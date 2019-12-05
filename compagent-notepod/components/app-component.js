@@ -110,7 +110,7 @@ class AppComponent extends LitElement {
     </div>
     </bs-container>
 
-<messages-component name="Messages"></messages-components>
+    <messages-component name="Messages"></messages-components>
 
 
     <div>
