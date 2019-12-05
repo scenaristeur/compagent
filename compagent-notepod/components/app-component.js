@@ -177,10 +177,7 @@ class AppComponent extends LitElement {
     <bs-container fluid>
     <bs-row>
     <bs-column sm-8 demo>
-
-<notepod-component name="Notepod"></notepod-component>
-
-
+    <notepod-component name="Notepod"></notepod-component>
     </bs-column>
     <bs-column sm demo>sm-4</bs-column>
     </bs-row>
