@@ -65,7 +65,7 @@ class LoginComponent extends LitElement {
     return html`
     ${this.logged ?
       html`
-      <bs-button warning @click=${this.logout}>Logout <br><small>${this.webId}</small></bs-button>`
+      <bs-button warning @click=${this.logout}>Logout</bs-button>`
       : html`<bs-button success @click=${this.login}>Login</bs-button>`
     }
     `;

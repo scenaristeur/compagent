@@ -61,51 +61,55 @@ class AppComponent extends LitElement {
     }
     .header {
       height: 10vh;
-          width:87vw;
+      width:87vw;
       margin-bottom: 0.5rem;
       background-color: #eee;
       border-radius: 0.25rem;
     }
-/*
+    /*
     .sidebar {
-      float: right;
-      width: 4rem;
-      height: 8rem;
-      background-color: #80bdff;
-      border-radius: 0.25rem;
-    }*/
+    float: right;
+    width: 4rem;
+    height: 8rem;
+    background-color: #80bdff;
+    border-radius: 0.25rem;
+  }*/
 
-    .body {
+  .body {
     /*  height: 50vh;*/
-        width:87vw;
-      margin-right: 4.5rem;
-      background-color: #eee;
-      border-radius: 0.25rem;
-    }
-    .footer {
-      height: 10vh;
-      width:87vw;
-      margin-top: 0.5rem;
-      background-color: #eee;
-      border-radius: 0.25rem;
-    }
-    bs-navbar-collapse {
-      background-color: #ddd;
-    }
-    .display-4 {
+    width:87vw;
+    margin-right: 4.5rem;
+    background-color: #eee;
+    border-radius: 0.25rem;
+  }
+  .footer {
+    height: 10vh;
+    width:87vw;
+    margin-top: 0.5rem;
+    background-color: #eee;
+    border-radius: 0.25rem;
+  }
+  bs-navbar-collapse {
+    background-color: #ddd;
+  }
+  .display-4 {
     font-size: 3.5rem;
     font-weight: 300;
     line-height: 1.2;
-}
-.lead {
+  }
+  .lead {
     font-size: 1.25rem;
     font-weight: 300;
-}
-.mb-4, .my-4 {
+  }
+  .mb-4, .my-4 {
     margin-bottom: 1.5rem !important;
-}
+  }
 
-bs-column[demo] {
+  bs-container {
+    width: 87vw;
+  }
+
+  bs-column[demo] {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
     background-color: rgba(86, 61, 124, 0.15);
@@ -113,129 +117,132 @@ bs-column[demo] {
     border-style: solid;
     border-color: rgba(86, 61, 124, 0.2);
     border-image: initial;
+  }
+
+  </style>
+
+
+
+
+
+  <bs-container fluid>
+  <div class="header">
+
+
+  <bs-navbar navbar-light expand-lg class="bg-light">
+  <bs-navbar-brand-link>Navbar</bs-navbar-brand-link>
+  <login-component name="Login"></login-component>
+  <bs-navbar-toggler>
+  <bs-navbar-toggler-icon></bs-navbar-toggler-icon>
+  </bs-navbar-toggler>
+  <bs-navbar-collapse>
+  <bs-navbar-nav class="mr-auto">
+  <bs-nav-item><bs-nav-link active>Home</bs-nav-link></bs-nav-item>
+  <bs-nav-item><bs-nav-link>Link</bs-nav-link></bs-nav-item>
+  <bs-nav-item>
+  <bs-dropdown>
+  <bs-link-button dropdown-nav-link dropdown-toggle>Dropdown</bs-link-button>
+  <bs-dropdown-menu down x-placement="bottom-start">
+  <bs-dropdown-item-link title="Action" index="0"></bs-dropdown-item-link>
+  <bs-dropdown-item-link title="Another action" index="1"></bs-dropdown-item-link>
+  <bs-dropdown-divider></bs-dropdown-divider>
+  <bs-dropdown-item-link title="Something else here" index="2"></bs-dropdown-item-link>
+  </bs-dropdown-menu>
+  </bs-dropdown>
+  </bs-nav-item>
+  <bs-nav-item>
+  <!--  <bs-nav-link disabled>Disabled</bs-nav-link>-->
+
+  </bs-nav-item>
+
+
+  </bs-navbar-nav>
+
+  <bs-form inline class="my-2 my-lg-0">
+  <bs-form-input class="mr-sm-2" type="search" placeholder="Search"></bs-form-input>
+  <bs-button class="my-2 my-sm-0" outline-success action="submit">Search</bs-button>
+  </bs-form>
+  </bs-navbar-collapse>
+  </bs-navbar>
+
+
+  </div>
+  <!--    <div class="sidebar">side</div>-->
+  <div class="body">
+
+  ${this.webId != null ?
+    html `
+    <p> ${this.webId}</p>
+    <br>
+    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+
+    `
+    :html `${this.message}`
+
+  }
+
+  <bs-jumbotron fluid>
+  <h1 class="display-4">Hello, world!</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+  <hr class="my-4">
+  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+  <bs-link-button primary>Learn more</bs-link-button>
+  </bs-jumbotron>
+
+
+
+
+
+
+  </div>
+
+  </bs-container>
+
+  <bs-container fluid>
+  <bs-row>
+  <bs-column sm-8 demo>sm-8</bs-column>
+  <bs-column sm-4 demo>sm-4</bs-column>
+  </bs-row>
+  <bs-row>
+  <bs-column sm demo>sm</bs-column>
+  <bs-column sm demo>sm</bs-column>
+  <bs-column sm demo>sm</bs-column>
+  </bs-row>
+  </bs-container>
+
+
+  <bs-container mt-4 class="footer">
+  <bs-row>
+  <bs-col>
+  <p class="text-center">Design by <a href="#">Smag0 Labs</a></p>
+  </bs-col>
+  </bs-row>
+  </bs-container>
+
+
+  <messages-component name="Messages"></messages-component>
+
+
+  <div>
+
+  </div>
+
+
+
+
+  `;
 }
 
-    </style>
+sessionChanged(webId){
+  this.webId = webId
+}
 
-
-
-
-
-    <bs-container fluid>
-    <div class="header">
-
-
-    <bs-navbar navbar-light expand-lg class="bg-light">
-        <bs-navbar-brand-link>Navbar</bs-navbar-brand-link>
-        <login-component name="Login"></login-component>
-        <bs-navbar-toggler>
-            <bs-navbar-toggler-icon></bs-navbar-toggler-icon>
-        </bs-navbar-toggler>
-        <bs-navbar-collapse>
-            <bs-navbar-nav class="mr-auto">
-                <bs-nav-item><bs-nav-link active>Home</bs-nav-link></bs-nav-item>
-                <bs-nav-item><bs-nav-link>Link</bs-nav-link></bs-nav-item>
-                <bs-nav-item>
-                    <bs-dropdown>
-                        <bs-link-button dropdown-nav-link dropdown-toggle>Dropdown</bs-link-button>
-                        <bs-dropdown-menu down x-placement="bottom-start">
-                            <bs-dropdown-item-link title="Action" index="0"></bs-dropdown-item-link>
-                            <bs-dropdown-item-link title="Another action" index="1"></bs-dropdown-item-link>
-                            <bs-dropdown-divider></bs-dropdown-divider>
-                            <bs-dropdown-item-link title="Something else here" index="2"></bs-dropdown-item-link>
-                        </bs-dropdown-menu>
-                    </bs-dropdown>
-                </bs-nav-item>
-                <bs-nav-item>
-                  <!--  <bs-nav-link disabled>Disabled</bs-nav-link>-->
-
-                </bs-nav-item>
-
-
-            </bs-navbar-nav>
-
-            <bs-form inline class="my-2 my-lg-0">
-                <bs-form-input class="mr-sm-2" type="search" placeholder="Search"></bs-form-input>
-                <bs-button class="my-2 my-sm-0" outline-success action="submit">Search</bs-button>
-            </bs-form>
-        </bs-navbar-collapse>
-    </bs-navbar>
-
-
-    </div>
-<!--    <div class="sidebar">side</div>-->
-    <div class="body">
-
-    ${this.webId != null ?
-      html `
-      <p> ${this.webId}</p>
-      <br>
-      <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-
-      `
-      :html `${this.message}`
-
-    }
-
-    <bs-jumbotron fluid>
-        <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <bs-link-button primary>Learn more</bs-link-button>
-    </bs-jumbotron>
-
-
-
-    <bs-container fluid>
-        <bs-row>
-            <bs-column sm-8 demo>sm-8</bs-column>
-            <bs-column sm-4 demo>sm-4</bs-column>
-        </bs-row>
-        <bs-row>
-            <bs-column sm demo>sm</bs-column>
-            <bs-column sm demo>sm</bs-column>
-            <bs-column sm demo>sm</bs-column>
-        </bs-row>
-    </bs-container>
-
-
-    </div>
-
-    </bs-container>
-
-    <bs-container mt-4 class="footer">
-      <bs-row>
-        <bs-col>
-          <p class="text-center">Design by <a href="#">Smag0 Labs</a></p>
-        </bs-col>
-      </bs-row>
-    </bs-container>
-
-
-    <messages-component name="Messages"></messages-component>
-
-
-    <div>
-
-    </div>
-
-
-
-
-    `;
-  }
-
-  sessionChanged(webId){
-    this.webId = webId
-  }
-
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    //  console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
+clickHandler(event) {
+  this.count++
+  //console.log(event.target);
+  //  console.log(this.agent)
+  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+}
 }
 
 // Register the new element with the browser.
