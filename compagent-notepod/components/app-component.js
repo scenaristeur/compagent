@@ -176,7 +176,7 @@ class AppComponent extends LitElement {
     <bs-container fluid>
     <bs-row>
     <bs-column sm-8 demo>sm-8</bs-column>
-    <bs-column sm-4 demo>sm-4</bs-column>
+    <bs-column sm demo>sm-4</bs-column>
     </bs-row>
     <bs-row>
     <bs-column sm demo>sm</bs-column>
