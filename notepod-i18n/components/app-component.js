@@ -5,6 +5,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import './messages-component.js'
 import './login-component.js'
 import './notepod-component.js'
+import './i18n-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -13,7 +14,7 @@ import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-jumbotron.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
 
-import  '../vendor/i18n/i18next.min.js';
+
 
 // Extend the LitElement base class
 class AppComponent extends LitElement {
@@ -33,30 +34,7 @@ class AppComponent extends LitElement {
     this.name = "unknown"
     this.count = 0;
     this.webId = null
-    i18next.init({
-      lng: navigator.language,
-      fallbackLng: 'en',
-      resources: {
-        en: {
-          translation: {
-            "hello_world": "Hallo Welt !",
-            "home": "Startseite"
-          }
-        },
-        fr: {
-          translation: {
-            "hello_world": "Salut tout le monde !",
-            "home": "Accueil"
-          }
-        },
-        de: {
-          translation: {
-            "hello_world": "Hello World !",
-            "home": "Home"
-          }
-        }
-      }
-    });
+
 
   }
 
@@ -70,6 +48,9 @@ class AppComponent extends LitElement {
           // code block
           app.sessionChanged(message.webId)
           break;
+          case "langChanged":
+          app.requestUpdate();
+          break;
           default:
           // code block
           console.log("Unknown action ",message)
@@ -77,6 +58,7 @@ class AppComponent extends LitElement {
       }
     };
   }
+
 
   render() {
     return html`
@@ -167,7 +149,9 @@ class AppComponent extends LitElement {
     <bs-nav-item>
     <login-component name="Login"></login-component>
     </bs-nav-item>
+    <i18n-component name="I18n"></i18n-component>
     </bs-navbar-collapse>
+
     </bs-navbar>
     </bs-container>
 
@@ -176,9 +160,7 @@ class AppComponent extends LitElement {
 
     <bs-jumbotron fluid>
     <h1 class="display-4"> ${i18next.t('hello_world')}</h1>
-    <img src="./assets/flag/en.png" @click="${this.changeLanguage}" lang="en" >
-    <img src="./assets/flag/fr.png" @click="${this.changeLanguage}" lang="fr" >
-    <img src="./assets/flag/de.png" @click="${this.changeLanguage}" lang="de" >
+
     <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
     <hr class="my-4">
     <p>  ${this.webId != null ?
@@ -242,12 +224,7 @@ class AppComponent extends LitElement {
   }
 
 
-  changeLanguage(event){
-    var lang = event.target.getAttribute('lang')
-    i18next.changeLanguage(lang)
-    this.requestUpdate();
-    this.agent.send('Messages', {action:"langChanged", lang: lang });
-  }
+
 
   sessionChanged(webId){
     this.webId = webId
