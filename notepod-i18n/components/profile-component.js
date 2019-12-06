@@ -64,10 +64,11 @@ class ProfileComponent extends LitElement {
                 <h5>webId :</h5>
             </bs-card-title>
             <bs-card-text slot="card-text">
-            <p>${this.webId}</p>
+            <p><a href="${this.webId}" target="_blank">${this.webId}</a></p>
               <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+              <br>
             </bs-card-text>
-            <bs-link-button primary>Détails</bs-link-button>
+            <bs-link-button disabled primary>Détails</bs-link-button>
         </bs-card-body>
     </bs-card>
 

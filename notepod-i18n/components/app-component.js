@@ -9,6 +9,7 @@ import './i18n-component.js'
 import './agora-notes-component.js'
 import './profile-component.js'
 import './friends-component.js'
+import './storage-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -193,19 +194,26 @@ class AppComponent extends LitElement {
       <bs-col  sm-3 demo>
       <profile-component name="Profile"></profile-component>
       </bs-col>
-      <bs-col>
+      <bs-col  sm-3 demo>
       <friends-component name="Friends"></friends-component>
+      </bs-col>
+      <bs-col  sm-3 demo>
+      <storage-component name="Storage"></storage-component>
       </bs-col>
 
       </bs-row>
       </bs-container>
+      <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>
       <!--
       <br>
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
       `
-      :html `${i18next.t('info_app2')}
+      :html `
+      ${i18next.t('info_app2')}
       ${i18next.t('info_app3')}
-      <a href="./assets/images/auth.png" target="_blank">${i18next.t('screenshot')}</a>.
+      <a href="./assets/images/auth.png" target="_blank">
+      ${i18next.t('screenshot')}
+      </a>.
       `
 
     }</p>
