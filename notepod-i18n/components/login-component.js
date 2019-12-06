@@ -4,6 +4,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import  '../vendor/solid-auth/solid-auth-client.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
+import './i18n-component.js'
 
 // Extend the LitElement base class
 class LoginComponent extends LitElement {
@@ -30,6 +31,10 @@ class LoginComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
+          case "langChanged":
+        //  app.lang = message.lang;
+          app.requestUpdate();
+          break;
           case "doSomething":
           // code block
           app.doSomething(message.params)
@@ -65,8 +70,8 @@ class LoginComponent extends LitElement {
     return html`
     ${this.logged ?
       html`
-      <bs-button warning @click=${this.logout}>Logout</bs-button>`
-      : html`<bs-button success @click=${this.login}>Login</bs-button>`
+      <bs-button warning @click=${this.logout}>${i18next.t('logout')}</bs-button>`
+      : html`<bs-button success @click=${this.login}>${i18next.t('login')}</bs-button>`
     }
     `;
   }

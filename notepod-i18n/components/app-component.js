@@ -121,7 +121,7 @@ class AppComponent extends LitElement {
     ${i18next.t('home')}
     </bs-nav-link>
     </bs-nav-item>
-
+    <!--
     <bs-nav-item><bs-nav-link>Link</bs-nav-link></bs-nav-item>
     <bs-nav-item>
     <bs-dropdown>
@@ -134,6 +134,7 @@ class AppComponent extends LitElement {
     </bs-dropdown-menu>
     </bs-dropdown>
     </bs-nav-item>
+    -->
     <!--   <bs-nav-item>
     <bs-nav-link disabled>Disabled</bs-nav-link>
 
@@ -149,7 +150,9 @@ class AppComponent extends LitElement {
     <bs-nav-item>
     <login-component name="Login"></login-component>
     </bs-nav-item>
+    <bs-nav-item>
     <i18n-component name="I18n"></i18n-component>
+    </bs-nav-item>
     </bs-navbar-collapse>
 
     </bs-navbar>
@@ -159,9 +162,9 @@ class AppComponent extends LitElement {
 
 
     <bs-jumbotron fluid>
-    <h1 class="display-4"> ${i18next.t('hello_world')}</h1>
+    <h1 class="display-4">${i18next.t('hello_world')}</h1>
 
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <p class="lead">${i18next.t('info_app1')}</p>
     <hr class="my-4">
     <p>  ${this.webId != null ?
       html `
@@ -170,11 +173,11 @@ class AppComponent extends LitElement {
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
 
       `
-      :html `${this.message}`
+      :html `${i18next.t('info_app2')}`
 
     }</p>
     <!--  <bs-link-button primary>Learn more</bs-link-button>-->
-    <login-component></login-component>
+    <login-component name="Login2"></login-component>
     </bs-jumbotron>
 
 

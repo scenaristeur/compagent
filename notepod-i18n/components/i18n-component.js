@@ -10,6 +10,7 @@ class I18nComponent extends LitElement {
   static get properties() {
     return {
       name: {type: String},
+      lang: {type: String}
     };
   }
 
@@ -18,44 +19,61 @@ class I18nComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
+    this.lang = navigator.language
     i18next.init({
-      lng: navigator.language,
+      lng: this.lang,
       fallbackLng: 'en',
       resources: {
         en: {
           translation: {
             "hello_world": "Hello World !",
             "home": "Home",
+            "login": "Login",
+            "logout": "Logout",
             "Messages": "Messages",
             "say": "say",
-            "add_note": "Add Note"
+            "add_note": "Add Note",
+            "info_app1": "This is a simple app to post some notes on your POD.",
+            "info_app2": "If you want to post, you must login."
           }
         },
         fr: {
           translation: {
             "hello_world": "Salut tout le monde !",
             "home": "Accueil",
+            "login": "Connexion",
+            "logout": "Deconnexion",
             "Messages": "Messages",
             "say": "dit",
-            "add_note": "Ajouter une note"
+            "add_note": "Ajouter une note",
+            "info_app1": "Ceci est une petite app pour poster des notes sur votre POD.",
+            "info_app2": "Si vous voulez poster, vous devez vous connecter."
           }
         },
         de: {
           translation: {
             "hello_world": "Hallo Welt !",
             "home": "Startseite",
+            "login": "Einloggen",
+            "logout": "Ausloggen",
             "Messages": "Nachrichten",
             "say": "sagte",
-            "add_note": "Notiz hinzufügen"
+            "add_note": "Notiz hinzufügen",
+            "info_app1": "Dies ist eine einfache App, mit der Sie einige Notizen auf Ihrem POD veröffentlichen können.",
+            "info_app2": "Wenn Sie posten möchten, müssen Sie sich anmelden."
           }
         },
         es: {
           translation: {
             "hello_world": "Hola Mundo !",
             "home": "Bienvenida",
+            "login": "Iniciar sesión",
+            "logout": "Cerrar sesión",
             "Messages": "Mensajes",
             "say": "dicho",
-            "add_note": "Añadir la nota"
+            "add_note": "Añadir la nota",
+            "info_app1": "Esta es una aplicación simple para publicar algunas notas en tu POD.",
+            "info_app2": "Si desea publicar, debe iniciar sesión."
           }
         }
       }
@@ -78,6 +96,7 @@ class I18nComponent extends LitElement {
         }
       }
     };
+    this.informLanguage();
   }
 
   render() {
@@ -86,6 +105,7 @@ class I18nComponent extends LitElement {
     <img src="./assets/flag/fr.png" @click="${this.changeLanguage}" lang="fr" >
     <img src="./assets/flag/de.png" @click="${this.changeLanguage}" lang="de" >
     <img src="./assets/flag/es.png" @click="${this.changeLanguage}" lang="es" >
+
     `;
   }
 
@@ -94,12 +114,18 @@ class I18nComponent extends LitElement {
   }
 
   changeLanguage(event){
-    var lang = event.target.getAttribute('lang')
-    i18next.changeLanguage(lang)
+    this.lang = event.target.getAttribute('lang')
+    i18next.changeLanguage(this.lang)
     this.requestUpdate();
-    this.agent.send('App', {action:"langChanged", lang: lang });
-    this.agent.send('Messages', {action:"langChanged", lang: lang });
-    this.agent.send('Notepod', {action:"langChanged", lang: lang });
+    this.informLanguage();
+  }
+
+  informLanguage(){
+    this.agent.send('App', {action:"langChanged", lang: this.lang });
+    this.agent.send('Messages', {action:"langChanged", lang: this.lang });
+    this.agent.send('Notepod', {action:"langChanged", lang: this.lang });
+    this.agent.send('Login', {action:"langChanged", lang: this.lang });
+    this.agent.send('Login2', {action:"langChanged", lang: this.lang });
   }
 
 }
