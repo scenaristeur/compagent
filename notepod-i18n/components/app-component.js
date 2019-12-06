@@ -173,10 +173,16 @@ class AppComponent extends LitElement {
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
 
       `
-      :html `${i18next.t('info_app2')}`
+      :html `${i18next.t('info_app2')}
+      ${i18next.t('info_app3')}
+
+      <a href="./assets/images/auth.png" target="_blank">${i18next.t('screenshot')}</a>.
+
+      `
 
     }</p>
     <!--  <bs-link-button primary>Learn more</bs-link-button>-->
+
     <login-component name="Login2"></login-component>
     </bs-jumbotron>
 

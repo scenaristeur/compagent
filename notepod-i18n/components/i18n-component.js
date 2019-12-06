@@ -34,7 +34,9 @@ class I18nComponent extends LitElement {
             "say": "say",
             "add_note": "Add Note",
             "info_app1": "This is a simple app to post some notes on your POD.",
-            "info_app2": "If you want to post, you must login."
+            "info_app2": "If you want to post, you must login.",
+            "info_app3": "And check all authorizations to this website as shown on this",
+            "screenshot": "screenshot"
           }
         },
         fr: {
@@ -47,7 +49,9 @@ class I18nComponent extends LitElement {
             "say": "dit",
             "add_note": "Ajouter une note",
             "info_app1": "Ceci est une petite app pour poster des notes sur votre POD.",
-            "info_app2": "Si vous voulez poster, vous devez vous connecter."
+            "info_app2": "Si vous voulez poster, vous devez vous connecter.",
+            "info_app3": "Et cochez toutes les autorisations comme dans cette",
+            "screenshot": "capture d'écran"
           }
         },
         de: {
@@ -60,7 +64,9 @@ class I18nComponent extends LitElement {
             "say": "sagte",
             "add_note": "Notiz hinzufügen",
             "info_app1": "Dies ist eine einfache App, mit der Sie einige Notizen auf Ihrem POD veröffentlichen können.",
-            "info_app2": "Wenn Sie posten möchten, müssen Sie sich anmelden."
+            "info_app2": "Wenn Sie posten möchten, müssen Sie sich anmelden.",
+            "info_app3": "Und überprüfen Sie alle Berechtigungen wie in diesem",
+            "screenshot": "Screenshot"
           }
         },
         es: {
@@ -73,7 +79,9 @@ class I18nComponent extends LitElement {
             "say": "dicho",
             "add_note": "Añadir la nota",
             "info_app1": "Esta es una aplicación simple para publicar algunas notas en tu POD.",
-            "info_app2": "Si desea publicar, debe iniciar sesión."
+            "info_app2": "Si desea publicar, debe iniciar sesión.",
+            "info_app3": "Y verifique todos los permisos como en esta",
+            "screenshot": "captura de pantalla"
           }
         }
       }
