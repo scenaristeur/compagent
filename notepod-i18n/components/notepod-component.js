@@ -5,6 +5,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
+import './i18n-component.js'
 
 // Extend the LitElement base class
 class NotepodComponent extends LitElement {
@@ -17,7 +18,8 @@ class NotepodComponent extends LitElement {
       webId: {type: String},
       username: {type: String},
       friends: {type: Array},
-      notes: {type: Array}
+      notes: {type: Array},
+      lang: {type: String}
     };
   }
 
@@ -29,6 +31,7 @@ class NotepodComponent extends LitElement {
     this.username = "unknown"
     this.friends = []
     this.notes = []
+    this.lang=navigator.language
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
@@ -47,6 +50,10 @@ class NotepodComponent extends LitElement {
           case "sessionChanged":
           // code block
           app.sessionChanged(message.webId)
+          break;
+          case "langChanged":
+          app.lang = message.lang;
+          app.requestUpdate();
           break;
           default:
           // code block
@@ -227,7 +234,7 @@ class NotepodComponent extends LitElement {
         <ul>
         ${notes.map((n) => html`
           <li>
-          ${n.text}, <small>${n.date.toLocaleString(navigator.language, { timeZone: 'UTC' })}</small><br>
+          ${n.text}, <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small><br>
           </li>
           `)}
           </ul>
@@ -261,7 +268,7 @@ class NotepodComponent extends LitElement {
 
           <br>
 
-          <bs-button primary @click=${this.addNote}>Add note</bs-button>
+          <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
           <br>
           <p>
 

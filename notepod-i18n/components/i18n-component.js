@@ -27,7 +27,8 @@ class I18nComponent extends LitElement {
             "hello_world": "Hello World !",
             "home": "Home",
             "Messages": "Messages",
-            "say": "say"
+            "say": "say",
+            "add_note": "Add Note"
           }
         },
         fr: {
@@ -35,7 +36,8 @@ class I18nComponent extends LitElement {
             "hello_world": "Salut tout le monde !",
             "home": "Accueil",
             "Messages": "Messages",
-            "say": "dit"
+            "say": "dit",
+            "add_note": "Ajouter une note"
           }
         },
         de: {
@@ -43,7 +45,17 @@ class I18nComponent extends LitElement {
             "hello_world": "Hallo Welt !",
             "home": "Startseite",
             "Messages": "Nachrichten",
-            "say": "sagte"
+            "say": "sagte",
+            "add_note": "Notiz hinzufügen"
+          }
+        },
+        es: {
+          translation: {
+            "hello_world": "Hola Mundo !",
+            "home": "Bienvenida",
+            "Messages": "Mensajes",
+            "say": "dicho",
+            "add_note": "Añadir la nota"
           }
         }
       }
@@ -73,6 +85,7 @@ class I18nComponent extends LitElement {
     <img src="./assets/flag/en.png" @click="${this.changeLanguage}" lang="en" >
     <img src="./assets/flag/fr.png" @click="${this.changeLanguage}" lang="fr" >
     <img src="./assets/flag/de.png" @click="${this.changeLanguage}" lang="de" >
+    <img src="./assets/flag/es.png" @click="${this.changeLanguage}" lang="es" >
     `;
   }
 
@@ -86,6 +99,7 @@ class I18nComponent extends LitElement {
     this.requestUpdate();
     this.agent.send('App', {action:"langChanged", lang: lang });
     this.agent.send('Messages', {action:"langChanged", lang: lang });
+    this.agent.send('Notepod', {action:"langChanged", lang: lang });
   }
 
 }
