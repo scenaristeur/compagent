@@ -11,7 +11,8 @@ class StorageComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+        storage: {type: String},
     };
   }
 
@@ -20,6 +21,7 @@ class StorageComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
+    this.storage = ""
 
   }
 
@@ -27,11 +29,12 @@ class StorageComponent extends LitElement {
     var app = this;
     this.agent = new HelloAgent(this.name);
     this.agent.receive = function(from, message) {
+      console.error(message)
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "doSomething":
+          case "storageChanged":
           // code block
-          app.doSomething(message.params)
+          app.storageChanged(message.storage)
           break;
           default:
           // code block
@@ -63,6 +66,7 @@ class StorageComponent extends LitElement {
     <bs-card-body>
     <bs-card-title slot="card-title">
     <h5>browser :</h5>
+    ${this.storage}
     </bs-card-title>
     <bs-card-text slot="card-text">
 
@@ -104,8 +108,9 @@ class StorageComponent extends LitElement {
     `;
   }
 
-  doSomething(params){
-    console.log(params)
+  storageChanged(storage){
+    console.log(storage)
+    this.storage = storage
   }
 
   clickHandler(event) {

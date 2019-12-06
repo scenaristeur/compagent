@@ -92,11 +92,15 @@ class NotepodComponent extends LitElement {
         console.log("personne",app.person)
         app.username = app.person.getString(app.FOAF('name'))
         app.friends = app.person.getAllRefs(app.FOAF('knows'))
+
         console.log("Friends",app.friends)
         app.initNotePod()
         app.agent.send('Profile',{action: "usernameChanged", username: app.username})
         app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
-
+        app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
+        const storage = app.person.getRef(app.SPACE('storage'))
+        console.log("storage",storage)
+        app.agent.send('Storage',{action: "storageChanged", storage: storage})
       },
       err => {
         console.log(err)
@@ -241,6 +245,8 @@ class NotepodComponent extends LitElement {
             console.log("creation a revoir")
             const storage = profile.getRef(app.SPACE('storage'))
             console.log("storage",storage)
+            app.agent.send('Storage',{action: "storageChanged", storage: storage})
+
             const notesListUrl = storage + 'public/notes.ttl';
 
             const notesList = Tripledoc.createDocument(notesListUrl);

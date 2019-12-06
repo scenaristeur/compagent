@@ -12,7 +12,8 @@ class FriendsComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+      friends: {type: Array}
     };
   }
 
@@ -20,6 +21,7 @@ class FriendsComponent extends LitElement {
     super();
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
+    this.friends = []
     this.count = 0;
 
   }
@@ -30,9 +32,9 @@ class FriendsComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "doSomething":
+          case "friendsChanged":
           // code block
-          app.doSomething(message.params)
+          app.friendsChanged(message.friends)
           break;
           default:
           // code block
@@ -65,38 +67,32 @@ class FriendsComponent extends LitElement {
     <h5>online:</h5>
     </bs-card-title>
     <bs-card-text slot="card-text">
-
     <bs-list-group>
-        <bs-list-group-item active>Cras justo odio</bs-list-group-item>
-        <bs-list-group-item>Dapibus ac facilisis in</bs-list-group-item>
-        <bs-list-group-item>Morbi leo risus</bs-list-group-item>
-        <bs-list-group-item>Porta ac consectetur ac</bs-list-group-item>
-        <bs-list-group-item>Vestibulum at eros</bs-list-group-item>
-    </bs-list-group>
-    <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-    <br>
-    </bs-card-text>
-    <bs-link-button disabled primary>See more -> graph Spoggy</bs-link-button>
-    </bs-card-body>
-    </bs-card>
+    ${this.friends.map((f) => html`
+      <bs-list-group-item>${f}</bs-list-group-item>
+      `)}
+      </bs-list-group>
+      <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+      <br>
+      </bs-card-text>
+      <bs-link-button disabled primary>See more -> graph Spoggy</bs-link-button>
+      </bs-card-body>
+      </bs-card>
+      `;
+    }
 
-    <!--  <p>${this.message}</p>
-    <p>${this.count}</p>
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
-    `;
+    friendsChanged(friends){
+      console.log(friends)
+      this.friends = friends
+    }
+
+    clickHandler(event) {
+      this.count++
+      //console.log(event.target);
+      console.log(this.agent)
+      this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+    }
   }
 
-  doSomething(params){
-    console.log(params)
-  }
-
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
-}
-
-// Register the new element with the browser.
-customElements.define('friends-component', FriendsComponent);
+  // Register the new element with the browser.
+  customElements.define('friends-component', FriendsComponent);

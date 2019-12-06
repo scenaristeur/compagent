@@ -137,9 +137,12 @@ class AppComponent extends LitElement {
     ${i18next.t('home')}
     </bs-nav-link>
     </bs-nav-item>
-    <!--
-    <bs-nav-item><bs-nav-link>Link</bs-nav-link></bs-nav-item>
-    <bs-nav-item>
+<!--
+<a href="#notepod">Notepod</a>
+    <bs-nav-item><bs-nav-link><a href="#notepod">Notepod</a></bs-nav-link></bs-nav-item>
+    <bs-nav-item><bs-nav-link><a href="#agoranotes">Agora Notes</a></bs-nav-link></bs-nav-item>-->
+
+    <!--  <bs-nav-item>
     <bs-dropdown>
     <bs-link-button dropdown-nav-link dropdown-toggle>Dropdown</bs-link-button>
     <bs-dropdown-menu down x-placement="bottom-start">
@@ -232,10 +235,10 @@ class AppComponent extends LitElement {
     <bs-container fluid>
     <bs-row>
     <bs-column sm-8 demo>
-    <notepod-component name="Notepod"></notepod-component>
+    <notepod-component id="notepod" name="Notepod"></notepod-component>
     </bs-column>
     <bs-column sm demo>
-    <agora-notes-component name="AgoraNotes"></agora-notes-component>
+    <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
 
     </bs-column>
     </bs-row>
