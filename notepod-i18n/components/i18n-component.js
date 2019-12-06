@@ -119,9 +119,8 @@ class I18nComponent extends LitElement {
     return html`
     <img src="./assets/flag/en.png" @click="${this.changeLanguage}" lang="en" >
     <img src="./assets/flag/fr.png" @click="${this.changeLanguage}" lang="fr" >
-    <img src="./assets/flag/de.png" @click="${this.changeLanguage}" lang="de" >
     <img src="./assets/flag/es.png" @click="${this.changeLanguage}" lang="es" >
-
+    <img src="./assets/flag/de.png" @click="${this.changeLanguage}" lang="de" >
     `;
   }
 

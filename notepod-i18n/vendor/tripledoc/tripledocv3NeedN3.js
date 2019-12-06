@@ -1,10 +1,11 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rdflib'), require('http-link-header'), require('rdf-namespaces')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'rdflib', 'http-link-header', 'rdf-namespaces'], factory) :
-    (global = global || self, factory(global.Tripledoc = {}, global.rdflib, global.LinkHeader, global.rdfNamespaces));
-}(this, function (exports, rdflib, LinkHeader, rdfNamespaces) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('http-link-header'), require('rdf-namespaces'), require('n3'), require('solid-auth-client')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'http-link-header', 'rdf-namespaces', 'n3', 'solid-auth-client'], factory) :
+    (global = global || self, factory(global.Tripledoc = {}, global.LinkHeader, global.rdfNamespaces, global.n3, global.SolidAuthClient));
+}(this, function (exports, LinkHeader, rdfNamespaces, n3, SolidAuthClient) { 'use strict';
 
     LinkHeader = LinkHeader && LinkHeader.hasOwnProperty('default') ? LinkHeader['default'] : LinkHeader;
+    SolidAuthClient = SolidAuthClient && SolidAuthClient.hasOwnProperty('default') ? SolidAuthClient['default'] : SolidAuthClient;
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -58,152 +59,217 @@
         }
     }
 
-    var store = rdflib.graph();
-    var fetcher = new rdflib.Fetcher(store, undefined);
-    var updater = new rdflib.UpdateManager(store);
     /**
-     * Single instance of an rdflib store, caches all fetched data
-     *
-     * @ignore Can be used as an escape hatch for people who want to use rdflib directly, but if that
-     *         is necessary, please consider submitting a feature request describing your use case
-     *         on Tripledoc first.
+     * @param quads Triples that should be serialised to Turtle
+     * @ignore Utility method for internal use by Tripledoc; not part of the public API.
      */
-    function getStore() {
-        return store;
+    function triplesToTurtle(quads) {
+        return __awaiter(this, void 0, void 0, function () {
+            var format, writer, triples, writePromise, rawTurtle;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        format = 'text/turtle';
+                        writer = new n3.Writer({ format: format });
+                        triples = quads.map(function (quad) { return n3.DataFactory.quad(quad.subject, quad.predicate, quad.object); });
+                        writer.addQuads(triples);
+                        writePromise = new Promise(function (resolve, reject) {
+                            writer.end(function (error, result) {
+                                /* istanbul ignore if [n3.js doesn't actually pass an error nor a result, apparently: https://github.com/rdfjs/N3.js/blob/62682e48c02d8965b4d728cb5f2cbec6b5d1b1b8/src/N3Writer.js#L290] */
+                                if (error) {
+                                    return reject(error);
+                                }
+                                resolve(result);
+                            });
+                        });
+                        return [4 /*yield*/, writePromise];
+                    case 1:
+                        rawTurtle = _a.sent();
+                        return [2 /*return*/, rawTurtle];
+                }
+            });
+        });
     }
     /**
-     * Single instance of an rdflib fetcher
-     *
-     * @ignore Can be used as an escape hatch for people who want to use rdflib directly, but if that
-     *         is necessary, please consider submitting a feature request describing your use case
-     *         on Tripledoc first.
+     * @param raw Turtle that should be parsed into Triples
+     * @ignore Utility method for internal use by Tripledoc; not part of the public API.
      */
-    function getFetcher() {
-        return fetcher;
+    function turtleToTriples(raw, documentRef) {
+        return __awaiter(this, void 0, void 0, function () {
+            var format, parser, parsingPromise;
+            return __generator(this, function (_a) {
+                format = 'text/turtle';
+                parser = new n3.Parser({ format: format, baseIRI: documentRef });
+                parsingPromise = new Promise(function (resolve, reject) {
+                    var parsedTriples = [];
+                    parser.parse(raw, function (error, quad, _prefixes) {
+                        if (error) {
+                            return reject(error);
+                        }
+                        if (quad) {
+                            quad.graph = n3.DataFactory.namedNode(documentRef);
+                            parsedTriples.push(quad);
+                        }
+                        else {
+                            resolve(parsedTriples);
+                        }
+                    });
+                });
+                return [2 /*return*/, parsingPromise];
+            });
+        });
+    }
+
+    /**
+     * Utility function that gets Triples located at a URL
+     *
+     * @param url Location of the Document contains the Triples.
+     * @returns Promise that resolves with the Triples
+     * @ignore Should not be used by library consumers directly.
+     */
+    /* istanbul ignore next Just a thin wrapper around solid-auth-client, yet cumbersome to test due to side effects */
+    function get(url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, SolidAuthClient.fetch(url, {
+                            headers: {
+                                Accept: 'text/turtle',
+                            },
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response];
+                }
+            });
+        });
     }
     /**
-     * Single instance of an rdflib updater
+     * Utility function that sends a PATCH request to the Pod to update a Document
      *
-     * @ignore Can be used as an escape hatch for people who want to use rdflib directly, but if that
-     *         is necessary, please consider submitting a feature request describing your use case
-     *         on Tripledoc first.
-     */
-    function getUpdater() {
-        return updater;
-    }
-    /**
-     * Utility function that properly promisifies the RDFLib UpdateManager's update function
-     *
-     * @param statementsToDelete Statements currently present on the Pod that should be deleted.
-     * @param statementsToAdd Statements not currently present on the Pod that should be added.
+     * @param url Location of the Document that contains the Triples to delete, and should have the Triples to add.
+     * @param triplesToDelete Triples currently present on the Pod that should be deleted.
+     * @param triplesToAdd Triples not currently present on the Pod that should be added.
      * @returns Promise that resolves when the update was executed successfully, and rejects if not.
      * @ignore Should not be used by library consumers directly.
      */
-    /* istanbul ignore next Just a thin wrapper around rdflib, yet cumbersome to test due to side effects */
-    function update(statementsToDelete, statementsToAdd) {
-        var promise = new Promise(function (resolve, reject) {
-            var updater = getUpdater();
-            updater.update(statementsToDelete, statementsToAdd, function (_uri, success, errorBody) {
-                if (success) {
-                    return resolve();
+    /* istanbul ignore next Just a thin wrapper around solid-auth-client, yet cumbersome to test due to side effects */
+    function update(url, triplesToDelete, triplesToAdd) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rawTriplesToDelete, rawTriplesToAdd, deleteStatement, insertStatement, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, triplesToTurtle(triplesToDelete)];
+                    case 1:
+                        rawTriplesToDelete = _a.sent();
+                        return [4 /*yield*/, triplesToTurtle(triplesToAdd)];
+                    case 2:
+                        rawTriplesToAdd = _a.sent();
+                        deleteStatement = (triplesToDelete.length > 0)
+                            ? "DELETE DATA {" + rawTriplesToDelete + "}"
+                            : '';
+                        insertStatement = (triplesToAdd.length > 0)
+                            ? "INSERT DATA {" + rawTriplesToAdd + "}"
+                            : '';
+                        return [4 /*yield*/, SolidAuthClient.fetch(url, {
+                                method: 'PATCH',
+                                body: deleteStatement + " " + insertStatement,
+                                headers: {
+                                    'Content-Type': 'application/sparql-update',
+                                },
+                            })];
+                    case 3:
+                        response = _a.sent();
+                        return [2 /*return*/, response];
                 }
-                return reject(new Error(errorBody));
             });
         });
-        return promise;
     }
     /**
-     * Utility function that properly promisifies the RDFLib UpdateManager's `put` function
+     * Utility function that sends a PUT request to the Pod to create a new Document
      *
      * @param url URL of the Document that should be created.
-     * @param statementsToAdd Statements that should be added to the Document.
+     * @param triplesToAdd Triples that should be added to the Document.
      * @returns Promise that resolves with the response when the Document was created successfully, and rejects if not.
      * @ignore Should not be used by library consumers directly.
      */
-    /* istanbul ignore next Just a thin wrapper around rdflib, yet cumbersome to test due to side effects */
-    function create(url, statementsToAdd) {
-        var promise = new Promise(function (resolve, reject) {
-            var store = getStore();
-            var updater = getUpdater();
-            var doc = store.sym(url);
-            updater.put(doc, statementsToAdd, 'text/turtle', function (_uri, ok, errorMessage, response) {
-                if (!ok) {
-                    return reject(new Error(errorMessage));
+    /* istanbul ignore next Just a thin wrapper around solid-auth-client, yet cumbersome to test due to side effects */
+    function create(url, triplesToAdd) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rawTurtle, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, triplesToTurtle(triplesToAdd)];
+                    case 1:
+                        rawTurtle = _a.sent();
+                        return [4 /*yield*/, SolidAuthClient.fetch(url, {
+                                method: 'PUT',
+                                body: rawTurtle,
+                                headers: {
+                                    'Content-Type': 'text/turtle',
+                                    'If-None-Match': '*',
+                                },
+                            })];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response];
                 }
-                return resolve(response);
             });
         });
-        return promise;
     }
 
     /**
      * @ignore This is a utility method for other parts of the code, and not part of the public API.
      */
-    var findSubjectInStatements = function (statements, predicateRef, objectRef, documentRef) {
-        return findEntityInStatements(statements, 'subject', null, predicateRef, objectRef, documentRef);
+    var findSubjectInStore = function (store, predicateRef, objectRef, documentRef) {
+        return findEntityInStore(store, 'subject', null, predicateRef, objectRef, documentRef);
     };
     /**
      * @ignore This is a utility method for other parts of the code, and not part of the public API.
      */
-    var findSubjectsInStatements = function (statements, predicateRef, objectRef, documentRef) {
-        return findEntitiesInStatements(statements, 'subject', null, predicateRef, objectRef, documentRef);
+    var findSubjectsInStore = function (store, predicateRef, objectRef, documentRef) {
+        return findEntitiesInStore(store, 'subject', null, predicateRef, objectRef, documentRef);
     };
     /**
      * @ignore This is a utility method for other parts of the code, and not part of the public API.
      */
-    var findObjectsInStatements = function (statements, subjectRef, predicateRef, documentRef) {
-        return findEntitiesInStatements(statements, 'object', subjectRef, predicateRef, null, documentRef);
+    var findObjectsInStore = function (store, subjectRef, predicateRef, documentRef) {
+        return findEntitiesInStore(store, 'object', subjectRef, predicateRef, null, documentRef);
     };
     /**
      * @ignore This is a utility method for other parts of the code, and not part of the public API.
      */
-    function findEntityInStatements(statements, type, subjectRef, predicateRef, objectRef, documentRef) {
-        var foundStatement = statements.find(function (statement) {
-            return (typeof statement[type] !== 'undefined' &&
-                statementMatches(statement, subjectRef, predicateRef, objectRef, documentRef));
-        });
-        return (typeof foundStatement !== 'undefined') ? normaliseEntity(foundStatement[type]) : null;
-    }
-    /**
-     * @ignore This is a utility method for other parts of the code, and not part of the public API.
-     */
-    function findEntitiesInStatements(statements, type, subjectRef, predicateRef, objectRef, documentRef) {
-        var foundStatements = statements.filter(function (statement) {
-            return (typeof statement[type] !== 'undefined' &&
-                statementMatches(statement, subjectRef, predicateRef, objectRef, documentRef));
-        });
-        return foundStatements.map(function (statement) { return normaliseEntity(statement[type]); }).filter(isEntity);
-    }
-    /**
-     * @ignore This is a utility method for other parts of the code, and not part of the public API.
-     */
-    function findMatchingStatements(statements, subjectRef, predicateRef, objectRef, documentRef) {
-        var foundStatements = statements.filter(function (statement) {
-            return statementMatches(statement, subjectRef, predicateRef, objectRef, documentRef);
-        });
-        return foundStatements;
-    }
-    function statementMatches(statement, subjectRef, predicateRef, objectRef, documentRef) {
+    function findEntityInStore(store, type, subjectRef, predicateRef, objectRef, documentRef) {
         var targetSubject = subjectRef ? toNode(subjectRef) : null;
         var targetPredicate = predicateRef ? toNode(predicateRef) : null;
         var targetObject = objectRef ? toNode(objectRef) : null;
-        var targetDocument = rdflib.sym(documentRef);
-        return ((targetSubject === null || statement.subject.sameTerm(targetSubject)) &&
-            (targetPredicate === null || statement.predicate.sameTerm(targetPredicate)) &&
-            (targetObject === null || statement.object.sameTerm(targetObject)) &&
-            (targetDocument === null || (typeof statement.why !== 'undefined' &&
-                isNamedNode(statement.why) &&
-                statement.why.sameTerm(targetDocument))));
+        var targetDocument = objectRef ? toNode(documentRef) : null;
+        var matchingTriples = store.getQuads(targetSubject, targetPredicate, targetObject, targetDocument);
+        var foundTriple = matchingTriples.find(function (triple) { return (typeof triple[type] !== 'undefined'); });
+        return (typeof foundTriple !== 'undefined') ? normaliseEntity(foundTriple[type]) : null;
+    }
+    /**
+     * @ignore This is a utility method for other parts of the code, and not part of the public API.
+     */
+    function findEntitiesInStore(store, type, subjectRef, predicateRef, objectRef, documentRef) {
+        var targetSubject = subjectRef ? toNode(subjectRef) : null;
+        var targetPredicate = predicateRef ? toNode(predicateRef) : null;
+        var targetObject = objectRef ? toNode(objectRef) : null;
+        var targetDocument = objectRef ? toNode(documentRef) : null;
+        var matchingTriples = store.getQuads(targetSubject, targetPredicate, targetObject, targetDocument);
+        var foundTriples = matchingTriples.filter(function (triple) { return (typeof triple[type] !== 'undefined'); });
+        return foundTriples.map(function (triple) { return normaliseEntity(triple[type]); }).filter(isEntity);
     }
     function toNode(referenceOrBlankNode) {
-        return (typeof referenceOrBlankNode === 'string') ? rdflib.sym(referenceOrBlankNode) : referenceOrBlankNode;
+        return (typeof referenceOrBlankNode === 'string') ? n3.DataFactory.namedNode(referenceOrBlankNode) : referenceOrBlankNode;
     }
     function normaliseEntity(entity) {
         if (isBlankNode(entity)) {
             return entity;
         }
         if (isNamedNode(entity)) {
-            return entity.uri;
+            return entity.value;
         }
         /* istanbul ignore else: All code paths to here result in either a Node or a Literal, so we can't test it */
         if (isLiteral(entity)) {
@@ -216,7 +282,7 @@
         return (node !== null);
     }
     /**
-     * @ignore Utility function for working with rdflib, which the library consumer should not need to
+     * @ignore Utility function for working with N3, which the library consumer should not need to
      *         be exposed to.
      */
     function isNamedNode(node) {
@@ -236,13 +302,16 @@
      * @param subjectRef The URL that identifies this subject.
      */
     function initialiseSubject(document, subjectRef) {
-        var subjectNode = isBlankNode$1(subjectRef) ? subjectRef : rdflib.sym(subjectRef);
-        var statements = findMatchingStatements(document.getStatements(), subjectRef, null, null, document.asRef());
+        var subjectNode = isBlankNode$1(subjectRef) ? subjectRef : n3.DataFactory.namedNode(subjectRef);
+        var triples = document.getStore()
+            .getQuads(subjectNode, null, null, n3.DataFactory.namedNode(document.asNodeRef()));
+        var store = new n3.Store();
+        store.addQuads(triples);
         var pendingAdditions = [];
         var pendingDeletions = [];
-        var get = function (predicateRef) { return findObjectsInStatements(statements, subjectRef, predicateRef, document.asRef()); };
-        var getString = function (predicateRef) {
-            var objects = get(predicateRef);
+        var get = function (predicateNode) { return findObjectsInStore(store, subjectRef, predicateNode, document.asRef()); };
+        var getString = function (predicateNode) {
+            var objects = get(predicateNode);
             var firstStringLiteral = objects.find(isStringLiteral);
             if (typeof firstStringLiteral === 'undefined') {
                 return null;
@@ -336,28 +405,29 @@
             return getRef(rdfNamespaces.rdf.type);
         };
         var addLiteral = function (predicateRef, literal) {
-            pendingAdditions.push(rdflib.st(subjectNode, rdflib.sym(predicateRef), asLiteral(literal), rdflib.sym(document.asRef())));
+            pendingAdditions.push(n3.DataFactory.quad(subjectNode, n3.DataFactory.namedNode(predicateRef), asLiteral(literal), n3.DataFactory.namedNode(document.asRef())));
         };
-        var addRef = function (predicateRef, ref) {
-            pendingAdditions.push(rdflib.st(subjectNode, rdflib.sym(predicateRef), rdflib.sym(ref), rdflib.sym(document.asRef())));
+        var addRef = function (predicateRef, nodeRef) {
+            pendingAdditions.push(n3.DataFactory.quad(subjectNode, n3.DataFactory.namedNode(predicateRef), n3.DataFactory.namedNode(nodeRef), n3.DataFactory.namedNode(document.asRef())));
         };
         var removeRef = function (predicateRef, nodeRef) {
-            pendingDeletions.push(rdflib.st(subjectNode, rdflib.sym(predicateRef), rdflib.sym(nodeRef), rdflib.sym(document.asRef())));
+            pendingDeletions.push(n3.DataFactory.quad(subjectNode, n3.DataFactory.namedNode(predicateRef), n3.DataFactory.namedNode(nodeRef), n3.DataFactory.namedNode(document.asRef())));
         };
         var removeAll = function (predicateRef) {
-            pendingDeletions.push.apply(pendingDeletions, findMatchingStatements(statements, subjectRef, predicateRef, null, document.asRef()));
+            pendingDeletions.push.apply(pendingDeletions, store.getQuads(subjectNode, predicateRef, null, n3.DataFactory.namedNode(document.asRef())));
         };
         var clear = function () {
-            pendingDeletions.push.apply(pendingDeletions, statements);
+            pendingDeletions.push.apply(pendingDeletions, getTriples());
         };
         var setRef = function (predicateRef, nodeRef) {
             removeAll(predicateRef);
             addRef(predicateRef, nodeRef);
         };
+        var getTriples = function () { return store.getQuads(subjectNode, null, null, n3.DataFactory.namedNode(document.asRef())); };
         var asRef = function () { return isBlankNode$1(subjectRef) ? subjectRef.id : subjectRef; };
         var subject = {
             getDocument: function () { return document; },
-            getStatements: function () { return statements; },
+            getTriples: getTriples,
             getString: getString,
             getInteger: getInteger,
             getDecimal: getDecimal,
@@ -377,7 +447,7 @@
             addRef: addRef,
             removeAll: removeAll,
             removeLiteral: function (predicateRef, literal) {
-                pendingDeletions.push(rdflib.st(subjectNode, rdflib.sym(predicateRef), asLiteral(literal), rdflib.sym(document.asRef())));
+                pendingDeletions.push(n3.DataFactory.quad(subjectNode, n3.DataFactory.namedNode(predicateRef), asLiteral(literal), n3.DataFactory.namedNode(document.asRef())));
             },
             removeRef: removeRef,
             setLiteral: function (predicateRef, literal) {
@@ -386,7 +456,7 @@
             },
             setRef: setRef,
             clear: clear,
-            getPendingStatements: function () { return [pendingDeletions, pendingAdditions]; },
+            getPendingTriples: function () { return [pendingDeletions, pendingAdditions]; },
             asRef: asRef,
             // Deprecated aliases, included for backwards compatibility:
             getNodeRef: getRef,
@@ -438,12 +508,20 @@
     }
     function asLiteral(literal) {
         if (literal instanceof Date) {
-            return rdflib.Literal.fromDate(literal);
+            // To align with rdflib, we ignore miliseconds:
+            // https://github.com/linkeddata/rdflib.js/blob/d84af88f367b8b5f617c753d8241c5a2035458e8/src/literal.js#L74
+            var roundedDate = new Date(Date.UTC(literal.getUTCFullYear(), literal.getUTCMonth(), literal.getUTCDate(), literal.getUTCHours(), literal.getUTCMinutes(), literal.getUTCSeconds(), 0));
+            // Truncate the `.000Z` at the end (i.e. the miliseconds), to plain `Z`:
+            var rdflibStyleString = roundedDate.toISOString().replace(/\.000Z$/, 'Z');
+            return n3.DataFactory.literal(rdflibStyleString, n3.DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#dateTime'));
         }
-        if (typeof literal === 'number') {
-            return rdflib.Literal.fromNumber(literal);
+        if (typeof literal === 'number' && Number.isInteger(literal)) {
+            return n3.DataFactory.literal(literal, n3.DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#integer'));
         }
-        return new rdflib.Literal(literal, undefined, undefined);
+        if (typeof literal === 'number' && !Number.isInteger(literal)) {
+            return n3.DataFactory.literal(literal, n3.DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#decimal'));
+        }
+        return n3.DataFactory.literal(literal);
     }
 
     /**
@@ -452,33 +530,36 @@
      * Note that this Document will not be created on the Pod until you call [[save]] on it.
      *
      * @param ref URL where this document should live
-     * @param statements Initial statements to be included in this document
      */
     function createDocument(ref) {
-        return instantiateDocument(ref, { existsOnPod: false });
+        return instantiateDocument(ref, [], { existsOnPod: false });
     }
     /**
      * Retrieve a document containing RDF triples
      *
-     * Note that if you fetch the same document twice, it will be cached; only one
-     * network request will be performed.
-     *
      * @param documentRef Where the document lives.
      * @returns Representation of triples in the document at `uri`.
      */
-    function fetchDocument(documentRef) {
+    function fetchDocument(uri) {
         return __awaiter(this, void 0, void 0, function () {
-            var fetcher, response, aclRef, webSocketRef;
+            var docUrl, documentRef, response, rawDocument, triples, aclRef, webSocketRef;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        fetcher = getFetcher();
-                        return [4 /*yield*/, fetcher.load(documentRef)];
+                        docUrl = new URL(uri);
+                        documentRef = docUrl.origin + docUrl.pathname + docUrl.search;
+                        return [4 /*yield*/, get(documentRef)];
                     case 1:
                         response = _a.sent();
+                        return [4 /*yield*/, response.text()];
+                    case 2:
+                        rawDocument = _a.sent();
+                        return [4 /*yield*/, turtleToTriples(rawDocument, documentRef)];
+                    case 3:
+                        triples = _a.sent();
                         aclRef = extractAclRef(response, documentRef);
                         webSocketRef = response.headers.get('Updates-Via');
-                        return [2 /*return*/, instantiateDocument(documentRef, {
+                        return [2 /*return*/, instantiateDocument(documentRef, triples, {
                                 aclRef: aclRef,
                                 webSocketRef: webSocketRef || undefined,
                                 existsOnPod: true,
@@ -502,13 +583,11 @@
         }
         return aclRef;
     }
-    function instantiateDocument(uri, metadata) {
+    function instantiateDocument(documentRef, triples, metadata) {
         var _this = this;
-        var docUrl = new URL(uri);
-        // Remove fragment identifiers (e.g. `#me`) from the URI:
-        var documentRef = docUrl.origin + docUrl.pathname + docUrl.search;
-        var statements = getStore().statementsMatching(null, null, null, rdflib.sym(documentRef));
         var asRef = function () { return documentRef; };
+        var store = new n3.Store();
+        store.addQuads(triples);
         var getAclRef = function () {
             return metadata.aclRef || null;
         };
@@ -517,13 +596,15 @@
         };
         var accessedSubjects = {};
         var getSubject = function (subjectRef) {
+            // Allow relative URLs to access Subjects in this Document:
+            subjectRef = new URL(subjectRef, documentRef).href;
             if (!accessedSubjects[subjectRef]) {
                 accessedSubjects[subjectRef] = initialiseSubject(tripleDocument, subjectRef);
             }
             return accessedSubjects[subjectRef];
         };
         var findSubject = function (predicateRef, objectRef) {
-            var findSubjectRef = withDocumentSingular(findSubjectInStatements, documentRef, statements);
+            var findSubjectRef = withDocumentSingular(findSubjectInStore, documentRef, store);
             var subjectRef = findSubjectRef(predicateRef, objectRef);
             if (!subjectRef || !isReference(subjectRef)) {
                 return null;
@@ -531,7 +612,7 @@
             return getSubject(subjectRef);
         };
         var findSubjects = function (predicateRef, objectRef) {
-            var findSubjectRefs = withDocumentPlural(findSubjectsInStatements, documentRef, statements);
+            var findSubjectRefs = withDocumentPlural(findSubjectsInStore, documentRef, store);
             var subjectRefs = findSubjectRefs(predicateRef, objectRef);
             return subjectRefs.filter(isReference).map(getSubject);
         };
@@ -550,16 +631,19 @@
         var save = function (subjects) {
             if (subjects === void 0) { subjects = Object.values(accessedSubjects); }
             return __awaiter(_this, void 0, void 0, function () {
-                var relevantSubjects, _a, allDeletions, allAdditions, response, aclRef, webSocketRef;
+                var relevantSubjects, _a, allDeletions, allAdditions, newTriples, response, aclRef, webSocketRef;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
                             relevantSubjects = subjects.filter(function (subject) { return subject.getDocument().asRef() === documentRef; });
                             _a = relevantSubjects.reduce(function (_a, subject) {
                                 var deletionsSoFar = _a[0], additionsSoFar = _a[1];
-                                var _b = subject.getPendingStatements(), deletions = _b[0], additions = _b[1];
+                                var _b = subject.getPendingTriples(), deletions = _b[0], additions = _b[1];
                                 return [deletionsSoFar.concat(deletions), additionsSoFar.concat(additions)];
                             }, [[], []]), allDeletions = _a[0], allAdditions = _a[1];
+                            newTriples = getTriples()
+                                .concat(allAdditions)
+                                .filter(function (tripleToDelete) { return allDeletions.findIndex(function (triple) { return triple.equals(tripleToDelete); }) === -1; });
                             if (!!metadata.existsOnPod) return [3 /*break*/, 2];
                             return [4 /*yield*/, create(documentRef, allAdditions)];
                         case 1:
@@ -574,18 +658,19 @@
                             }
                             metadata.existsOnPod = true;
                             return [3 /*break*/, 4];
-                        case 2: return [4 /*yield*/, update(allDeletions, allAdditions)];
+                        case 2: return [4 /*yield*/, update(documentRef, allDeletions, allAdditions)];
                         case 3:
                             _b.sent();
                             _b.label = 4;
-                        case 4:
-                        // Instantiate a new TripleDocument that includes the updated Statements:
-                        return [2 /*return*/, instantiateDocument(documentRef, metadata)];
+                        case 4: 
+                        // Instantiate a new TripleDocument that includes the updated Triples:
+                        return [2 /*return*/, instantiateDocument(documentRef, newTriples, metadata)];
                     }
                 });
             });
         };
-        var getStatements = function () { return statements; };
+        var getStore = function () { return store; };
+        var getTriples = function () { return store.getQuads(null, null, null, n3.DataFactory.namedNode(documentRef)); };
         var tripleDocument = {
             addSubject: addSubject,
             removeSubject: removeSubject,
@@ -597,21 +682,23 @@
             getWebSocketRef: getWebSocketRef,
             asRef: asRef,
             save: save,
-            getStatements: getStatements,
+            getStore: getStore,
+            getTriples: getTriples,
             // Deprecated aliases, included for backwards compatibility:
             asNodeRef: asRef,
             getAcl: getAclRef,
+            getStatements: getTriples,
         };
         return tripleDocument;
     }
-    var withDocumentSingular = function (getEntityFromStatements, document, statements) {
+    var withDocumentSingular = function (getEntityFromTriples, document, store) {
         return function (knownEntity1, knownEntity2) {
-            return getEntityFromStatements(statements, knownEntity1, knownEntity2, document);
+            return getEntityFromTriples(store, knownEntity1, knownEntity2, document);
         };
     };
-    var withDocumentPlural = function (getEntitiesFromStatements, document, statements) {
+    var withDocumentPlural = function (getEntitiesFromTriples, document, store) {
         return function (knownEntity1, knownEntity2) {
-            return getEntitiesFromStatements(statements, knownEntity1, knownEntity2, document);
+            return getEntitiesFromTriples(store, knownEntity1, knownEntity2, document);
         };
     };
     /**
@@ -631,8 +718,8 @@
     /**
      * @ignore Tripledoc's methods should be explicit about whether they return or accept a Literal, so
      *         this is merely an internal utility function, rather than a public API.
-     * @param param A value that might or might not be an RDFlib Literal.
-     * @returns Whether `param` is an RDFlib Literal.
+     * @param param A value that might or might not be an N3 Literal.
+     * @returns Whether `param` is an N3 Literal.
      */
     function isLiteral(param) {
         return (typeof param === 'object') &&
@@ -643,38 +730,38 @@
     /**
      * @ignore Tripledoc's methods should be explicit about whether they return or accept a specific
      *         type, so this is merely an internal utility function, rather than a public API.
-     * @param param A value that might or might not be an RDFlib string Literal.
-     * @returns Whether `param` is an RDFlib string Literal.
+     * @param param A value that might or might not be an N3 string Literal.
+     * @returns Whether `param` is an N3 string Literal.
      */
     function isStringLiteral(param) {
-        return isLiteral(param) && param.datatype.uri === 'http://www.w3.org/2001/XMLSchema#string';
+        return isLiteral(param) && param.datatype.id === 'http://www.w3.org/2001/XMLSchema#string';
     }
     /**
      * @ignore Tripledoc's methods should be explicit about whether they return or accept a specific
      *         type, so this is merely an internal utility function, rather than a public API.
-     * @param param A value that might or might not be an RDFlib integer Literal.
-     * @returns Whether `param` is an RDFlib integer Literal.
+     * @param param A value that might or might not be an N3 integer Literal.
+     * @returns Whether `param` is an N3 integer Literal.
      */
     function isIntegerLiteral(param) {
-        return isLiteral(param) && param.datatype.uri === 'http://www.w3.org/2001/XMLSchema#integer';
+        return isLiteral(param) && param.datatype.id === 'http://www.w3.org/2001/XMLSchema#integer';
     }
     /**
      * @ignore Tripledoc's methods should be explicit about whether they return or accept a specific
      *         type, so this is merely an internal utility function, rather than a public API.
-     * @param param A value that might or might not be an RDFlib decimal Literal.
-     * @returns Whether `param` is an RDFlib decimal Literal.
+     * @param param A value that might or might not be an N3 decimal Literal.
+     * @returns Whether `param` is an N3 decimal Literal.
      */
     function isDecimalLiteral(param) {
-        return isLiteral(param) && param.datatype.uri === 'http://www.w3.org/2001/XMLSchema#decimal';
+        return isLiteral(param) && param.datatype.id === 'http://www.w3.org/2001/XMLSchema#decimal';
     }
     /**
      * @ignore Tripledoc's methods should be explicit about whether they return or accept a specific
      *         type, so this is merely an internal utility function, rather than a public API.
-     * @param param A value that might or might not be an RDFlib DateTime Literal.
-     * @returns Whether `param` is an RDFlib DateTime Literal.
+     * @param param A value that might or might not be an N3 DateTime Literal.
+     * @returns Whether `param` is an N3 DateTime Literal.
      */
     function isDateTimeLiteral(param) {
-        return isLiteral(param) && param.datatype.uri === 'http://www.w3.org/2001/XMLSchema#dateTime';
+        return isLiteral(param) && param.datatype.id === 'http://www.w3.org/2001/XMLSchema#dateTime';
     }
     /**
      * @ignore Deprecated function.
@@ -706,9 +793,7 @@
     exports.create = create;
     exports.createDocument = createDocument;
     exports.fetchDocument = fetchDocument;
-    exports.getFetcher = getFetcher;
-    exports.getStore = getStore;
-    exports.getUpdater = getUpdater;
+    exports.get = get;
     exports.initialiseSubject = initialiseSubject;
     exports.isBlankNode = isBlankNode$1;
     exports.isDateTimeLiteral = isDateTimeLiteral;

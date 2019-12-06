@@ -94,6 +94,9 @@ class NotepodComponent extends LitElement {
         app.friends = app.person.getAllRefs(app.FOAF('knows'))
         console.log("Friends",app.friends)
         app.initNotePod()
+        app.agent.send('Profile',{action: "usernameChanged", username: app.username})
+        app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
+
       },
       err => {
         console.log(err)

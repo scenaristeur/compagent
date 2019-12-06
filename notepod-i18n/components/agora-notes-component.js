@@ -40,9 +40,6 @@ class AgoraNotesComponent extends LitElement {
           case "langChanged":
           app.lang = message.lang;
           app.requestUpdate();
-          case "doSomething":
-          // code block
-          app.doSomething(message.params)
           break;
           default:
           // code block

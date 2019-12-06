@@ -7,6 +7,8 @@ import './login-component.js'
 import './notepod-component.js'
 import './i18n-component.js'
 import './agora-notes-component.js'
+import './profile-component.js'
+import './friends-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -24,8 +26,8 @@ class AppComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number},
-      webId: {type: String}
+      webId: {type: String},
+      count: {type: Number}
     };
   }
 
@@ -33,10 +35,8 @@ class AppComponent extends LitElement {
     super();
     this.message = 'If you want to post, you must login';
     this.name = "unknown"
-    this.count = 0;
     this.webId = null
-
-
+    this.count = 0;
   }
 
   firstUpdated(changedProperties) {
@@ -59,6 +59,19 @@ class AppComponent extends LitElement {
       }
     };
   }
+
+
+  sessionChanged(webId){
+    this.webId = webId
+  }
+
+  clickHandler(event) {
+    this.count++
+    //console.log(event.target);
+    //  console.log(this.agent)
+    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+  }
+
 
 
   render() {
@@ -112,6 +125,7 @@ class AppComponent extends LitElement {
 
     <bs-navbar navbar-light expand-lg class="bg-light">
     <bs-navbar-brand-link>Poddy</bs-navbar-brand-link>
+    <i18n-component name="I18n"></i18n-component>
     <bs-navbar-toggler>
     <bs-navbar-toggler-icon></bs-navbar-toggler-icon>
     </bs-navbar-toggler>
@@ -152,7 +166,7 @@ class AppComponent extends LitElement {
     <login-component name="Login"></login-component>
     </bs-nav-item>
     <bs-nav-item>
-    <i18n-component name="I18n"></i18n-component>
+
     </bs-nav-item>
     </bs-navbar-collapse>
 
@@ -167,9 +181,24 @@ class AppComponent extends LitElement {
 
     <p class="lead">${i18next.t('info_app1')}</p>
     <hr class="my-4">
+
     <p>  ${this.webId != null ?
       html `
-      <p> ${this.webId}</p>
+
+
+
+
+      <bs-container fluid>
+      <bs-row>
+      <bs-col  sm-3 demo>
+      <profile-component name="Profile"></profile-component>
+      </bs-col>
+      <bs-col>
+      <friends-component name="Friends"></friends-component>
+      </bs-col>
+
+      </bs-row>
+      </bs-container>
       <!--
       <br>
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
@@ -198,7 +227,7 @@ class AppComponent extends LitElement {
     <notepod-component name="Notepod"></notepod-component>
     </bs-column>
     <bs-column sm demo>
-<agora-notes-component name="AgoraNotes"></agora-notes-component>
+    <agora-notes-component name="AgoraNotes"></agora-notes-component>
 
     </bs-column>
     </bs-row>
@@ -234,19 +263,6 @@ class AppComponent extends LitElement {
     `;
   }
 
-
-
-
-  sessionChanged(webId){
-    this.webId = webId
-  }
-
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    //  console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
 }
 
 // Register the new element with the browser.

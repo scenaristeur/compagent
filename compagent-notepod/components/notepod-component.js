@@ -149,7 +149,7 @@ class NotepodComponent extends LitElement {
     addNote(){
       var app = this
       var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
-      console.log(textarea)
+    //  console.log(textarea)
       var note = textarea.value.trim()
       textarea.value = ""
       console.log(note)
