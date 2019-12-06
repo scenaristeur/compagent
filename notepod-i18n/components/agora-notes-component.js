@@ -148,11 +148,7 @@ class AgoraNotesComponent extends LitElement {
             console.log("msg",msg);
             console.log("data",msg.data)
             //  document.getElementById("notification").value = now+"[notification] "+msg.data+"\n"+document.getElementById("notification").value;
-
-            setTimeout(function () {
-              //petit delai avant update
-              app.getAgoraData()
-            }, 1000);
+            app.getAgoraData()
 
           }
           else{console.log("message inconnu",msg)}

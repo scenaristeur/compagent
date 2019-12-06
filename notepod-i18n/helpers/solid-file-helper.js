@@ -28,7 +28,7 @@ export class SolidFileHelper {
       return folder
     }, err => {
       console.log(err) ;
-    alert(err)
+      alert(err)
       return err;
     });
   }
@@ -41,10 +41,27 @@ export class SolidFileHelper {
       return body
     }, err => {
       console.log(err) ;
-        alert(err)
+      alert(err)
       return err;
     });
   }
+
+
+  fetchAndParse(uri, contentType = 'application/json'){
+    console.log("fetch",uri)
+    return  this.fileClient.fetchAndParse(uri, contentType).then(graph => {
+      console.log("graph",graph)
+      //   console.log(`File content is : ${body}.`);
+      //  let something = graph.any(someSubject, somePredicate);
+      return graph
+    }, err => {
+      console.log(err) ;
+      alert(err)
+      return err;
+    });
+  }
+
+
 
   updateFile(url, newContent, contentType){
     return this.fileClient.updateFile( url, newContent, contentType ).then(
@@ -53,7 +70,7 @@ export class SolidFileHelper {
         return `Updated ${url}.`
       }, err => {
         console.log(err)
-          alert(err)
+        alert(err)
         return err
       });
     }
