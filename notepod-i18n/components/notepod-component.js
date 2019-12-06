@@ -166,23 +166,15 @@ class NotepodComponent extends LitElement {
 
     addNote(){
       var app = this
-      var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
-      console.log(textarea)
-      var note = textarea.value.trim()
-      textarea.value = ""
-      console.log(note)
 
-      var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
-      console.log("ca",checkAgora)
       console.log(app.notesList)
       if (app.notesList == undefined){
         alert(i18next.t('must_log'))
       }else{
-
-
-        //var date = new Date().toUTCString();
-        //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
-        //  console.log(date)
+        var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
+        var note = textarea.value.trim()
+        textarea.value = ""
+      //  console.log(note)
         const newNote = app.notesList.addSubject();
         var date = new Date(Date.now())
         // Indicate that the Subject is a schema:TextDigitalDocument:
@@ -194,6 +186,7 @@ class NotepodComponent extends LitElement {
 
         app.notesList.save([newNote]).then(
           success=>{
+            var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
             if(checkAgora == true){
               app.updateAgora(note, date, newNote.asNodeRef())
             }
