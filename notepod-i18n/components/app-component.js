@@ -6,6 +6,7 @@ import './messages-component.js'
 import './login-component.js'
 import './notepod-component.js'
 import './i18n-component.js'
+import './agora-notes-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -169,15 +170,13 @@ class AppComponent extends LitElement {
     <p>  ${this.webId != null ?
       html `
       <p> ${this.webId}</p>
+      <!--
       <br>
-      <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-
+      <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
       `
       :html `${i18next.t('info_app2')}
       ${i18next.t('info_app3')}
-
       <a href="./assets/images/auth.png" target="_blank">${i18next.t('screenshot')}</a>.
-
       `
 
     }</p>
@@ -198,7 +197,10 @@ class AppComponent extends LitElement {
     <bs-column sm-8 demo>
     <notepod-component name="Notepod"></notepod-component>
     </bs-column>
-    <bs-column sm demo>sm-4</bs-column>
+    <bs-column sm demo>
+<agora-notes-component name="AgoraNotes"></agora-notes-component>
+
+    </bs-column>
     </bs-row>
     <bs-row>
     <bs-column sm demo>sm</bs-column>
