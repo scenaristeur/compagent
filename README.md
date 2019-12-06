@@ -7,3 +7,6 @@ https://github.com/nik-christou/lit-element-bootstrap
 https://www.npmjs.com/package/@lit-element-bootstrap/badge
 https://unpkg.com/@lit-element-bootstrap/badge@latest/unpkg/index.bundled.js
 https://www.sitepoint.com/build-responsive-bootstrap-website/
+
+
+# https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm
