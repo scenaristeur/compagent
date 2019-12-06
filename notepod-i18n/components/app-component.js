@@ -110,7 +110,7 @@ class AppComponent extends LitElement {
     <bs-container fluid>
 
     <bs-navbar navbar-light expand-lg class="bg-light">
-    <bs-navbar-brand-link>Navbar</bs-navbar-brand-link>
+    <bs-navbar-brand-link>Poddy</bs-navbar-brand-link>
     <bs-navbar-toggler>
     <bs-navbar-toggler-icon></bs-navbar-toggler-icon>
     </bs-navbar-toggler>

@@ -36,7 +36,9 @@ class I18nComponent extends LitElement {
             "info_app1": "This is a simple app to post some notes on your POD.",
             "info_app2": "If you want to post, you must login.",
             "info_app3": "And check all authorizations to this website as shown on this",
-            "screenshot": "screenshot"
+            "screenshot": "screenshot",
+            "agora_publish": "Publish to Agora",
+            "must_log" : "You must login to be able to post !"
           }
         },
         fr: {
@@ -51,7 +53,9 @@ class I18nComponent extends LitElement {
             "info_app1": "Ceci est une petite app pour poster des notes sur votre POD.",
             "info_app2": "Si vous voulez poster, vous devez vous connecter.",
             "info_app3": "Et cochez toutes les autorisations comme dans cette",
-            "screenshot": "capture d'écran"
+            "screenshot": "capture d'écran",
+            "agora_publish": "Publier sur l'Agora",
+            "must_log" : "Vous devez vous connecter pour pouvoir poster !"
           }
         },
         de: {
@@ -66,7 +70,9 @@ class I18nComponent extends LitElement {
             "info_app1": "Dies ist eine einfache App, mit der Sie einige Notizen auf Ihrem POD veröffentlichen können.",
             "info_app2": "Wenn Sie posten möchten, müssen Sie sich anmelden.",
             "info_app3": "Und überprüfen Sie alle Berechtigungen wie in diesem",
-            "screenshot": "Screenshot"
+            "screenshot": "Screenshot",
+            "agora_publish": "In Agora veröffentlichen",
+            "must_log" : "Sie müssen sich anmelden, um einen Beitrag schreiben zu können!"
           }
         },
         es: {
@@ -81,7 +87,9 @@ class I18nComponent extends LitElement {
             "info_app1": "Esta es una aplicación simple para publicar algunas notas en tu POD.",
             "info_app2": "Si desea publicar, debe iniciar sesión.",
             "info_app3": "Y verifique todos los permisos como en esta",
-            "screenshot": "captura de pantalla"
+            "screenshot": "captura de pantalla",
+            "agora_publish": "Publicar en Agora",
+            "must_log" : "¡Debes iniciar sesión para poder publicar!"
           }
         }
       }

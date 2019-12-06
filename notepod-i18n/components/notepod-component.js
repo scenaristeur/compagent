@@ -160,27 +160,36 @@ class NotepodComponent extends LitElement {
       var note = textarea.value.trim()
       textarea.value = ""
       console.log(note)
-      //var date = new Date().toUTCString();
-      //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
-      //  console.log(date)
-      const newNote = app.notesList.addSubject();
-      // Indicate that the Subject is a schema:TextDigitalDocument:
-      newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
-      // Set the Subject's `schema:text` to the actual note contents:
-      newNote.addLiteral(app.SCHEMA('text'), note);
-      // Store the date the note was created (i.e. now):
-      newNote.addLiteral(app.SCHEMA('dateCreated'), new Date(Date.now()))
 
-      app.notesList.save([newNote]).then(
-        success=>{
-          console.log("success")
-          app.initNotePod()
-        },
-        err=>{
-          console.log(err)
-        });
+      var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
+      console.log("ca",checkAgora)
+
+      if (app.noteList == undefined){
+        alert(i18next.t('must_log'))
+      }else{
 
 
+        //var date = new Date().toUTCString();
+        //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
+        //  console.log(date)
+        const newNote = app.notesList.addSubject();
+        // Indicate that the Subject is a schema:TextDigitalDocument:
+        newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
+        // Set the Subject's `schema:text` to the actual note contents:
+        newNote.addLiteral(app.SCHEMA('text'), note);
+        // Store the date the note was created (i.e. now):
+        newNote.addLiteral(app.SCHEMA('dateCreated'), new Date(Date.now()))
+
+        app.notesList.save([newNote]).then(
+          success=>{
+            console.log("success")
+            app.initNotePod()
+          },
+          err=>{
+            console.log(err)
+          });
+
+        }
       }
 
 
@@ -243,7 +252,7 @@ class NotepodComponent extends LitElement {
 
 
           return html`
-          <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
+          <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
 
           <!-- Card Body -->
           <!--  <div class="card-body">
@@ -261,14 +270,20 @@ class NotepodComponent extends LitElement {
 
 
           <bs-form-group>
-          <bs-form-label slot="label">Example textarea</bs-form-label>
-          <bs-form-textarea id ="notearea" rows="10" slot="control"></bs-form-textarea>
+          <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
+          <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
           </bs-form-group>
 
 
           <br>
 
           <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
+
+          <bs-form-check-group>
+          <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
+          <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
+          </bs-form-check-group>
+
           <br>
           <p>
 
