@@ -83,6 +83,10 @@ class AgoraNotesComponent extends LitElement {
           app.notesList = notesList;
 
           console.log("app.notesList",app.notesList)
+
+
+
+
           app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
           //  console.log("notesUri",app.notesUri)
           app.notes = []
@@ -106,8 +110,57 @@ class AgoraNotesComponent extends LitElement {
 
           app.notes.reverse()
           console.log(app.notes)
+
+
+          if (app.socket == undefined){
+            app.subscribe()
+          }else{
+            console.log("socket exist deja")
+          }
+
         })
       }
+
+      subscribe(){
+        var app = this
+        //https://github.com/scenaristeur/spoggy-chat-solid/blob/master/index.html
+        var websocket = this.notesList.getWebSocketRef();
+        console.log("WEBSOCK",websocket)
+        app.socket = new WebSocket(websocket);
+        console.log ("socket",app.socket)
+        app.socket.onopen = function() {
+          const d = new Date();
+          var now = d.toLocaleTimeString(app.lang) + `.${d.getMilliseconds()}`
+          this.send('sub '+app.agoraNotesListUrl);
+          app.agent.send('Messages', now+"[souscription] "+app.agoraNotesListUrl)
+          //  this.send('sub https://spoggy.solid.community/public/test/fichier2.ttl');
+          /*  this.send('sub https://spoggy.solid.community/public/test');
+          this.send('sub https://spoggy.solid.community/public/test/index.ttl');*/
+          //  document.getElementById("notification").value = now+"[souscription] "+whiteboardUrl+"\n"+document.getElementById("notification").value;
+          //  document.getElementById("notification").value = now+"[souscription] fichier2.ttl\n"+document.getElementById("notification").value;
+          console.log("OPENED SOCKET",app.socket)
+        };
+        app.socket.onmessage = function(msg) {
+          if (msg.data && msg.data.slice(0, 3) === 'pub') {
+            // resource updated, refetch resource
+            const d = new Date();
+            var now = d.toLocaleTimeString(app.lang) + `.${d.getMilliseconds()}`
+            console.log("msg",msg);
+            console.log("data",msg.data)
+            //  document.getElementById("notification").value = now+"[notification] "+msg.data+"\n"+document.getElementById("notification").value;
+
+            setTimeout(function () {
+              //petit delai avant update
+              app.getAgoraData()
+            }, 1000);
+
+          }
+          else{console.log("message inconnu",msg)}
+        };
+      }
+
+
+
 
     }
 
