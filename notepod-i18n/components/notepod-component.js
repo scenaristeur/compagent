@@ -40,6 +40,7 @@ class NotepodComponent extends LitElement {
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 
   }
@@ -186,9 +187,8 @@ class NotepodComponent extends LitElement {
 
         app.notesList.save([newNote]).then(
           success=>{
-            console.log("success",success)
             if(checkAgora == true){
-              app.updateAgora(note, date)
+              app.updateAgora(note, date, newNote.asNodeRef())
             }
             app.initNotePod()
           },
@@ -204,7 +204,7 @@ class NotepodComponent extends LitElement {
 
       }
 
-      updateAgora(note,date){
+      updateAgora(note,date, subject){
         var app = this;
         console.log("app.agoraNotesListUrl",app.agoraNotesListUrl)
         Tripledoc.fetchDocument(app.agoraNotesListUrl).then(
@@ -218,6 +218,9 @@ class NotepodComponent extends LitElement {
             newNote.addLiteral(app.SCHEMA('text'), note);
             // Store the date the note was created (i.e. now):
             newNote.addLiteral(app.SCHEMA('dateCreated'), date)
+            // add ref to user note
+            newNote.addRef(app.RDFS('seeAlso'), subject);
+            newNote.addRef(app.SCHEMA('creator'), app.webId);
 
             app.agoraNotesList.save([newNote]).then(
               success=>{

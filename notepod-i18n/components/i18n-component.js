@@ -142,6 +142,7 @@ class I18nComponent extends LitElement {
     this.agent.send('Notepod', {action:"langChanged", lang: this.lang });
     this.agent.send('Login', {action:"langChanged", lang: this.lang });
     this.agent.send('Login2', {action:"langChanged", lang: this.lang });
+    this.agent.send('AgoraNotes', {action:"langChanged", lang: this.lang });
   }
 
 }
