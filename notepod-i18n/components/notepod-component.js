@@ -153,7 +153,8 @@ class NotepodComponent extends LitElement {
           //  console.log(text, date)
           var note = {}
           note.text = text;
-          note.date = date
+          note.date = date;
+        //  note.uri = nuri;
           //text = nuri.getAllStrings()*/
           app.notes = [... app.notes, note]
         })
@@ -285,6 +286,7 @@ class NotepodComponent extends LitElement {
             ${notes.map((n) => html`
               <li>
               ${n.text}, <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small><br>
+          <!--    <a href="${n.uri}" _target="_blank">${n.uri}</a>-->
               </li>
               `)}
               </ul>
