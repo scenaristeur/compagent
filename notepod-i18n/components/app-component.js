@@ -17,6 +17,7 @@ import  '../vendor/@lit-element-bootstrap/bs-dropdown.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-jumbotron.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-collapse.bundle.js';
 
 
 
@@ -137,8 +138,8 @@ class AppComponent extends LitElement {
     ${i18next.t('home')}
     </bs-nav-link>
     </bs-nav-item>
-<!--
-<a href="#notepod">Notepod</a>
+    <!--
+    <a href="#notepod">Notepod</a>
     <bs-nav-item><bs-nav-link><a href="#notepod">Notepod</a></bs-nav-link></bs-nav-item>
     <bs-nav-item><bs-nav-link><a href="#agoranotes">Agora Notes</a></bs-nav-link></bs-nav-item>-->
 
@@ -186,26 +187,65 @@ class AppComponent extends LitElement {
     <p class="lead">${i18next.t('info_app1')}</p>
     <hr class="my-4">
 
+
+
+
+
+
+
+
+
+
     <p>  ${this.webId != null ?
       html `
 
-
-
-
-      <bs-container fluid>
-      <bs-row>
-      <bs-col  sm-3 demo>
+      <bs-accordion>
+      <bs-card>
+      <bs-card-header slot="card-header">
+      <bs-collapse-toggle target="collapseOne">
+      <h5 class="mb-0">
+      <bs-button link>Profile</bs-button>
+      </h5>
+      </bs-collapse-toggle>
+      </bs-card-header>
+      <bs-collapsable collapsed id="collapseOne">
+      <bs-card-body>
       <profile-component name="Profile"></profile-component>
-      </bs-col>
-      <bs-col  sm-3 demo>
+      </bs-card-body>
+      </bs-collapsable>
+      </bs-card>
+      <bs-card>
+      <bs-card-header slot="card-header">
+      <bs-collapse-toggle target="collapseTwo">
+      <h5 class="mb-0">
+      <bs-button link>Friends</bs-button>
+      </h5>
+      </bs-collapse-toggle>
+      </bs-card-header>
+      <bs-collapsable collapsed id="collapseTwo">
+      <bs-card-body>
       <friends-component name="Friends"></friends-component>
-      </bs-col>
-      <bs-col  sm-3 demo>
+      </bs-card-body>
+      </bs-collapsable>
+      </bs-card>
+      <bs-card>
+      <bs-card-header slot="card-header">
+      <bs-collapse-toggle target="collapseThree">
+      <h5 class="mb-0">
+      <bs-button link>Storage</bs-button>
+      </h5>
+      </bs-collapse-toggle>
+      </bs-card-header>
+      <bs-collapsable collapsed id="collapseThree">
+      <bs-card-body>
       <storage-component name="Storage"></storage-component>
-      </bs-col>
+      </bs-card-body>
+      </bs-collapsable>
+      </bs-card>
+      </bs-accordion>
 
-      </bs-row>
-      </bs-container>
+
+
       <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>
       <!--
       <br>
