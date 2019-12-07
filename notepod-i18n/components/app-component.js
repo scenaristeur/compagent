@@ -119,6 +119,7 @@ class AppComponent extends LitElement {
       border-color: rgba(86, 61, 124, 0.2);
       border-image: initial;
     }
+    
 
     </style>
 
@@ -245,8 +246,8 @@ class AppComponent extends LitElement {
       </bs-accordion>
 
 
-
-      <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>
+<!--
+      <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>-->
       <!--
       <br>
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
