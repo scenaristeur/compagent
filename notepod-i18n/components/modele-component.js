@@ -28,24 +28,13 @@ class ModeleComponent extends LitElement {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
           case "doSomething":
-          // code block
           app.doSomething(message.params)
           break;
           default:
-          // code block
           console.log("Unknown action ",message)
         }
       }
     };
-  }
-
-  render() {
-    return html`
-    <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-    `;
   }
 
   doSomething(params){
@@ -58,6 +47,16 @@ class ModeleComponent extends LitElement {
     console.log(this.agent)
     this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
   }
+
+  render() {
+    return html`
+    <h1>${this.name}</h1>
+    <p>${this.message}</p>
+    <p>${this.count}</p>
+    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+    `;
+  }
+
 }
 
 // Register the new element with the browser.

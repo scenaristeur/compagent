@@ -29,7 +29,6 @@ class StorageComponent extends LitElement {
     var app = this;
     this.agent = new HelloAgent(this.name);
     this.agent.receive = function(from, message) {
-      console.error(message)
       if (message.hasOwnProperty("action")){
         switch(message.action) {
           case "storageChanged":

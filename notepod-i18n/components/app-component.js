@@ -4,6 +4,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 
 import './messages-component.js'
 import './login-component.js'
+import './webid-component.js'
 import './notepod-component.js'
 import './i18n-component.js'
 import './agora-notes-component.js'
@@ -119,11 +120,11 @@ class AppComponent extends LitElement {
       border-color: rgba(86, 61, 124, 0.2);
       border-image: initial;
     }
-    
+
 
     </style>
 
-
+<webid-component name="Webid"></webid-component>
     <bs-container fluid>
 
     <bs-navbar navbar-light expand-lg class="bg-light">

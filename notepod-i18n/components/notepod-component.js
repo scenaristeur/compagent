@@ -15,12 +15,10 @@ class NotepodComponent extends LitElement {
       message: { type: String },
       name: {type: String},
       source: {type: String},
-      webId: {type: String},
-      username: {type: String},
-      friends: {type: Array},
       notes: {type: Array},
       lang: {type: String},
-      agoraNotesListUrl: {type: String}
+      agoraNotesListUrl: {type: String},
+      person: {type: Object}
     };
   }
 
@@ -28,11 +26,10 @@ class NotepodComponent extends LitElement {
     super();
     this.message = 'Hello world! From my-element';
     this.name = "unknown"
+    this.person = {}
     this.source = "unknown"
-    this.username = "unknown"
-    this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
-    this.friends = []
-    this.notes = []
+      this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
+      this.notes = []
     this.lang=navigator.language
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
@@ -49,40 +46,45 @@ class NotepodComponent extends LitElement {
     this.agent = new HelloAgent(this.name);
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
-
         switch(message.action) {
           case "sessionChanged":
-          // code block
           app.sessionChanged(message.webId)
+          break;
+          case "personChanged":
+          app.personChanged(message.person)
           break;
           case "langChanged":
           app.lang = message.lang;
           app.requestUpdate();
           break;
           default:
-          // code block
           console.log("Unknown action ",message)
         }
-
       }
     };
   }
+
+
+personChanged(person){
+  this.person=person;
+this.initNotePod()
+}
+
 
   sessionChanged(webId){
     this.webId = webId
 
     if (this.webId != null){
-      this.getUserData()
+      //this.getUserData()
+      //
     }else{
       this.notes = []
     }
   }
 
-
+/*
   getUserData(){
     var app = this;
-    //  showFileInConsole(app.webId)
-    //showFileInConsole('https://vincentt.inrupt.net/profile/card')
     Tripledoc.fetchDocument(app.webId).then(
       doc => {
         //    console.log("DOC",doc)
@@ -106,7 +108,7 @@ class NotepodComponent extends LitElement {
         console.log(err)
       }
     );
-  }
+  }*/
 
   initNotePod(){
     var app = this;
@@ -134,13 +136,12 @@ class NotepodComponent extends LitElement {
 
   getNotes(){
     var app = this;
-    console.log("getNotes at ",app.notesListUrl)
-    //  showFileInConsole(app.notesListUrl)
+  //  console.log("getNotes at ",app.notesListUrl)
     Tripledoc.fetchDocument(app.notesListUrl).then(
       notesList => {
         app.notesList = notesList;
 
-        console.log("app.notesList",app.notesList)
+    //    console.log("app.notesList",app.notesList)
         app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
         //  console.log("notesUri",app.notesUri)
         app.notes = []
@@ -168,7 +169,7 @@ class NotepodComponent extends LitElement {
     addNote(){
       var app = this
 
-      console.log(app.notesList)
+    //  console.log(app.notesList)
       if (app.notesList == undefined){
         alert(i18next.t('must_log'))
       }else{
@@ -207,11 +208,11 @@ class NotepodComponent extends LitElement {
 
       updateAgora(note,date, subject){
         var app = this;
-        console.log("app.agoraNotesListUrl",app.agoraNotesListUrl)
+      //  console.log("app.agoraNotesListUrl",app.agoraNotesListUrl)
         Tripledoc.fetchDocument(app.agoraNotesListUrl).then(
           agoraNotesList => {
             app.agoraNotesList = agoraNotesList;
-            console.log("app.agoraNotesList",app.agoraNotesList)
+          //  console.log("app.agoraNotesList",app.agoraNotesList)
             const newNote = app.agoraNotesList.addSubject();
             // Indicate that the Subject is a schema:TextDigitalDocument:
             newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
@@ -238,7 +239,7 @@ class NotepodComponent extends LitElement {
             var app = this;
             console.log("creation a revoir")
             const storage = profile.getRef(app.SPACE('storage'))
-            console.log("storage",storage)
+        //    console.log("storage",storage)
             app.agent.send('Storage',{action: "storageChanged", storage: storage})
 
             const notesListUrl = storage + 'public/notes.ttl';
@@ -275,75 +276,37 @@ class NotepodComponent extends LitElement {
             */
           }
 
-
-
-
-
           render() {
             const noteList = (notes) => html`
-            Note List with template (${notes.length})<br>
+            Note List (${notes.length})<br>
             <ul>
             ${notes.map((n) => html`
               <li>
               ${n.text}, <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small><br>
-          <!--    <a href="${n.uri}" _target="_blank">${n.uri}</a>-->
+              <a href="${n.uri}" _target="_blank">${n.uri}</a>
               </li>
               `)}
               </ul>
               `;
 
-
-
               return html`
               <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-
-              <!-- Card Body -->
-              <!--  <div class="card-body">
-              <p>Name : ${this.name}</p>
-              <p>UserName : ${this.username}</p>
-              <p>WebId : ${this.webId}</p>
-              <p> Friends : ${this.friends.length}</p>
-
-              <pre class="pre-scrollable">
-              <ul id="messageslist">
-              ${this.friends.map((f) => html`<li>${f}</li>`)}
-              </ul>
-              </pre>-->
-
-
-
               <bs-form-group>
               <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
               <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
               </bs-form-group>
-
-
               <br>
-
               <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
-
               <bs-form-check-group>
               <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
               <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
               </bs-form-check-group>
-
               <br>
               <p>
-
               ${noteList(this.notes)}
               </p>
-
-
-
               `;
             }
-
-            clickHandler(event) {
-              //console.log(event.target);
-              console.log(this.agent)
-              this.agent.send('Messages', 'Hello agent1!');
-            }
-
           }
 
           // Register the new element with the browser.
