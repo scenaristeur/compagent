@@ -5,12 +5,14 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import './messages-component.js'
 import './login-component.js'
 import './webid-component.js'
-import './notepod-component.js'
 import './i18n-component.js'
-import './agora-notes-component.js'
 import './profile-component.js'
 import './friends-component.js'
 import './storage-component.js'
+import './notepod-component.js'
+import './agora-notes-component.js'
+import './annonce-component.js'
+import './agora-annonce-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -124,7 +126,7 @@ class AppComponent extends LitElement {
 
     </style>
 
-<webid-component name="Webid"></webid-component>
+    <webid-component name="Webid"></webid-component>
     <bs-container fluid>
 
     <bs-navbar navbar-light expand-lg class="bg-light">
@@ -247,7 +249,7 @@ class AppComponent extends LitElement {
       </bs-accordion>
 
 
-<!--
+      <!--
       <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>-->
       <!--
       <br>
@@ -276,20 +278,21 @@ class AppComponent extends LitElement {
 
     <bs-container fluid>
     <bs-row>
-    <bs-column sm-8 demo>
-    <notepod-component id="notepod" name="Notepod"></notepod-component>
-    </bs-column>
     <bs-column sm demo>
     <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
-
+    </bs-column>
+    <bs-column sm demo>
+    <notepod-component id="notepod" name="Notepod"></notepod-component>
     </bs-column>
     </bs-row>
     <bs-row>
-    <bs-column sm demo>sm</bs-column>
-    <bs-column sm demo>sm</bs-column>
-    <bs-column sm demo>sm</bs-column>
-    <bs-column sm demo>sm</bs-column>
-    <bs-column sm demo>sm</bs-column>
+    <bs-column sm demo>
+    <annonce-component name="Annonce"></annonce-component>
+    </bs-column>
+    <bs-column sm demo>
+    <agora-annonce-component name="AgoraAnnonce"></agora-annonce-component>
+    </bs-column>
+    <!--  <bs-column sm demo>sm</bs-column>-->
     </bs-row>
     </bs-container>
 

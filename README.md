@@ -16,4 +16,8 @@ https://www.sitepoint.com/build-responsive-bootstrap-website/
 https://developer.mozilla.org/fr/docs/Web/API/ShadowRoot
 
 
-# https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm
+# modules js
+https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm
+
+# rdf vocabs
+https://lov.linkeddata.es/dataset/lov/vocabs/rdf

@@ -38,7 +38,8 @@ class I18nComponent extends LitElement {
             "info_app3": "And check all authorizations to this website as shown on this",
             "screenshot": "screenshot",
             "agora_publish": "Publish to Agora",
-            "must_log" : "You must login to be able to post !"
+            "must_log" : "You must login to be able to post !",
+            "add_annonce": "Add Classified",
           }
         },
         fr: {
@@ -55,7 +56,8 @@ class I18nComponent extends LitElement {
             "info_app3": "Et cochez toutes les autorisations comme dans cette",
             "screenshot": "capture d'écran",
             "agora_publish": "Publier sur l'Agora",
-            "must_log" : "Vous devez vous connecter pour pouvoir poster !"
+            "must_log" : "Vous devez vous connecter pour pouvoir poster !",
+            "add_annonce": "Ajouter une Annonce",
           }
         },
         de: {

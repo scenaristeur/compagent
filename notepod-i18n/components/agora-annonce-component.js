@@ -5,13 +5,13 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import './i18n-component.js'
 
 // Extend the LitElement base class
-class AgoraNotesComponent extends LitElement {
+class AgoraAnnonceComponent extends LitElement {
 
   static get properties() {
     return {
       name: {type: String},
-      agoraNotesListUrl: {type: String},
-      notes: {type: Array},
+      agoraAnnoncesListUrl: {type: String},
+          annonces: {type: Array},
       lang: {type: String}
     };
   }
@@ -19,9 +19,9 @@ class AgoraNotesComponent extends LitElement {
   constructor() {
     super();
     this.name = "unknown"
-    this.notes = []
+    this.agoraAnnoncesListUrl = "https://agora.solid.community/public/Annonce/annonces.ttl"
+    this.annonces = []
     this.lang=navigator.language
-    this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
@@ -29,6 +29,8 @@ class AgoraNotesComponent extends LitElement {
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
     this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    this.AGORA = new $rdf.Namespace('https://agora.solid.community/public/')
+
   }
 
   firstUpdated(changedProperties) {
@@ -51,10 +53,10 @@ class AgoraNotesComponent extends LitElement {
   }
 
   render() {
-    const noteList = (notes) => html`
-    Notes on Agora (${notes.length})<br> <small><a href="${this.agoraNotesListUrl}" target="_blank">${this.agoraNotesListUrl}</a></small><br>
+    const annonceList = (annonces) => html`
+    Annonces on Agora (${annonces.length})<br> <small><a href="${this.agoraAnnoncesListUrl}" target="_blank">${this.agoraAnnoncesListUrl}</a></small><br>
     <ul>
-    ${notes.map((n) => html`
+    ${annonces.map((n) => html`
       <li>
       ${n.text}
       <br><small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
@@ -68,26 +70,26 @@ class AgoraNotesComponent extends LitElement {
       `;
 
       return html`
-      ${noteList(this.notes)}
+      ${annonceList(this.annonces)}
       `;
     }
 
 
     getAgoraData(){
       var app = this
-      Tripledoc.fetchDocument(app.agoraNotesListUrl).then(
-        notesList => {
-          app.notesList = notesList;
+      Tripledoc.fetchDocument(app.agoraAnnoncesListUrl).then(
+        annoncesList => {
+          app.annoncesList = annoncesList;
 
-          console.log("app.notesList",app.notesList)
-
-
+          console.log("app.annoncesList",app.annoncesList)
 
 
-          app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
-          //  console.log("notesUri",app.notesUri)
-          app.notes = []
-          app.notesUri.forEach(function (nuri){
+
+
+          app.annoncesUri = annoncesList.findSubjects(app.RDF('type'),app.AGORA('Annonce'))
+          //  console.log("annoncesUri",app.annoncesUri)
+          app.annonces = []
+          app.annoncesUri.forEach(function (nuri){
             //var subj = nuri.getLocalSubject()
             //  console.log("nuri",nuri)
             //  console.log("doc",nuri.getDocument())
@@ -96,17 +98,17 @@ class AgoraNotesComponent extends LitElement {
             var creator = nuri.getRef(app.SCHEMA('creator'))
             var also = nuri.getRef(app.RDFS('seeAlso'))
             //  console.log(text, date)
-            var note = {}
-            note.text = text;
-            note.date = date;
-            note.creator = creator;
-            note.also = also;
+            var annonce = {}
+            annonce.text = text;
+            annonce.date = date;
+            annonce.creator = creator;
+            annonce.also = also;
             //text = nuri.getAllStrings()*/
-            app.notes = [... app.notes, note]
+            app.annonces = [... app.annonces, annonce]
           })
 
-          app.notes.reverse()
-          console.log(app.notes)
+          app.annonces.reverse()
+          console.log(app.annonces)
 
 
           if (app.socket == undefined){
@@ -121,15 +123,15 @@ class AgoraNotesComponent extends LitElement {
       subscribe(){
         var app = this
         //https://github.com/scenaristeur/spoggy-chat-solid/blob/master/index.html
-        var websocket = this.notesList.getWebSocketRef();
+        var websocket = this.annoncesList.getWebSocketRef();
         console.log("WEBSOCK",websocket)
         app.socket = new WebSocket(websocket);
         console.log ("socket",app.socket)
         app.socket.onopen = function() {
           const d = new Date();
           var now = d.toLocaleTimeString(app.lang) + `.${d.getMilliseconds()}`
-          this.send('sub '+app.agoraNotesListUrl);
-          app.agent.send('Messages', now+"[souscription] "+app.agoraNotesListUrl)
+          this.send('sub '+app.agoraAnnoncesListUrl);
+          app.agent.send('Messages', now+"[souscription] "+app.agoraAnnoncesListUrl)
           //  this.send('sub https://spoggy.solid.community/public/test/fichier2.ttl');
           /*  this.send('sub https://spoggy.solid.community/public/test');
           this.send('sub https://spoggy.solid.community/public/test/index.ttl');*/
@@ -158,4 +160,4 @@ class AgoraNotesComponent extends LitElement {
     }
 
     // Register the new element with the browser.
-    customElements.define('agora-notes-component', AgoraNotesComponent);
+    customElements.define('agora-annonce-component', AgoraAnnonceComponent);

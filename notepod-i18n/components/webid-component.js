@@ -85,6 +85,8 @@ class WebidComponent extends LitElement {
 
         app.agent.send('Storage',{action: "storageChanged", storage: storage})
         app.agent.send('Notepod',{action: "personChanged", person: app.person})
+        app.agent.send('Annonce',{action: "personChanged", person: app.person})
+
 
     //  app.initNotePod()
 
@@ -95,35 +97,9 @@ class WebidComponent extends LitElement {
     );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
-
   render() {
-    return html`
-    <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-    `;
+    return html``;
   }
-
-
 }
 
 // Register the new element with the browser.
