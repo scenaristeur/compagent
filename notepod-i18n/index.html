@@ -1,30 +1,40 @@
 <html>
 <head>
   <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" async defer src="./components/app-component.js"></script>
-<!--  <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
+  <!--  <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
   <script type="text/javascript" src="../vendor/visjs/standalone/umd/vis-network.min.js"></script>-->
   <!--<script type="text/javascript" src="../vendor/visjsvis-network.min.js"></script>-->
   <!--  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
 
 </head>
 <body>
-<!--  origin : https://forum.solidproject.org/t/conceptual-design-solid-better-user-experience/422/61?u=smag0-->
+  <!--  origin : https://forum.solidproject.org/t/conceptual-design-solid-better-user-experience/422/61?u=smag0-->
   <app-component name="App"></app-component>
 
 </body>
 
-
-
-<!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->
-<!--<script src="./vendor/n3/n3.bundle.js"></script>
-<script src="./vendor/solid-auth/solid-auth-client.bundle.js"></script>-->
+<!--
+tripledoc 2.4 -->
 <script src="./vendor/rdflib/rdflib.min.js"></script>
 <script>
 window.rdflib = window.$rdf;
 </script>
 <script src="./vendor/tripledoc/tripledoc.js"></script>
+
+
+<!--<script src="../node_modules/tripledoc/umd/index.d.ts"></script>-->
+
+<!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->
+<!--<script src="./vendor/n3/index.js"></script>-->
+<!--<script src="../node_modules/n3/src/index.js"></script>
+<script src="./vendor/solid-auth/solid-auth-client.bundle.js"></script>
+<script src="./vendor/rdflib/rdflib.min.js"></script>
+<script>
+window.rdflib = window.$rdf;
+</script>
+<script src="../node_modules/tripledoc/umd/index.js"></script>-->
 <!--<script src="https://unpkg.com/tripledoc@2.4/umd/index.js"></script>-->
 <!--
 <script type="module" src="./components/component-app.js"></script>-->
