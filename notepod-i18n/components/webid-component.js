@@ -21,15 +21,15 @@ class WebidComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
-      this.username = "unknown"
-        this.friends = []
-        this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
-        this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
-        this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
-        this.SCHEMA = new $rdf.Namespace('http://schema.org/');
-        this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
-        this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-        this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    this.username = "unknown"
+    this.friends = []
+    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
+    this.SCHEMA = new $rdf.Namespace('http://schema.org/');
+    this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
+    this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 
   }
@@ -41,10 +41,10 @@ class WebidComponent extends LitElement {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
           case "sessionChanged":
-                app.sessionChanged(message.webId)
+          app.sessionChanged(message.webId)
           break;
           default:
-        console.log("Unknown action ",message)
+          console.log("Unknown action ",message)
         }
       }
     };
@@ -56,7 +56,7 @@ class WebidComponent extends LitElement {
     if (this.webId != null){
       this.getUserData()
     }else{
-    //  this.notes = []
+      //  this.notes = []
     }
   }
 
@@ -72,23 +72,24 @@ class WebidComponent extends LitElement {
         app.username = app.person.getString(app.FOAF('name'))
         app.friends = app.person.getAllRefs(app.FOAF('knows'))
         console.log("Friends",app.friends)
-      const storage = app.person.getRef(app.SPACE('storage'))
+        const storage = app.person.getRef(app.SPACE('storage'))
         console.log("storage",storage)
         app.agent.send('Profile',{action: "usernameChanged", username: app.username})
         app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
         app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
-  //  var person = {}
-  //  person.webId = app.webId
-    //person.username = app.username
-    //person.friends = app.friends
-  //  person.storage = app.storage
+        //  var person = {}
+        //  person.webId = app.webId
+        //person.username = app.username
+        //person.friends = app.friends
+        //  person.storage = app.storage
 
         app.agent.send('Storage',{action: "storageChanged", storage: storage})
+        app.agent.send('Storage',{action: "sessionStorageChanged", storage: storage})
         app.agent.send('Notepod',{action: "personChanged", person: app.person})
         app.agent.send('Annonce',{action: "personChanged", person: app.person})
 
 
-    //  app.initNotePod()
+        //  app.initNotePod()
 
       },
       err => {

@@ -21,6 +21,7 @@ class StorageComponent extends LitElement {
       uri: {type: String},
       folder: { type: Object},
       file: {type: Object},
+      webId: {type: String},
     };
   }
 
@@ -31,6 +32,7 @@ class StorageComponent extends LitElement {
     this.count = 0;
     this.storage = ""
     this.uri = ""
+    this.webId = "fdsgf"
     this.folder = {folders: [], files: []}
     this.file = {uri:"",type:""}
     this.sfh = new SolidFileHelper()
@@ -47,12 +49,22 @@ class StorageComponent extends LitElement {
           // code block
           app.storageChanged(message.storage)
           break;
+          case "sessionStorageChanged":
+          app.sessionStorageChanged(message.storage)
+          break;
           default:
           // code block
           console.log("Unknown action ",message)
         }
       }
     };
+  }
+
+
+
+  sessionStorageChanged(storage){
+    console.log("SESSION")
+    this.sessionStorage = storage
   }
 
   render() {
@@ -131,6 +143,7 @@ class StorageComponent extends LitElement {
         <h1>${this.name}</h1>
         <bs-card-body>
         <bs-card-title slot="card-title">
+        <button @click=${this.clickFolder} uri=${this.sessionStorage} >${this.sessionStorage}</button>
         <h5>browser :</h5>
         ${this.storage}<br>
         ${this.uri}
