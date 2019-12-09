@@ -4,6 +4,8 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 
 import './i18n-component.js'
 
+import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
+
 // Extend the LitElement base class
 class AgoraAnnonceComponent extends LitElement {
 
@@ -22,14 +24,14 @@ class AgoraAnnonceComponent extends LitElement {
     this.agoraAnnoncesListUrl = "https://agora.solid.community/public/Annonce/annonces.ttl"
     this.annonces = []
     this.lang=navigator.language
-    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+/*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
     this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
-    this.AGORA = new $rdf.Namespace('https://agora.solid.community/public/')
+    this.AGORA = new $rdf.Namespace('https://agora.solid.community/public/')*/
 
   }
 
@@ -80,23 +82,22 @@ class AgoraAnnonceComponent extends LitElement {
       Tripledoc.fetchDocument(app.agoraAnnoncesListUrl).then(
         annoncesList => {
           app.annoncesList = annoncesList;
-
           console.log("app.annoncesList",app.annoncesList)
 
 
 
 
-          app.annoncesUri = annoncesList.findSubjects(app.RDF('type'),app.AGORA('Annonce'))
+          app.annoncesUri = annoncesList.findSubjects(rdf.type, 'https://agora.solid.community/public/Annonce')
           //  console.log("annoncesUri",app.annoncesUri)
           app.annonces = []
           app.annoncesUri.forEach(function (nuri){
             //var subj = nuri.getLocalSubject()
             //  console.log("nuri",nuri)
             //  console.log("doc",nuri.getDocument())
-            var text = nuri.getString(app.SCHEMA('text'))
-            var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
-            var creator = nuri.getRef(app.SCHEMA('creator'))
-            var also = nuri.getRef(app.RDFS('seeAlso'))
+            var text = nuri.getString(schema.text)
+            var date = nuri.getDateTime(schema.dateCreated)
+            var creator = nuri.getRef(schema.creator)
+            var also = nuri.getRef(rdfs.seeAlso)
             //  console.log(text, date)
             var annonce = {}
             annonce.text = text;

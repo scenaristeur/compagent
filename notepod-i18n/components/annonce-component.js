@@ -7,6 +7,8 @@ import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 import './i18n-component.js'
 
+import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
+
 // Extend the LitElement base class
 class AnnonceComponent extends LitElement {
 
@@ -29,14 +31,14 @@ class AnnonceComponent extends LitElement {
     this.agoraAnnonceListUrl = "https://agora.solid.community/public/Annonce/annonces.ttl"
     this.annonces = []
     this.lang=navigator.language
-    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+  /*  this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
     this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
-    this.AGORA = new $rdf.Namespace('https://agora.solid.community/public/')
+    this.AGORA = new $rdf.Namespace('https://agora.solid.community/public/')*/
 
   }
   firstUpdated(changedProperties) {
@@ -105,18 +107,18 @@ console.log(err)
 
 initAnnoncePod(){
   var app = this;
-  app.publicTypeIndexUrl = app.person.getRef(app.SOLID('publicTypeIndex'))
+  app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
   //console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
   Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
     publicTypeIndex => {
       app.publicTypeIndex = publicTypeIndex;
-      app.annoncesListEntry = app.publicTypeIndex.findSubject(app.SOLID('forClass'), app.AGORA('Annonce'));
+      app.annoncesListEntry = app.publicTypeIndex.findSubject(solid.forClass, 'https://agora.solid.community/public/Annonce');
        console.log("app.annoncesListEntry",app.annoncesListEntry)
       if (app.annoncesListEntry === null){
         app.annoncesListUrl = app.initialiseAnnoncesList(app.person, app.publicTypeIndex)
       }else{
-        app.annoncesListUrl = app.annoncesListEntry.getRef(app.SOLID("instance"))
+        app.annoncesListUrl = app.annoncesListEntry.getRef(solid.instance)
           console.log("annoncesListUrl",app.annoncesListUrl)
 
       }
@@ -135,15 +137,15 @@ getAnnonces(){
       app.annoncesList = annoncesList;
 
           console.log("app.annoncesList",app.annoncesList)
-      app.annoncesUri = annoncesList.findSubjects(app.RDF('type'),app.AGORA('Annonce'))
+      app.annoncesUri = annoncesList.findSubjects(rdf.type, 'https://agora.solid.community/public/Annonce')
         console.log("annoncesUri",app.annoncesUri)
       app.annonces = []
       app.annoncesUri.forEach(function (nuri){
         var subject = nuri.asNodeRef()
         //  console.log("subject",subject)
         //  console.log("doc",nuri.getDocument())
-        var text = nuri.getString(app.SCHEMA('text'))
-        var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
+        var text = nuri.getString(schema.text)
+        var date = nuri.getDateTime(schema.dateCreated)
         //  console.log(text, date)
         var annonce = {}
         annonce.text = text;
@@ -173,11 +175,11 @@ getAnnonces(){
       const newAnnonce = app.annoncesList.addSubject();
       var date = new Date(Date.now())
       // Indicate that the Subject is a schema:TextDigitalDocument:
-      newAnnonce.addRef(app.RDF('type'), app.AGORA('Annonce'));
+      newAnnonce.addRef(rdf.type, 'https://agora.solid.community/public/Annonce');
       // Set the Subject's `schema:text` to the actual annonce contents:
-      newAnnonce.addLiteral(app.SCHEMA('text'), annonce);
+      newAnnonce.addLiteral(schema.text, annonce);
       // Store the date the annonce was created (i.e. now):
-      newAnnonce.addLiteral(app.SCHEMA('dateCreated'), date)
+      newAnnonce.addLiteral(schema.dateCreated, date)
  console.log("newAnnonce",newAnnonce)
       app.annoncesList.save([newAnnonce]).then(
         success=>{
@@ -191,12 +193,7 @@ getAnnonces(){
           console.log(err)
           alert(err)
         });
-
       }
-
-
-
-
     }
 
     updateAgora(annonce,date, subject){
@@ -208,14 +205,14 @@ getAnnonces(){
             console.log("app.agoraAnnonceList",app.agoraAnnonceList)
           const newAnnonce = app.agoraAnnonceList.addSubject();
           // Indicate that the Subject is a schema:TextDigitalDocument:
-          newAnnonce.addRef(app.RDF('type'), app.AGORA('Annonce'));
+          newAnnonce.addRef(rdf.type, 'https://agora.solid.community/public/Annonce');
           // Set the Subject's `schema:text` to the actual annonce contents:
-          newAnnonce.addLiteral(app.SCHEMA('text'), annonce);
+          newAnnonce.addLiteral(schema.text, annonce);
           // Store the date the annonce was created (i.e. now):
-          newAnnonce.addLiteral(app.SCHEMA('dateCreated'), date)
+          newAnnonce.addLiteral(schema.dateCreated, date)
           // add ref to user annonce
-          newAnnonce.addRef(app.RDFS('seeAlso'), subject);
-          newAnnonce.addRef(app.SCHEMA('creator'), app.webId);
+          newAnnonce.addRef(rdfs.seeAlso, subject);
+          newAnnonce.addRef(schema.creator, app.webId);
 console.log("newAnnonce", newAnnonce)
           app.agoraAnnonceList.save([newAnnonce]).then(
             success=>{
@@ -231,7 +228,7 @@ console.log("newAnnonce", newAnnonce)
         initialiseAnnoncesList(profile,typeIndex){
           var app = this;
           console.log("creation a revoir")
-          const storage = profile.getRef(app.SPACE('storage'))
+          const storage = profile.getRef(space.storage)
           //    console.log("storage",storage)
           app.agent.send('Storage',{action: "storageChanged", storage: storage})
 
@@ -242,9 +239,9 @@ console.log("newAnnonce", newAnnonce)
 
           // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
           const typeRegistration = typeIndex.addSubject();
-          typeRegistration.addRef(app.RDF('type'), app.SOLID('TypeRegistration'))
-          typeRegistration.addRef(app.SOLID('instance'), annoncesList.asRef())
-          typeRegistration.addRef(app.SOLID('forClass'), app.AGORA('Annonce'))
+          typeRegistration.addRef(rdf.type, solid.TypeRegistration)
+          typeRegistration.addRef(solid.instance, annoncesList.asRef())
+          typeRegistration.addRef(solid.forClass, 'https://agora.solid.community/public/Annonce')
           typeIndex.save([ typeRegistration ]);
 
           return annoncesListUrl

@@ -4,6 +4,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 
 import './i18n-component.js'
 
+import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 // Extend the LitElement base class
 class AgoraNotesComponent extends LitElement {
 
@@ -22,13 +23,13 @@ class AgoraNotesComponent extends LitElement {
     this.notes = []
     this.lang=navigator.language
     this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
-    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+/*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')*/
   }
 
   firstUpdated(changedProperties) {
@@ -84,17 +85,17 @@ class AgoraNotesComponent extends LitElement {
 
 
 
-          app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
+          app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
           //  console.log("notesUri",app.notesUri)
           app.notes = []
           app.notesUri.forEach(function (nuri){
             //var subj = nuri.getLocalSubject()
             //  console.log("nuri",nuri)
             //  console.log("doc",nuri.getDocument())
-            var text = nuri.getString(app.SCHEMA('text'))
-            var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
-            var creator = nuri.getRef(app.SCHEMA('creator'))
-            var also = nuri.getRef(app.RDFS('seeAlso'))
+            var text = nuri.getString(schema.text)
+            var date = nuri.getDateTime(schema.dateCreated)
+            var creator = nuri.getRef(schema.creator)
+            var also = nuri.getRef(schema.seeAlso)
             //  console.log(text, date)
             var note = {}
             note.text = text;

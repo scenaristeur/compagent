@@ -36,3 +36,6 @@ https://codesandbox.io/s/hardcore-elion-11ko6
 <script src="https://unpkg.com/tripledoc@3.0.1/umd/index.js"></script>
 
 ```
+
+# Restore PublicTypeIndex
+https://github.com/solid/node-solid-server/blob/master/default-templates/new-account/settings/publicTypeIndex.ttl
