@@ -7,8 +7,6 @@ import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 import './i18n-component.js'
 
-import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
-
 // Extend the LitElement base class
 class NotepodComponent extends LitElement {
 
@@ -33,15 +31,15 @@ class NotepodComponent extends LitElement {
     this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
     this.notes = []
     this.lang=navigator.language
-    /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
     this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')*/
+    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
-    
+
   }
   firstUpdated(changedProperties) {
     var app = this;
@@ -114,18 +112,18 @@ console.log(err)
 
 initNotePod(){
   var app = this;
-  app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
+  app.publicTypeIndexUrl = app.person.getRef(app.SOLID('publicTypeIndex').value)
   //console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
   Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
     publicTypeIndex => {
       app.publicTypeIndex = publicTypeIndex;
-      app.notesListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
+      app.notesListEntry = app.publicTypeIndex.findSubject(app.SOLID('forClass').value, app.SCHEMA('TextDigitalDocument').value);
       //  console.log("app.notesListEntry",app.notesListEntry)
       if (app.notesListEntry === null){
         app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
       }else{
-        app.notesListUrl = app.notesListEntry.getRef(solid.instance)
+        app.notesListUrl = app.notesListEntry.getRef(app.SOLID("instance").value)
         //  console.log("notesListUrl",app.notesListUrl)
 
       }
@@ -144,15 +142,15 @@ getNotes(){
       app.notesList = notesList;
 
       //    console.log("app.notesList",app.notesList)
-      app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
+      app.notesUri = notesList.findSubjects(app.RDF('type').value,app.SCHEMA('TextDigitalDocument').value)
       //  console.log("notesUri",app.notesUri)
       app.notes = []
       app.notesUri.forEach(function (nuri){
         var subject = nuri.asNodeRef()
-        //  console.log("subject",subject)
+      //  console.log("subject",subject)
         //  console.log("doc",nuri.getDocument())
-        var text = nuri.getString(schema.text)
-        var date = nuri.getDateTime(schema.dateCreated)
+        var text = nuri.getString(app.SCHEMA('text').value)
+        var date = nuri.getDateTime(app.SCHEMA('dateCreated').value)
         //  console.log(text, date)
         var note = {}
         note.text = text;
@@ -182,11 +180,14 @@ getNotes(){
       const newNote = app.notesList.addSubject();
       var date = new Date(Date.now())
       // Indicate that the Subject is a schema:TextDigitalDocument:
-      newNote.addRef(rdf.type, schema.TextDigitalDocument);
+      newNote.addRef(app.RDF('type').value, app.SCHEMA('TextDigitalDocument').value);
       // Set the Subject's `schema:text` to the actual note contents:
-      newNote.addLiteral(schema.text, note);
+      newNote.addLiteral(app.SCHEMA('text').value, note);
       // Store the date the note was created (i.e. now):
-      newNote.addLiteral(schema.dateCreated, date)
+      newNote.addLiteral(app.SCHEMA('dateCreated').value, date)
+
+
+console.log(newNote)
 
       app.notesList.save([newNote]).then(
         success=>{
@@ -217,14 +218,14 @@ getNotes(){
           //  console.log("app.agoraNotesList",app.agoraNotesList)
           const newNote = app.agoraNotesList.addSubject();
           // Indicate that the Subject is a schema:TextDigitalDocument:
-          newNote.addRef(rdf.type, schema.TextDigitalDocument);
+          newNote.addRef(app.RDF('type').value, app.SCHEMA('TextDigitalDocument').value);
           // Set the Subject's `schema:text` to the actual note contents:
-          newNote.addLiteral(schema.text, note);
+          newNote.addLiteral(app.SCHEMA('text').value, note);
           // Store the date the note was created (i.e. now):
-          newNote.addLiteral(schema.dateCreated, date)
+          newNote.addLiteral(app.SCHEMA('dateCreated').value, date)
           // add ref to user note
-          newNote.addRef(rdfs.seeAlso, subject);
-          newNote.addRef(schema.creator, app.webId);
+          newNote.addRef(app.RDFS('seeAlso').value, subject);
+          newNote.addRef(app.SCHEMA('creator').value, app.webId);
 
           app.agoraNotesList.save([newNote]).then(
             success=>{
@@ -240,7 +241,7 @@ getNotes(){
         initialiseNotesList(profile,typeIndex){
           var app = this;
           console.log("creation a revoir")
-          const storage = profile.getRef(space.storage)
+          const storage = profile.getRef(app.SPACE('storage').value)
           //    console.log("storage",storage)
           app.agent.send('Storage',{action: "storageChanged", storage: storage})
 
@@ -251,9 +252,9 @@ getNotes(){
 
           // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
           const typeRegistration = typeIndex.addSubject();
-          typeRegistration.addRef(rdf.type, solid.TypeRegistration)
-          typeRegistration.addRef(solid.instance, notesList.asRef())
-          typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
+          typeRegistration.addRef(app.RDF('type').value, app.SOLID('TypeRegistration').value)
+          typeRegistration.addRef(app.SOLID('instance').value, notesList.asRef())
+          typeRegistration.addRef(app.SOLID('forClass').value, app.SCHEMA('TextDigitalDocument').value)
           typeIndex.save([ typeRegistration ]);
 
           return notesListUrl

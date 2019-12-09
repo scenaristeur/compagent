@@ -23,6 +23,10 @@ https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm
 https://lov.linkeddata.es/dataset/lov/vocabs/rdf
 
 # tripledoc
+https://cdn.pika.dev/-/rdf-namespaces/1.6.0/dist-es2017/rdf-namespaces.min.js  (https://www.pika.dev/npm/rdf-namespaces/repl)
+
+import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
+
 https://forum.solidproject.org/t/are-you-a-front-end-developer-interested-in-solid-but-unfamiliar-with-linked-data-try-tripledoc/2421/14
 
 https://codesandbox.io/s/hardcore-elion-11ko6
