@@ -20,8 +20,8 @@ class ProfileComponent extends LitElement {
     super();
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
-        this.webId = null
-            this.username = null
+    this.webId = null
+    this.username = null
 
   }
 
@@ -52,31 +52,33 @@ class ProfileComponent extends LitElement {
 
   render() {
     return html`
-<style>
+    <style>
+    bs-card-img{
+      max-width:33%
+    }
+    </style>
 
-
-</style>
     <bs-card>
-        <bs-card-img position="top" slot="top-image">
-            <svg class="bd-placeholder-img" width="180" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
+    <bs-card-img position="top" slot="top-image">
+    <svg class="bd-placeholder-img" width="180" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
 
-        </bs-card-img>
-<h1>${this.username}</h1>
-        <bs-card-body>
-            <bs-card-title slot="card-title">
-                <h5>webId :</h5>
-            </bs-card-title>
-            <bs-card-text slot="card-text">
-            <p><a href="${this.webId}" target="_blank">${this.webId}</a></p>
-              <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-              <br>
-            </bs-card-text>
-            <bs-link-button disabled primary>Détails</bs-link-button>
-        </bs-card-body>
+    </bs-card-img>
+    <h1>${this.username}</h1>
+    <bs-card-body>
+    <bs-card-title slot="card-title">
+    <h5>webId :</h5>
+    </bs-card-title>
+    <bs-card-text slot="card-text">
+    <p><a href="${this.webId}" target="_blank">${this.webId}</a></p>
+    <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+    <br>
+    </bs-card-text>
+    <bs-link-button disabled primary>Détails</bs-link-button>
+    </bs-card-body>
     </bs-card>
 
 
-  <!--
+    <!--
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
     `;
   }

@@ -123,9 +123,7 @@ class AppComponent extends LitElement {
       border-image: initial;
     }
 
-    bs-card{
-      max-width:33%
-    }
+
 
 
     </style>

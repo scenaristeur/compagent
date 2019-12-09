@@ -46,7 +46,12 @@ class FriendsComponent extends LitElement {
 
   render() {
     return html`
-
+    <style>
+    bs-card-img{
+      max-width:33%
+    }
+    </style>
+    
     <bs-card>
     <bs-card-img position="top" slot="top-image">
     <!--

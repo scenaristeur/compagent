@@ -53,6 +53,7 @@ class StorageComponent extends LitElement {
 
   render() {
 
+
     const folderList = (folder) => html`
     <h5>folders  (${folder.folders.length})  :</h5>
     <input id="newFolderInput" placeholder="newFolderName" ></input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
@@ -73,10 +74,10 @@ class StorageComponent extends LitElement {
 
       <h5>files (${files.length}) :</h5>
 
-      <!--<input id="newFileInput" placeholder="newfilename.ttl"></input>
-      <button @click=${this.newFile} disabled>New File</button>-->
-      <twit-component name="Twit" uri=${this.uri}></twit-component>
-      <note-component name="Note" uri=${this.uri}></note-component>
+      <input id="newFileInput" placeholder="newfilename.ttl"></input>
+      <button @click=${this.newFile} disabled>New File</button>
+      <!--  <twit-component name="Twit" uri=${this.uri}></twit-component>
+      <note-component name="Note" uri=${this.uri}></note-component>-->
       <bs-list-group>
 
       ${files.map((f) => html`
@@ -100,6 +101,13 @@ class StorageComponent extends LitElement {
 
 
         return html`
+
+        <style>
+        bs-card-img{
+          max-width:33%
+        }
+        </style>
+
         <bs-card>
         <bs-card-img position="top" slot="top-image">
         <!--
