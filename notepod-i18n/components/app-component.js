@@ -123,6 +123,10 @@ class AppComponent extends LitElement {
       border-image: initial;
     }
 
+    bs-card{
+      max-width:33%
+    }
+
 
     </style>
 
@@ -202,6 +206,58 @@ class AppComponent extends LitElement {
 
     <p>  ${this.webId != null ?
       html `
+
+
+
+<!--
+      <p>
+      <bs-collapse-toggle target="multiCollapseExample1">
+      <bs-link-button primary>Profile</bs-link-button>
+      </bs-collapse-toggle>
+      <bs-collapse-toggle target="multiCollapseExample2">
+      <bs-button primary>Friends</bs-button>
+      </bs-collapse-toggle>
+      <bs-collapse-toggle target="multiCollapseExample3">
+      <bs-button primary>Storage</bs-button>
+      </bs-collapse-toggle>
+      <bs-collapse-multi-toggle multitarget="multi-collapse">
+      <bs-button primary>Toggle both elements</bs-button>
+      </bs-collapse-multi-toggle>
+      </p>
+
+      <bs-row>
+      <bs-column xs>
+      <bs-collapsable expanded id="multiCollapseExample1" class="multi-collapse">
+      <bs-card>
+      <bs-card-body>
+      <profile-component name="Profile"></profile-component>
+      </bs-card-body>
+      </bs-card>
+      </bs-collapsable>
+      </bs-column>
+      <bs-column xs>
+      <bs-collapsable expanded id="multiCollapseExample2" class="multi-collapse">
+      <bs-card>
+      <bs-card-body>
+      <friends-component name="Friends"></friends-component>
+      </bs-card-body>
+      </bs-card>
+      </bs-collapsable>
+      </bs-column>
+      <bs-column xs>
+      <bs-collapsable expanded id="multiCollapseExample3" class="multi-collapse">
+      <bs-card>
+      <bs-card-body>
+      <storage-component name="Storage"></storage-component>
+      </bs-card-body>
+      </bs-card>
+      </bs-collapsable>
+      </bs-column>
+      </bs-row>
+-->
+
+
+
 
       <bs-accordion>
       <bs-card>
