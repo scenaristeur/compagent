@@ -184,14 +184,14 @@ export class Spoggy {
       // EVENTS on Network
 
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
-        module.updateEditorFromNetwork(event, properties, senderId)
+      //  module.updateEditorFromNetwork(event, properties, senderId)
       //  console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
 
 
-      module.updateEditorFromNetwork(event, properties, senderId)
+    //  module.updateEditorFromNetwork(event, properties, senderId)
     //  console.log(event)
     }
   );

@@ -3,7 +3,11 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 import { HelloAgent } from '../agents/HelloAgent.js';
 
 import  '../vendor/@lit-element-bootstrap/bs-list-group.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 import { SolidFileHelper } from '../helpers/solid-file-helper.js';
+
+import './visualization-component.js'
 
 // Extend the LitElement base class
 class StorageComponent extends LitElement {
@@ -56,7 +60,7 @@ class StorageComponent extends LitElement {
 
     const folderList = (folder) => html`
     <h5>folders  (${folder.folders.length})  :</h5>
-    <input id="newFolderInput" placeholder="newFolderName" ></input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
+    <bs-input id="newFolderInput" placeholder="newFolderName" ></bs-input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
     <bs-list-group>
     <bs-list-group-item active @click=${this.clickFolder} uri=${folder.parent}>.. (${folder.parent})</bs-list-group-item>
 
@@ -142,6 +146,9 @@ class StorageComponent extends LitElement {
         <bs-col>
         ${fileList(this.folder.files)}
         </bs-col>
+        <bs-col>
+        <visualization-component name="Visualization"></visualization-component>
+        </bs-col>
         </bs-row>
 
 
@@ -180,6 +187,8 @@ class StorageComponent extends LitElement {
               app.agent.send('EditorTwit', messageMeta);
               app.agent.send('EditorNote', messageMeta);
               app.agent.send('Camera', messageMeta);*/
+              var  messageSpoggy = {action: "updateFromFolder", folder:uri}
+              app.agent.send('Spoggy', messageSpoggy);
               console.log("FOLDER",app.folder)
             }else{
               console.log("err folder ",folder)
@@ -200,8 +209,8 @@ class StorageComponent extends LitElement {
           var type = event.target.getAttribute("type");
           this.file = {uri: uri,type:type}
           var message = {action:"fileChanged", file: this.file}
-          console.log(this.message)
-          //      this.agent.send('Visualization', message);
+          console.log(message)
+          this.agent.send('Visualization', message);
 
           //  this.agent.send('Image', message);
           /*var messageMeta = {action:"uriChanged", uri:uri}

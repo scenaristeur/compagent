@@ -2,7 +2,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="module" async defer src="./components/app-component.js"></script>
+  <link href="./vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="./vendor/visjs/standalone/umd/vis-network.min.js"></script>
+
   <!--  <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
   <script type="text/javascript" src="../vendor/visjs/standalone/umd/vis-network.min.js"></script>-->
   <!--<script type="text/javascript" src="../vendor/visjsvis-network.min.js"></script>-->
@@ -23,7 +25,7 @@ window.rdflib = window.$rdf;
 </script>
 <script src="./vendor/tripledoc/tripledoc.js"></script>
 
-
+<script type="module" async defer src="./components/app-component.js"></script>
 <!--<script src="../node_modules/tripledoc/umd/index.d.ts"></script>-->
 
 <!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->

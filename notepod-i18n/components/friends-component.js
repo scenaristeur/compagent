@@ -51,7 +51,7 @@ class FriendsComponent extends LitElement {
       max-width:33%
     }
     </style>
-    
+
     <bs-card>
     <bs-card-img position="top" slot="top-image">
     <!--
@@ -74,7 +74,7 @@ class FriendsComponent extends LitElement {
     <bs-card-text slot="card-text">
     <bs-list-group>
     ${this.friends.map((f) => html`
-      <bs-list-group-item>${f}</bs-list-group-item>
+      <bs-list-group-item @click=${this.clickFriend} uri=${f}>${f}</bs-list-group-item>
       `)}
       </bs-list-group>
       <!--  <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
@@ -91,11 +91,12 @@ class FriendsComponent extends LitElement {
       this.friends = friends
     }
 
-    clickHandler(event) {
-      this.count++
+    clickFriend(event) {
+      var uri = event.target.getAttribute("uri");
+      this.agent.send('Storage',{action: "storageChanged", storage: uri})
       //console.log(event.target);
-      console.log(this.agent)
-      this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+      //  console.log(this.agent)
+      //this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
     }
   }
 
