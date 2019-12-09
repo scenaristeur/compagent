@@ -189,6 +189,10 @@ getNotes(){
       // Store the date the note was created (i.e. now):
       newNote.addLiteral(schema.dateCreated, date)
 
+console.log(newNote.asNodeRef())
+
+
+
       app.notesList.save([newNote]).then(
         success=>{
           var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
@@ -201,11 +205,7 @@ getNotes(){
           console.log(err)
           alert(err)
         });
-
       }
-
-
-
 
     }
 
@@ -281,37 +281,46 @@ getNotes(){
 
         render() {
           const noteList = (notes) => html`
-          Note List (${notes.length})<br>
-          <ul>
+        <h3>My  Note List (${notes.length})</h3>
+
+
+          <bs-list-group-action>
           ${notes.map((n) => html`
-            <li>
-            ${n.text}<br>
-             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
+            <bs-list-group-item-action-link class="flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+            <!--  <h5 class="mb-1">${n.title}</h5> -->
+            </div>
+            <p class="mb-1">
+              <div style="white-space: pre-wrap">${n.text}</div>
+              </p>
+            <!--<small>Donec id elit non mi porta.</small>-->
+            <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
             <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
-            </li>
+            </bs-list-group-item-action-link>
             `)}
-            </ul>
-            `;
+            </bs-list-group-action>
 
-            return html`
-            <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-            <bs-form-group>
-            <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
-            <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
-            </bs-form-group>
-            <br>
-            <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
-            <bs-form-check-group>
-            <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
-            <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
-            </bs-form-check-group>
-            <br>
-            <p>
-            ${noteList(this.notes)}
-            </p>
-            `;
+              `;
+
+              return html`
+              <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
+              <bs-form-group>
+              <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
+              <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+              </bs-form-group>
+              <br>
+              <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
+              <bs-form-check-group>
+              <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
+              <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
+              </bs-form-check-group>
+              <br>
+              <p>
+              ${noteList(this.notes)}
+              </p>
+              `;
+            }
           }
-        }
 
-        // Register the new element with the browser.
-        customElements.define('notepod-component', NotepodComponent);
+          // Register the new element with the browser.
+          customElements.define('notepod-component', NotepodComponent);

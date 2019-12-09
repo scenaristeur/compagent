@@ -4,6 +4,9 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 
 import './i18n-component.js'
 
+import  '../vendor/@lit-element-bootstrap/bs-list-group.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
+
 import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 // Extend the LitElement base class
 class AgoraNotesComponent extends LitElement {
@@ -52,8 +55,9 @@ class AgoraNotesComponent extends LitElement {
   }
 
   render() {
+
     const noteList = (notes) => html`
-    Notes on Agora (${notes.length})<br>
+    <h3>    Notes on Agora (${notes.length})</h3>
 
 
     <bs-link-button primary small
@@ -61,15 +65,19 @@ class AgoraNotesComponent extends LitElement {
     target="_blank">
     ${this.agoraNotesListUrl}
     </bs-link-button>
-    <br>
-    <ul>
+
+    <bs-list-group-action>
     ${notes.map((n) => html`
-      <li>
-      ${n.text}
-      <br>
-      <small>
-      ${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
-      </small>
+      <bs-list-group-item-action-link class="flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-between">
+      <!--              <h5 class="mb-1">${n.title}</h5>-->
+
+      </div>
+      <p class="mb-1">
+      <div style="white-space: pre-wrap">${n.text}</div>
+      </p>
+      <!--<small>Donec id elit non mi porta.</small>-->
+      <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
       <bs-link-button primary small
       href="${n.creator}"
       ?hidden=${n.creator == null}
@@ -85,14 +93,14 @@ class AgoraNotesComponent extends LitElement {
       target="_blank">
       See Also
       </bs-link-button>
-
-
-      </li>
+      </bs-list-group-item-action-link>
       `)}
-      </ul>
+      </bs-list-group-action>
       `;
 
       return html`
+
+
       ${noteList(this.notes)}
       `;
     }
@@ -119,7 +127,7 @@ class AgoraNotesComponent extends LitElement {
             var text = nuri.getString(schema.text)
             var date = nuri.getDateTime(schema.dateCreated)
             var creator = nuri.getRef(schema.creator)
-            var also = nuri.getRef(schema.seeAlso)
+            var also = nuri.getRef(rdfs.seeAlso)
             //  console.log(text, date)
             var note = {}
             note.text = text;

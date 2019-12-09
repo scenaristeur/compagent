@@ -268,17 +268,22 @@ console.log("newAnnonce", newAnnonce)
 
         render() {
           const annonceList = (annonces) => html`
-          Annonce List (${annonces.length})<br>
-          <ul>
+          <h3>My Annonce List (${annonces.length})</h3>
+          <bs-list-group-action>
           ${annonces.map((n) => html`
-            <li>
-            ${n.text}
-            <br>
+            <bs-list-group-item-action-link class="flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+            <!--  <h5 class="mb-1">${n.title}</h5> -->
+            </div>
+            <p class="mb-1">
+              <div style="white-space: pre-wrap">${n.text}</div>
+              </p>
+            <!--<small>Donec id elit non mi porta.</small>-->
             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-              <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
-            </li>
+            <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
+            </bs-list-group-item-action-link>
             `)}
-            </ul>
+            </bs-list-group-action>
             `;
 
             return html`

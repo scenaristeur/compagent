@@ -56,20 +56,24 @@ class AgoraAnnonceComponent extends LitElement {
 
   render() {
     const annonceList = (annonces) => html`
-    Annonces on Agora (${annonces.length})<br>
+  <h3>  Annonces on Agora (${annonces.length})</h3>
     <bs-link-button primary small
      href="${this.agoraAnnoncesListUrl}"
      target="_blank">${this.agoraAnnoncesListUrl}
      </bs-link-button>
      <br>
-    <ul>
+  <bs-list-group-action>
     ${annonces.map((n) => html`
-      <li>
-      ${n.text}
-      <br>
-      <small>
-      ${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
-      </small>
+      <bs-list-group-item-action-link class="flex-column align-items-start">
+      <div class="d-flex w-100 justify-content-between">
+      <!--              <h5 class="mb-1">${n.title}</h5>-->
+
+      </div>
+      <p class="mb-1">
+      <div style="white-space: pre-wrap">${n.text}</div>
+      </p>
+      <!--<small>Donec id elit non mi porta.</small>-->
+      <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
 
       <bs-link-button primary small
       href="${n.creator}"
@@ -88,9 +92,9 @@ class AgoraAnnonceComponent extends LitElement {
       </bs-link-button>
 
 
-      </li>
+      </bs-list-group-item-action-link>
       `)}
-      </ul>
+      </bs-list-group-action>
       `;
 
       return html`
