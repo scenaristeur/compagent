@@ -72,7 +72,7 @@ class AnnonceComponent extends LitElement {
 
   sessionChanged(webId){
     this.webId = webId
-    if (this.webId != null){
+    if (this.webId == null){
       this.annonces = []
     }
   }
