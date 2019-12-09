@@ -23,7 +23,7 @@ class AgoraNotesComponent extends LitElement {
     this.notes = []
     this.lang=navigator.language
     this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
-/*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
@@ -53,15 +53,39 @@ class AgoraNotesComponent extends LitElement {
 
   render() {
     const noteList = (notes) => html`
-    Notes on Agora (${notes.length})<br> <small><a href="${this.agoraNotesListUrl}" target="_blank">${this.agoraNotesListUrl}</a></small><br>
+    Notes on Agora (${notes.length})<br>
+
+
+    <bs-link-button primary small
+    href="${this.agoraNotesListUrl}"
+    target="_blank">
+    ${this.agoraNotesListUrl}
+    </bs-link-button>
+    <br>
     <ul>
     ${notes.map((n) => html`
       <li>
       ${n.text}
-      <br><small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
-      <a href="${n.creator}" ?hidden=${n.creator == null} title="${n.creator}" target="_blank">creator</a>
-      <a href="${n.also}" ?hidden=${n.also == null} title="${n.also}" target="_blank">see also</a>
+      <br>
+      <small>
+      ${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
       </small>
+      <bs-link-button primary small
+      href="${n.creator}"
+      ?hidden=${n.creator == null}
+      target="_blank"
+      title="${n.creator}">
+      Creator
+      </bs-link-button>
+
+      <bs-link-button primary small
+      href="${n.also}"
+      ?hidden=${n.also == null}
+      title="${n.also}"
+      target="_blank">
+      See Also
+      </bs-link-button>
+
 
       </li>
       `)}

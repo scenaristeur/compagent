@@ -41,8 +41,9 @@ class NotepodComponent extends LitElement {
     this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
     this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')*/
 
-    
   }
+
+
   firstUpdated(changedProperties) {
     var app = this;
     this.agent = new HelloAgent(this.name);
@@ -284,8 +285,9 @@ getNotes(){
           <ul>
           ${notes.map((n) => html`
             <li>
-            ${n.text}, <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-            <a href="${n.subject}" _target="_blank"><small>Open</small></a>
+            ${n.text}<br>
+             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
+            <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
             </li>
             `)}
             </ul>

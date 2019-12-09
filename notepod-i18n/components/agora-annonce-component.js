@@ -13,7 +13,7 @@ class AgoraAnnonceComponent extends LitElement {
     return {
       name: {type: String},
       agoraAnnoncesListUrl: {type: String},
-          annonces: {type: Array},
+      annonces: {type: Array},
       lang: {type: String}
     };
   }
@@ -24,7 +24,7 @@ class AgoraAnnonceComponent extends LitElement {
     this.agoraAnnoncesListUrl = "https://agora.solid.community/public/Annonce/annonces.ttl"
     this.annonces = []
     this.lang=navigator.language
-/*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
     this.SCHEMA = new $rdf.Namespace('http://schema.org/');
@@ -56,15 +56,37 @@ class AgoraAnnonceComponent extends LitElement {
 
   render() {
     const annonceList = (annonces) => html`
-    Annonces on Agora (${annonces.length})<br> <small><a href="${this.agoraAnnoncesListUrl}" target="_blank">${this.agoraAnnoncesListUrl}</a></small><br>
+    Annonces on Agora (${annonces.length})<br>
+    <bs-link-button primary small
+     href="${this.agoraAnnoncesListUrl}"
+     target="_blank">${this.agoraAnnoncesListUrl}
+     </bs-link-button>
+     <br>
     <ul>
     ${annonces.map((n) => html`
       <li>
       ${n.text}
-      <br><small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
-      <a href="${n.creator}" ?hidden=${n.creator == null} title="${n.creator}" target="_blank">creator</a>
-      <a href="${n.also}" ?hidden=${n.also == null} title="${n.also}" target="_blank">see also</a>
+      <br>
+      <small>
+      ${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}
       </small>
+
+      <bs-link-button primary small
+      href="${n.creator}"
+      ?hidden=${n.creator == null}
+      target="_blank"
+      title="${n.creator}">
+      Creator
+      </bs-link-button>
+
+      <bs-link-button primary small
+      href="${n.also}"
+      ?hidden=${n.also == null}
+      title="${n.also}"
+      target="_blank">
+      See Also
+      </bs-link-button>
+
 
       </li>
       `)}

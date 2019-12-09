@@ -72,7 +72,7 @@ class StorageComponent extends LitElement {
 
     const folderList = (folder) => html`
     <h5>folders  (${folder.folders.length})  :</h5>
-    <bs-input id="newFolderInput" placeholder="newFolderName" ></bs-input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
+    <input id="newFolderInput" placeholder="newFolderName" ></input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
     <bs-list-group>
     <bs-list-group-item active @click=${this.clickFolder} uri=${folder.parent}>.. (${folder.parent})</bs-list-group-item>
 
@@ -106,6 +106,7 @@ class StorageComponent extends LitElement {
           : html`
           <bs-list-group-item @click=${this.clickFile} uri=${f.url} type=${f.type}>
           ${f.name}
+          <bs-link-button primary small href="${f.url}" target="_blank">Open</bs-link-button>
           </bs-list-group-item>
           `
         }

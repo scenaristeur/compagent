@@ -71,10 +71,9 @@ class EditorComponent extends LitElement {
     <div>
     <input id="folderPath" placehoder="folderPath" value=${this.folderPath}>
     <input id="fileName" placehoder="fileName" value=${this.fileName}>
-    <bs-button @click=${this.clickUpdate}>Save</bs-button>
+    <bs-button @click=${this.clickUpdate} primary >Save</bs-button>
     </div>
-    <!--<button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>-->
-    <div>
+  <div>
   <textarea
     rows="20"
     cols="60"
@@ -82,7 +81,6 @@ class EditorComponent extends LitElement {
     placeholder="type here text that you want to post"
     @change=${this.textareaChanged}>
     </textarea>
-  }
   </div>
 
 

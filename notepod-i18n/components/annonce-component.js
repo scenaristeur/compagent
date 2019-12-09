@@ -272,8 +272,10 @@ console.log("newAnnonce", newAnnonce)
           <ul>
           ${annonces.map((n) => html`
             <li>
-            ${n.text}, <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-            <a href="${n.subject}" _target="_blank"><small>Open</small></a>
+            ${n.text}
+            <br>
+            <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
+              <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
             </li>
             `)}
             </ul>
