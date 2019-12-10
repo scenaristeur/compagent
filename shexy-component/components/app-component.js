@@ -14,7 +14,7 @@ import './agora-notes-component.js'
 import './annonce-component.js'
 import './agora-annonce-component.js'
 
-
+import './shexy-component.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
@@ -392,7 +392,7 @@ class AppComponent extends LitElement {
 
 
       <messages-component name="Messages"></messages-component>
-
+      <shexy-component name="Shexy"></shexy-component>
 
       <div>
 
