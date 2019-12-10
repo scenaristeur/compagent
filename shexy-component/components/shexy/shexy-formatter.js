@@ -1,4 +1,4 @@
-import { LitElement, html, property, customElement }  from 'https://unpkg.com/lit-element?module';
+import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min.js';
 import './shexy-solid.js'
 
 class ShexyFormatter extends LitElement {

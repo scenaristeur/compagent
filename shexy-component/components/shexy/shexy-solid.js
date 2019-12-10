@@ -1,4 +1,4 @@
-import { LitElement, html, property, customElement }  from 'https://unpkg.com/lit-element?module';
+import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min.js';
 
 
 class ShexySolid extends LitElement {
@@ -15,7 +15,6 @@ class ShexySolid extends LitElement {
 
   render() {
     return html`
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
     <p>Hello, ${this.name}!</p>
     <p>Shape : ${this.ttl.shape.url}</p>
@@ -32,7 +31,7 @@ class ShexySolid extends LitElement {
 
 
 
-
+/*
     shouldUpdate(changedProperties) {
       changedProperties.forEach((oldValue, propName) => {
         console.log(`${propName} changed. oldValue: ${oldValue}`);
@@ -41,7 +40,7 @@ class ShexySolid extends LitElement {
         this.processsTtl()
       }
       return changedProperties.has('schema') || changedProperties.has('currentShape') || changedProperties.has('ttl') || changedProperties.has('formData') || changedProperties.has('prop4')  || changedProperties.has('prop5');
-    }
+    }*/
 
     processsTtl(){
       console.log("TTL",this.ttl)
@@ -328,8 +327,6 @@ class SolidLogin extends LitElement {
 
   render() {
     return html`
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     <div class="right">
     <a href="#" title="LOGIN" @click="${(e) =>this.solidCheckSession()}">
     ${this.webId.length> 0

@@ -1,10 +1,13 @@
-import { LitElement, html, property, customElement }  from 'https://unpkg.com/lit-element?module';
-import 'https://unpkg.com/@polymer/paper-button/paper-button.js?module';
+import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min.js';
+import  '../../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 import { HelloAgent } from '../../agents/HelloAgent.js';
 //import 'https://unpkg.com/@polymer/paper-input/paper-input.js?module'; NOT SUPPORTED
 import './shexy-formatter.js'
 import './shexy-solid.js'
+
+import  '../../vendor/@lit-element-bootstrap/bs-button.bundle.js';
+import  '../../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
 
 class ShexyForms extends LitElement {
   static get properties() {
@@ -60,22 +63,22 @@ render() {
 
   ${shape.style == "regular"
 
-  ? html `<br><paper-button
+  ? html `<br>
+  <bs-button primary
   class="waves-effect waves-light btn-large"
   type="submit"
-  @click="${(e) =>this.submitForm()}"
-  raised >
+  @click="${(e) =>this.submitForm()}">
   Submit ${this.localName(shape.url)}
-  <i class="material-icons right">send</i>
-  </paper-button>`
+  <i class="fas fa-chevron-right"></i>
+  </bs-button>`
 
-  : html `<br><paper-button
+  : html `<br>
+  <bs-button primary
   class="waves-effect waves-light btn-large"
   type="submit"
-  @click="${(e) =>this.displayForm(shape.url.replace('_Footprint', ''))}"
-  raised >
-  <i class="material-icons left">arrow_back</i>
-  Back to ${this.localName(shape.url.replace('_Footprint', ''))} Form</paper-button>`}
+  @click="${(e) =>this.displayForm(shape.url.replace('_Footprint', ''))}">
+  <i class="fas fa-chevron-left"></i>
+  Back to ${this.localName(shape.url.replace('_Footprint', ''))} Form</bs-button>`}
 
   </fieldset>
   </form>
@@ -210,6 +213,8 @@ ${constraint.reference
   ></input>
 
   2-->
+  <bs-row>
+  <bs-col>
   <solid-folders
   url="${constraint.reference}"
   @change=${this.selectorChange}
@@ -221,17 +226,22 @@ ${constraint.reference
   </select>
 
   </solid-folders>
-
+  </bs-col>
+  <bs-col>
   <a href="${constraint.reference}"
   title="See existing ${this.localName(constraint.reference)} at ${constraint.reference}"
   target="blank">
-  <i class="material-icons left teal-text lighten-5">visibility</i>
+  <i class="far fa-eye"></i>
   </a>
+  </bs-col>
+  <bs-col>
   <a href="#"
   title="Create a ${constraint.reference}"
   @click="${(e) =>this.displayForm(constraint.reference)}">
-  <i class="material-icons left teal-text lighten-5">create</i>
+  <i class="fas fa-pen"></i>
   </a>
+  </bs-col>
+  </bs-row>
   <br>  `
   : html``
 }
@@ -259,8 +269,7 @@ ${constraint.values
 
 
   return html`
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
 
   <style>
   select {
@@ -288,6 +297,10 @@ ${constraint.values
     color: #2e7582;
     text-align: right;
   }
+
+  i {
+    padding: 10px
+  }
   </style>
 
 
@@ -296,10 +309,13 @@ ${constraint.values
   <div  class="row center-align flow-text">
   ${this.shapes.map(i => html`
     ${i.style == "regular"
-    ? html `  <div   class=" flow-text card-panel hoverable col s6 m3 l2 teal lighten-2">
+    ? html `
+    <bs-button primary title=${i.url} @click="${(e) =>this.panelClicked(i)}">${this.localName(i.url)}</bs-button>
+    <!--
+    <div   class=" flow-text card-panel hoverable col s6 m3 l2 teal lighten-2">
     <p class=" flow-text" title=${i.url} @click="${(e) =>this.panelClicked(i)}">
     ${this.localName(i.url)}</p>
-    </div>`
+    </div>-->`
     :html ``
   }`
 )}
@@ -309,8 +325,8 @@ ${constraint.values
 
 <div class="divider" id="top_Form"></div>
 <div >
-<paper-button raised class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("forms_section")}">Forms</paper-button>
-<paper-button raised class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("footprints_section")}" >Footprints</paper-button>
+<bs-button primary class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("forms_section")}">Forms</bs-button>
+<bs-button primary class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("footprints_section")}" >Footprints</bs-button>
 <div class="divider"></div>
 <div id="currentShapeDiv" class="teal-text text-darken-2">
 ${this.currentShape.url}
@@ -342,10 +358,8 @@ ${this.shapes.map(shape => html`
   ${this.shapes.map(i => html`
     ${i.style == "footprint"
     ? html `
-    <div  class="card-panel hoverable col s12 m6 l3 teal lighten-5">
-    <p title=${i.url} @click="${(e) =>this.panelClicked(i)}">
-    ${this.localName(i.url)}</p>
-    </div>`
+    <bs-button primary title=${i.url} @click="${(e) =>this.panelClicked(i)}">${this.localName(i.url)}</bs-button>
+    `
     : html ``
   }`
 )}

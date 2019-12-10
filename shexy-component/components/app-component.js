@@ -362,6 +362,14 @@ class AppComponent extends LitElement {
 
 
       <bs-container fluid>
+
+<bs-container>
+      <bs-row>
+      <shexy-component name="Shexy"></shexy-component>
+      </bs-row>
+</bs-container>
+
+
       <bs-row>
       <bs-column sm demo>
       <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
@@ -392,7 +400,7 @@ class AppComponent extends LitElement {
 
 
       <messages-component name="Messages"></messages-component>
-      <shexy-component name="Shexy"></shexy-component>
+
 
       <div>
 

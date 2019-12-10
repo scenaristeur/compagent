@@ -8,6 +8,8 @@ import './shexy/shexy-forms.js'
 import './shexy/shexy-solid.js'
 import './shexy/shexy-formatter.js'
 
+import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
+
 // Extend the LitElement base class
 class ShexyComponent extends LitElement {
 
@@ -25,9 +27,7 @@ class ShexyComponent extends LitElement {
 
   constructor() {
     super();
-    this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
-    this.count = 0;
     this.shapeUrl = "";
     this.schema = {};
 
@@ -77,12 +77,11 @@ class ShexyComponent extends LitElement {
 
   render() {
     return html`
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
     <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
 
-    <h5>Select shape to generate Form</h5>
-    <a href="${this.jsonList}" title="${this.jsonList}" target="blank"><i class="material-icons right">visibility</i></a>
+    <h5>Select shape to generate Form <a href="${this.jsonList}" title="${this.jsonList}" target="blank"><i class="far fa-eye"></i></a></h5>
+
 
     <shape-selector
     name="ShapeSelector"
@@ -101,7 +100,6 @@ class ShexyComponent extends LitElement {
     @schema-loaded="${(e) => { this.schemaLoaded(e) }}"
     ></shex-schema>
 
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
 

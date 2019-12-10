@@ -1,4 +1,4 @@
-import { LitElement, html, property, customElement }  from 'https://unpkg.com/lit-element?module';
+import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min.js';
 
 import { HelloAgent } from '../../agents/HelloAgent.js';
 
@@ -22,7 +22,6 @@ class ShexSchema extends LitElement {
 
   render() {
     return html`
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
     <p>Hello, ${this.name}!</p>
     <div class="card-panel teal lighten-2">shape forms</div>
