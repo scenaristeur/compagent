@@ -2,8 +2,6 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
-
-
 import './messages-component.js'
 import './login-component.js'
 import './webid-component.js'
@@ -17,6 +15,16 @@ import './annonce-component.js'
 import './agora-annonce-component.js'
 
 import './shexy-component.js'
+
+import  '../vendor/@lit-element-bootstrap/bs-navbar.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-nav.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-dropdown.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-jumbotron.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-collapse.bundle.js';
+import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
+
 
 
 // Extend the LitElement base class
@@ -75,20 +83,28 @@ class AppComponent extends LitElement {
     this.webId = webId
   }
 
+  clickHandler(event) {
+    this.count++
+    //console.log(event.target);
+    //  console.log(this.agent)
+    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+  }
 
   clickMenu(event) {
     var url = event.target.getAttribute("url");
     console.log(url)
     window.open('url', '_blank');
   }
-  clickDropdown(){
-    console.log("click")
-    $('.dropdown-toggle').dropdown()
-  }
 
   render() {
-/*
+
+
+
     const toolsList = (tools) => html`
+
+
+
+
     ${tools.map((n) => html`
       <bs-nav-item>
       <bs-dropdown-item-link dropdown-toggle @click="this.clickMenu" href="${n.url}" target="_blank"  title="${n.name}" ></bs-dropdown-item-link>
@@ -96,52 +112,303 @@ class AppComponent extends LitElement {
       </bs-nav-item>
       `)}
 
-      `;*/
+
+
+
+
+
+      `;
 
       return html`
-      <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
-      <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
-      <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-      </button>
+      <style>
+      :host {
+        height: 100%
+      }
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-      <a class="nav-link" href="#" >Link</a>
-      </li>
-      <li class="nav-item dropdown" @click="this.clickDropdown">
-      <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Dropdown
-      </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">Something else here</a>
+      .footer {
+        height: 10vh;
+
+        margin-top: 0.5rem;
+        background-color: #eee;
+        border-radius: 0.25rem;
+      }
+      bs-navbar-collapse {
+        background-color: #ddd;
+      }
+      .display-4 {
+        font-size: 3.5rem;
+        font-weight: 300;
+        line-height: 1.2;
+      }
+      .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+      }
+      .mb-4, .my-4 {
+        margin-bottom: 1.5rem !important;
+      }
+
+      bs-container {
+        /*  width: 87vw; */
+      }
+
+      bs-column[demo] {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        background-color: rgba(86, 61, 124, 0.15);
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgba(86, 61, 124, 0.2);
+        border-image: initial;
+      }
+
+
+
+
+      </style>
+
+      <webid-component name="Webid"></webid-component>
+      <bs-container fluid>
+
+      <bs-navbar navbar-light expand-lg class="bg-light">
+      <bs-navbar-brand-link>Poddy</bs-navbar-brand-link>
+      <i18n-component name="I18n"></i18n-component>
+      <bs-navbar-toggler>
+      <bs-navbar-toggler-icon></bs-navbar-toggler-icon>
+      </bs-navbar-toggler>
+      <bs-navbar-collapse>
+      <bs-navbar-nav class="mr-auto">
+      <bs-nav-item>
+      <bs-nav-link active>
+      ${i18next.t('home')}
+      </bs-nav-link>
+      </bs-nav-item>
+      <!--
+      <a href="#notepod">Notepod</a>
+      <bs-nav-item><bs-nav-link><a href="#notepod">Notepod</a></bs-nav-link></bs-nav-item>
+      <bs-nav-item><bs-nav-link><a href="#agoranotes">Agora Notes</a></bs-nav-link></bs-nav-item>
+      -->
+
+      ${toolsList(this.tools)}
+
+
+      <!--   <bs-nav-item>
+      <bs-nav-link disabled>Disabled</bs-nav-link>
+
+      </bs-nav-item>
+      -->
+
+      </bs-navbar-nav>
+
+      <bs-form inline class="my-2 my-lg-0">
+      <bs-form-input class="mr-sm-2" type="search" placeholder="Search"></bs-form-input>
+      <bs-button class="my-2 my-sm-0" outline-success action="submit">Search</bs-button>
+      </bs-form>
+      <bs-nav-item>
+      <login-component name="Login"></login-component>
+      </bs-nav-item>
+      <bs-nav-item>
+
+      </bs-nav-item>
+      </bs-navbar-collapse>
+
+      </bs-navbar>
+      </bs-container>
+
+      <bs-container fluid>
+
+
+      <bs-jumbotron fluid>
+      <h1 class="display-4">${i18next.t('hello_world')}</h1>
+
+      <p class="lead">${i18next.t('info_app1')}</p>
+      <hr class="my-4">
+
+
+
+
+
+
+
+
+
+
+      <p>  ${this.webId != null ?
+        html `
+
+
+
+        <!--
+        <p>
+        <bs-collapse-toggle target="multiCollapseExample1">
+        <bs-link-button primary>Profile</bs-link-button>
+        </bs-collapse-toggle>
+        <bs-collapse-toggle target="multiCollapseExample2">
+        <bs-button primary>Friends</bs-button>
+        </bs-collapse-toggle>
+        <bs-collapse-toggle target="multiCollapseExample3">
+        <bs-button primary>Storage</bs-button>
+        </bs-collapse-toggle>
+        <bs-collapse-multi-toggle multitarget="multi-collapse">
+        <bs-button primary>Toggle both elements</bs-button>
+        </bs-collapse-multi-toggle>
+        </p>
+
+        <bs-row>
+        <bs-column xs>
+        <bs-collapsable expanded id="multiCollapseExample1" class="multi-collapse">
+        <bs-card>
+        <bs-card-body>
+        <profile-component name="Profile"></profile-component>
+        </bs-card-body>
+        </bs-card>
+        </bs-collapsable>
+        </bs-column>
+        <bs-column xs>
+        <bs-collapsable expanded id="multiCollapseExample2" class="multi-collapse">
+        <bs-card>
+        <bs-card-body>
+        <friends-component name="Friends"></friends-component>
+        </bs-card-body>
+        </bs-card>
+        </bs-collapsable>
+        </bs-column>
+        <bs-column xs>
+        <bs-collapsable expanded id="multiCollapseExample3" class="multi-collapse">
+        <bs-card>
+        <bs-card-body>
+        <storage-component name="Storage"></storage-component>
+        </bs-card-body>
+        </bs-card>
+        </bs-collapsable>
+        </bs-column>
+        </bs-row>
+        -->
+
+
+
+
+        <bs-accordion>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseOne">
+        <h5 class="mb-0">
+        <bs-button link>Profile</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseOne">
+        <bs-card-body>
+        <profile-component name="Profile"></profile-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseTwo">
+        <h5 class="mb-0">
+        <bs-button link>Friends</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseTwo">
+        <bs-card-body>
+        <friends-component name="Friends"></friends-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseThree">
+        <h5 class="mb-0">
+        <bs-button link>Storage</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseThree">
+        <bs-card-body>
+        <storage-component name="Storage"></storage-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        </bs-accordion>
+
+
+        <!--
+        <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>-->
+        <!--
+        <br>
+        <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
+        `
+        :html `
+        ${i18next.t('info_app2')}
+        ${i18next.t('info_app3')}
+        <a href="./assets/images/auth.png" target="_blank">
+        ${i18next.t('screenshot')}
+        </a>.
+        `
+
+      }</p>
+      <!--  <bs-link-button primary>Learn more</bs-link-button>-->
+
+      <login-component name="Login2"></login-component>
+      </bs-jumbotron>
+
+
+      </bs-container>
+
+
+
+
+
+      <bs-container fluid>
+
+
+
+
+      <bs-row>
+      <bs-column sm demo>
+      <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
+      </bs-column>
+      <bs-column sm demo>
+      <notepod-component id="notepod" name="Notepod"></notepod-component>
+      </bs-column>
+      </bs-row>
+      <bs-row>
+      <bs-column sm demo>
+      <annonce-component name="Annonce"></annonce-component>
+      </bs-column>
+      <bs-column sm demo>
+      <agora-annonce-component name="AgoraAnnonce"></agora-annonce-component>
+      </bs-column>
+      <!--  <bs-column sm demo>sm</bs-column>-->
+      </bs-row>
+      </bs-container>
+      <bs-container>
+            <bs-row>
+            <shexy-component name="Shexy"></shexy-component>
+            </bs-row>
+      </bs-container>
+
+      <bs-container mt-4 class="footer">
+      <bs-row>
+      <bs-col>
+      <p class="text-center">Design by <a href="https://github.com/scenaristeur/compagent/blob/master/README.md">Smag0 Labs</a></p>
+      </bs-col>
+      </bs-row>
+      </bs-container>
+
+
+      <messages-component name="Messages"></messages-component>
+
+
+      <div>
+
       </div>
-      </li>
-      <li class="nav-item">
-      <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-      </div>
-      </nav>
 
 
-<button @click="this.clickMenu">buttton</button>
 
-      </div>
+
       `;
     }
 
