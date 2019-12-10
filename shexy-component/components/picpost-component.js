@@ -345,22 +345,28 @@ getNotes(){
             `;
 
             return html`
+            <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+              <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
 
 
 
 
 
-
-            <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-
+            <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
 
 
+            <form>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="customFile" accept="image/*">
+                <label class="custom-file-label" for="customFile">Choose file <i class="fas fa-camera-retro"></i></label>
+              </div>
+            </form>
 
 
-            <input type="file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera">
-            <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
-            <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">
+            <input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
+          <!--  <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
+            <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
 Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
 File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i class="fas fa-copy"></i><i class="fas fa-chevron-right"></i></br>
