@@ -120,7 +120,7 @@ render() {
   }
 
   ${constraint.predicate
-    ? html`<label class="flow-text" title="${this.toText(constraint)}">${this.setLastPredicate(constraint.predicate)}</label>`
+    ? html`<br><label class="flow-text" title="${this.toText(constraint)}">${this.setLastPredicate(constraint.predicate)}</label>`
     : html``
   }
 
