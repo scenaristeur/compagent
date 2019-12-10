@@ -1,5 +1,6 @@
 import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min.js';
 
+import { HelloAgent } from '../../agents/HelloAgent.js';
 
 class ShexySolid extends LitElement {
   static get properties() {
@@ -11,6 +12,8 @@ class ShexySolid extends LitElement {
     super();
     this.name = 'World';
     this.fileClient = SolidFileClient;
+    this.ttl = {shape: {url: ""}}
+    console.log(this.ttl)
   }
 
   render() {
@@ -29,9 +32,27 @@ class ShexySolid extends LitElement {
       `;
     }
 
+    firstUpdated(){
+        var app = this;
+    this.agent = new HelloAgent(this.name);
+  //  console.log("SHEXYFORMSAGENT", this.agent)
+    this.agent.receive = function(from, message) {
+      console.log(message)
+      if (message.hasOwnProperty("action")){
+        switch(message.action) {
+          case "ttlChanged":
+          app.ttlChanged(message.ttl)
+          break;
+          default:
+          console.log("Unknown action ",message)
+        }
+      }
+    };
 
 
-/*
+    }
+
+
     shouldUpdate(changedProperties) {
       changedProperties.forEach((oldValue, propName) => {
         console.log(`${propName} changed. oldValue: ${oldValue}`);
@@ -40,7 +61,7 @@ class ShexySolid extends LitElement {
         this.processsTtl()
       }
       return changedProperties.has('schema') || changedProperties.has('currentShape') || changedProperties.has('ttl') || changedProperties.has('formData') || changedProperties.has('prop4')  || changedProperties.has('prop5');
-    }*/
+    }
 
     processsTtl(){
       console.log("TTL",this.ttl)
@@ -188,7 +209,7 @@ class SolidFolders extends LitElement {
 
   render() {
     return html`
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <!--  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>-->
     <style>
     select {
       display: block; # obligé car materializecss n'arrive pas à initilaiser les selects
@@ -268,7 +289,7 @@ class SolidFolders extends LitElement {
       this.folder = {}
 
       this.fileClient.readFolder(url).then(folder => {
-        console.log(folder)
+      //  console.log(folder)
         this.folder = folder
         //  return  html`NAME : ${folder.name}`
       },

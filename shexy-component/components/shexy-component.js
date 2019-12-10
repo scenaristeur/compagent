@@ -5,7 +5,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import './shexy/shape-selector.js'
 import './shexy/shex-schema.js'
 import './shexy/shexy-forms.js'
-import './shexy/shexy-solid.js'
+//import './shexy/shexy-solid.js'
 import './shexy/shexy-formatter.js'
 
 import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
@@ -78,6 +78,9 @@ class ShexyComponent extends LitElement {
   render() {
     return html`
     <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+      <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
+
+      
     <h1>${this.name}</h1>
 
     <h5>Select shape to generate Form <a href="${this.jsonList}" title="${this.jsonList}" target="blank"><i class="far fa-eye"></i></a></h5>

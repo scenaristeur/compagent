@@ -4,7 +4,7 @@ import  '../../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 import { HelloAgent } from '../../agents/HelloAgent.js';
 //import 'https://unpkg.com/@polymer/paper-input/paper-input.js?module'; NOT SUPPORTED
 import './shexy-formatter.js'
-import './shexy-solid.js'
+//import './shexy-solid.js'
 
 import  '../../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 import  '../../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
@@ -63,10 +63,13 @@ render() {
 
   ${shape.style == "regular"
 
-  ? html `<br>
+  ? html `
+
+
+
   <bs-button primary
   class="waves-effect waves-light btn-large"
-  type="submit"
+  type="button"
   @click="${(e) =>this.submitForm()}">
   Submit ${this.localName(shape.url)}
   <i class="fas fa-chevron-right"></i>
@@ -75,7 +78,7 @@ render() {
   : html `<br>
   <bs-button primary
   class="waves-effect waves-light btn-large"
-  type="submit"
+  type="button"
   @click="${(e) =>this.displayForm(shape.url.replace('_Footprint', ''))}">
   <i class="fas fa-chevron-left"></i>
   Back to ${this.localName(shape.url.replace('_Footprint', ''))} Form</bs-button>`}
@@ -270,7 +273,7 @@ ${constraint.values
 
   return html`
   <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
-
+  <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
   <style>
   select {
     display: block; # obligé car materializecss n'arrive pas à initilaiser les selects
@@ -322,19 +325,25 @@ ${constraint.values
 </div>
 </div>
 
-
-<div class="divider" id="top_Form"></div>
-<div >
-<bs-button primary class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("forms_section")}">Forms</bs-button>
-<bs-button primary class="waves-effect waves-light teal lighten" @click="${(e) =>this.focus("footprints_section")}" >Footprints</bs-button>
-<div class="divider"></div>
+${this.shapes.length > 0 ?
+  html  `
+<div class="divider" id="top_Form">
+<div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-secondary" @click="${(e) =>this.focus("forms_section")}">Forms</button>
+  <button type="button" class="btn btn-secondary" @click="${(e) =>this.focus("footprints_section")}">Footprints</button>
+</div>
 <div id="currentShapeDiv" class="teal-text text-darken-2">
 ${this.currentShape.url}
 </div>
+
 </div>
 
+  `
+  :html ``
+}
 
 
+<div >
 
 
 

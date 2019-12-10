@@ -2,6 +2,10 @@ import { LitElement, css,  html } from '../../vendor/lit-element/lit-element.min
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../../agents/HelloAgent.js';
 
+
+
+
+
 class ShapeSelector extends LitElement {
   static get properties() {
     return {
@@ -18,29 +22,27 @@ class ShapeSelector extends LitElement {
 
 constructor() {
   super();
-    this.name = "unknown"
+  this.name = "unknown"
   this.liste = []
 }
 
 render() {
 
   return html`
+  <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-  select {
-    display: block; # obligé car materializecss n'arrive pas à initilaiser les selects
-  }
-  </style>
-
-  <!--  <label>Shape Select</label>-->
-  <select class=" flow-text teal lighten-5" @change=${this.selectorChange}>
+  <div class="form-group">
+  <!--<label for="sel1">Select list:</label>-->
+  <select class="form-control bg-info text-white" id="sel1" @change=${this.selectorChange}>
   <option value="" disabled selected>1 - CHOOSE A GOOD SHEX</option>
   ${this.liste.map(i => html`<option value="${i.value}" title="${i.value}" ?disabled=${this.disabled(i)} >${this.optionName(i)}</option>`)}
   </select>
-<!--  <div class="input-field">
+  </div>
+
+  <!--  <div class="input-field">
   <input disabled ></input><bs-button primary disabled>Use your shex shape</bs-button>
   </div>-->
-  <a href="${this.shapeUrl}" target="blank">${this.shapeUrl}</a>
+  <a href="${this.shapeUrl}"  target="blank">${this.shapeUrl}</a>
 
 
   `;
