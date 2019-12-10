@@ -15,13 +15,13 @@ export class SolidFileHelper {
       return folder
     }, err => {
       console.log(err) ;
-      alert(err)
+  //    alert(err)
       return err;
     });
   }
 
   createFolder(uri){
-    console.log("readFolder",uri)
+    console.log("createFolder",uri)
     return  this.fileClient.createFolder(uri).then(folder => {
       //   console.log(`Read ${folder.name}, it has ${folder.files.length} files.`);
       console.log(folder)

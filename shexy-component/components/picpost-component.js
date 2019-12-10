@@ -1,13 +1,14 @@
 import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js';
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
+import { SolidFileHelper } from '../helpers/solid-file-helper.js';
 
 import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 import './i18n-component.js'
 
-import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
+import { space} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 
 // Extend the LitElement base class
 class PicpostComponent extends LitElement {
@@ -20,7 +21,9 @@ class PicpostComponent extends LitElement {
       notes: {type: Array},
       lang: {type: String},
       agoraNotesListUrl: {type: String},
-      person: {type: Object}
+      person: {type: Object},
+      path: {type: String},
+      filename: {type: String}
     };
   }
 
@@ -33,6 +36,9 @@ class PicpostComponent extends LitElement {
     this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
     this.notes = []
     this.lang=navigator.language
+    this.sfh = new SolidFileHelper()
+    this.path = ""
+    this.filename = ""
     /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
@@ -70,46 +76,62 @@ class PicpostComponent extends LitElement {
 
   personChanged(person){
     this.person=person;
-    this.initNotePod()
+    //  this.initNotePod()
+    this.storage = this.person.getRef(space.storage)
+    console.log("storage",this.storage)
+    this.sfh.readFolder(this.storage+"public/Picpost/").then(
+      success => {
+
+        console.log(success)
+        if (typeof success == "String" && success.startsWith("404")){
+        //  console.log("404 ERREUR §§§§§§§§§§§§§")
+          this.sfh.createFolder(this.storage+"public/Picpost/").then(
+            success => {console.log(success)},
+            err => {console.log(err)})
+          }
+
+        },
+        err => {console.log(err)})
+
+      }
+
+
+      sessionChanged(webId){
+        this.webId = webId
+
+        if (this.webId != null){
+          //this.getUserData()
+          //
+        }else{
+          this.notes = []
+        }
+      }
+
+      /*
+      getUserData(){
+      var app = this;
+      Tripledoc.fetchDocument(app.webId).then(
+      doc => {
+      //    console.log("DOC",doc)
+      //    console.log(doc.getStatements())
+      app.doc = doc;
+      app.person = doc.getSubject(app.webId);
+      console.log("personne",app.person)
+      app.username = app.person.getString(app.FOAF('name'))
+      app.friends = app.person.getAllRefs(app.FOAF('knows'))
+
+      console.log("Friends",app.friends)
+      app.initNotePod()
+      app.agent.send('Profile',{action: "usernameChanged", username: app.username})
+      app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
+      app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
+      const storage = app.person.getRef(app.SPACE('storage'))
+      console.log("storage",storage)
+      app.agent.send('Storage',{action: "storageChanged", storage: storage})
+    },
+    err => {
+    console.log(err)
   }
-
-
-  sessionChanged(webId){
-    this.webId = webId
-
-    if (this.webId != null){
-      //this.getUserData()
-      //
-    }else{
-      this.notes = []
-    }
-  }
-
-  /*
-  getUserData(){
-  var app = this;
-  Tripledoc.fetchDocument(app.webId).then(
-  doc => {
-  //    console.log("DOC",doc)
-  //    console.log(doc.getStatements())
-  app.doc = doc;
-  app.person = doc.getSubject(app.webId);
-  console.log("personne",app.person)
-  app.username = app.person.getString(app.FOAF('name'))
-  app.friends = app.person.getAllRefs(app.FOAF('knows'))
-
-  console.log("Friends",app.friends)
-  app.initNotePod()
-  app.agent.send('Profile',{action: "usernameChanged", username: app.username})
-  app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
-  app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
-  const storage = app.person.getRef(app.SPACE('storage'))
-  console.log("storage",storage)
-  app.agent.send('Storage',{action: "storageChanged", storage: storage})
-},
-err => {
-console.log(err)
-}
 );
 }*/
 
@@ -189,7 +211,7 @@ getNotes(){
       // Store the date the note was created (i.e. now):
       newNote.addLiteral(schema.dateCreated, date)
 
-console.log(newNote.asNodeRef())
+      console.log(newNote.asNodeRef())
 
 
 
@@ -278,10 +300,30 @@ console.log(newNote.asNodeRef())
           return notesList;
           */
         }
+        sendPic(e) {
+          console.log(e.target)
+          console.log(e.target.getAttribute("capture"))
+
+          var file = e.target.files[0];
+          console.log("storage",this.storage)
+          this.path = this.storage+"public/Picpost/"
+          console.log(file)
+          this.filename = file.name
+          var uri = this.path+this.filename
+          this.sfh.updateFile(uri, file)
+          .then(
+            success =>{
+              console.log(success)
+
+            },
+            err => {console.log(err)});
+
+        }
+
 
         render() {
           const noteList = (notes) => html`
-        <h3>My  Note List (${notes.length})</h3>
+          <h3>My Picpost List (${notes.length})</h3>
 
 
           <bs-list-group-action>
@@ -291,8 +333,8 @@ console.log(newNote.asNodeRef())
             <!--  <h5 class="mb-1">${n.title}</h5> -->
             </div>
             <p class="mb-1">
-              <div style="white-space: pre-wrap">${n.text}</div>
-              </p>
+            <div style="white-space: pre-wrap">${n.text}</div>
+            </p>
             <!--<small>Donec id elit non mi porta.</small>-->
             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
             <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
@@ -300,36 +342,53 @@ console.log(newNote.asNodeRef())
             `)}
             </bs-list-group-action>
 
-              `;
+            `;
 
-              return html`
-
-<input type="file" accept="image/*" capture="camera">
-<input type="file" accept="image/*" capture="camcorder">
-<input type="file" accept="image/*" capture="audio">
+            return html`
 
 
 
 
 
-              <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-              <bs-form-group>
-              <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
-              <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
-              </bs-form-group>
-              <br>
-              <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
-              <bs-form-check-group>
-              <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
-              <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
-              </bs-form-check-group>
-              <br>
-              <p>
-              ${noteList(this.notes)}
-              </p>
-              `;
-            }
+
+
+            <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
+
+
+
+
+
+            <input type="file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera">
+            <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
+            <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">
+
+Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
+File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i class="fas fa-copy"></i><i class="fas fa-chevron-right"></i></br>
+
+
+            <bs-form-group>
+            <bs-form-label slot="label">Legend</bs-form-label>
+          <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+
+
+            </bs-form-group>
+            <br>
+            <bs-button primary @click=${this.addNote}>${i18next.t('add_legend')}</bs-button>
+
+
+
+
+            <bs-form-check-group>
+            <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
+            <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
+            </bs-form-check-group>
+            <br>
+            <p>
+            ${noteList(this.notes)}
+            </p>
+            `;
           }
+        }
 
-          // Register the new element with the browser.
-          customElements.define('picpost-component', PicpostComponent);
+        // Register the new element with the browser.
+        customElements.define('picpost-component', PicpostComponent);

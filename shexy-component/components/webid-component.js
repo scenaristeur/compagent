@@ -87,6 +87,7 @@ class WebidComponent extends LitElement {
         app.agent.send('Storage',{action: "sessionStorageChanged", storage: storage})
         app.agent.send('Notepod',{action: "personChanged", person: app.person})
         app.agent.send('Annonce',{action: "personChanged", person: app.person})
+        app.agent.send('Picpost',{action: "personChanged", person: app.person})
 
 
         //  app.initNotePod()

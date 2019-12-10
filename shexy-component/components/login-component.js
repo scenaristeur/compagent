@@ -32,7 +32,7 @@ class LoginComponent extends LitElement {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
           case "langChanged":
-        //  app.lang = message.lang;
+          //  app.lang = message.lang;
           app.requestUpdate();
           break;
           case "doSomething":
@@ -48,19 +48,21 @@ class LoginComponent extends LitElement {
 
 
     solid.auth.trackSession(session => {
-      if (!session){
-        //  this.switchLogButtons(null)
-        app.logged = false
-        //  slog("not logged")
-        console.log("notlogged")
-        app.informAllAgents(null)
-      }
-      else{
-        app.logged = true
-        //  this.switchLogButtons(session)
-        //  slog("user is "+session.webId)
-        console.log("user is "+session.webId)
-        app.informAllAgents(session)
+      if (session.webId != app.webId){
+        if (!session){
+          //  this.switchLogButtons(null)
+          app.logged = false
+          //  slog("not logged")
+          console.log("notlogged")
+          app.informAllAgents(null)
+        }
+        else{
+          app.logged = true
+          //  this.switchLogButtons(session)
+          //  slog("user is "+session.webId)
+          console.log("user is "+session.webId)
+          app.informAllAgents(session)
+        }
       }
     })
 
