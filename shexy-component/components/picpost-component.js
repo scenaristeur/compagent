@@ -369,7 +369,7 @@ getNotes(){
             <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
 Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
-File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i class="fas fa-copy"></i><i class="fas fa-chevron-right"></i></br>
+File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i class="fas fa-copy"></i></br>
 
 
             <bs-form-group>

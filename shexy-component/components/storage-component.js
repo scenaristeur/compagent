@@ -72,12 +72,14 @@ class StorageComponent extends LitElement {
 
     const folderList = (folder) => html`
     <h5>folders  (${folder.folders.length})  :</h5>
-    <input id="newFolderInput" placeholder="newFolderName" ></input> <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
+    <input id="newFolderInput" placeholder="newFolderName" ></input>
+    <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
     <bs-list-group>
     <bs-list-group-item active @click=${this.clickFolder} uri=${folder.parent}>.. (${folder.parent})</bs-list-group-item>
 
     ${folder.folders.map((f) => html`
-      <bs-list-group-item @click=${this.clickFolder} uri=${f.url} >${f.name}</bs-list-group-item>
+
+      <bs-list-group-item @click=${this.clickFolder} uri=${f.url} >${f.name} <i class="fas fa-copy"></i></bs-list-group-item>
       <!--<button @click=${this.clickAcl} uri=${f.url} >acl</button> -->
       `)}
       </bs-list-group>
@@ -101,12 +103,14 @@ class StorageComponent extends LitElement {
           html`
           <bs-list-group-item>
           <img src=${f.url} style='border:5px solid lightgray' width='50' height='50' @click=${this.clickFile} uri=${f.url} type=${f.type}>
+ <i class="fas fa-copy"></i>
           </bs-list-group-item>
           `
           : html`
           <bs-list-group-item @click=${this.clickFile} uri=${f.url} type=${f.type}>
           ${f.name}
           <bs-link-button primary small href="${f.url}" target="_blank">Open</bs-link-button>
+           <i class="fas fa-copy"></i>
           </bs-list-group-item>
           `
         }
@@ -118,7 +122,8 @@ class StorageComponent extends LitElement {
 
 
         return html`
-
+        <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+          <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
         <style>
         bs-card-img{
           max-width:33%
