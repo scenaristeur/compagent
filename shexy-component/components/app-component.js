@@ -13,6 +13,8 @@ import './notepod-component.js'
 import './agora-notes-component.js'
 import './annonce-component.js'
 import './agora-annonce-component.js'
+import './picpost-component.js'
+//import './agora-picpost-component.js'
 
 import './shexy-component.js'
 
@@ -168,7 +170,7 @@ class AppComponent extends LitElement {
       </style>
 
       <webid-component name="Webid"></webid-component>
-      <bs-container fluid>
+      <bs-container >
 
       <bs-navbar navbar-light expand-lg class="bg-light">
       <bs-navbar-brand-link>Poddy</bs-navbar-brand-link>
@@ -215,10 +217,10 @@ class AppComponent extends LitElement {
       </bs-navbar>
       </bs-container>
 
-      <bs-container fluid>
+      <bs-container >
 
 
-      <bs-jumbotron fluid>
+      <bs-jumbotron >
       <h1 class="display-4">${i18next.t('hello_world')}</h1>
 
       <p class="lead">${i18next.t('info_app1')}</p>
@@ -361,12 +363,18 @@ class AppComponent extends LitElement {
 
 
 
-      <bs-container fluid>
+      <bs-container >
 
 
 
 
       <bs-row>
+      <bs-column sm demo>
+      <agora-picpost-component id="agorapicpost" name="AgoraPicpost"></agora-picpost-component>
+      </bs-column>
+      <bs-column sm demo>
+      <picpost-component id="picpost" name="Picpost"></picpost-component>
+      </bs-column>
       <bs-column sm demo>
       <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
       </bs-column>
