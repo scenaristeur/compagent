@@ -73,68 +73,75 @@ class PicpostComponent extends LitElement {
         }
       }
     };
-  }
+    /*
+    $custom-file-text: (
+    en: "Browse",
+    es: "Elegir",
+    fr: "Parcourir",
+    de: "Durchsuchen"
+  );*/
+}
 
 
-  personChanged(person){
-    this.person=person;
-    //  this.initNotePod()
-    this.webId = person.webId
-    this.storage = this.person.getRef(space.storage)
-    console.log("storage",this.storage)
-    this.sfh.readFolder(this.storage+"public/Picpost/").then(
-      success => {
+personChanged(person){
+  this.person=person;
+  //  this.initNotePod()
+  this.webId = person.webId
+  this.storage = this.person.getRef(space.storage)
+  console.log("storage",this.storage)
+  this.sfh.readFolder(this.storage+"public/Picpost/").then(
+    success => {
 
-        console.log(success)
-        if (typeof success == "String" && success.startsWith("404")){
-          //  console.log("404 ERREUR §§§§§§§§§§§§§")
-          this.sfh.createFolder(this.storage+"public/Picpost/").then(
-            success => {console.log(success)},
-            err => {console.log(err)})
-          }
-
-        },
-        err => {console.log(err)})
-
-      }
-
-
-      sessionChanged(webId){
-        this.webId = webId
-
-        if (this.webId != null){
-          //this.getUserData()
-          //
-        }else{
-          this.notes = []
+      console.log(success)
+      if (typeof success == "String" && success.startsWith("404")){
+        //  console.log("404 ERREUR §§§§§§§§§§§§§")
+        this.sfh.createFolder(this.storage+"public/Picpost/").then(
+          success => {console.log(success)},
+          err => {console.log(err)})
         }
+
+      },
+      err => {console.log(err)})
+
+    }
+
+
+    sessionChanged(webId){
+      this.webId = webId
+
+      if (this.webId != null){
+        //this.getUserData()
+        //
+      }else{
+        this.notes = []
       }
+    }
 
-      /*
-      getUserData(){
-      var app = this;
-      Tripledoc.fetchDocument(app.webId).then(
-      doc => {
-      //    console.log("DOC",doc)
-      //    console.log(doc.getStatements())
-      app.doc = doc;
-      app.person = doc.getSubject(app.webId);
-      console.log("personne",app.person)
-      app.username = app.person.getString(app.FOAF('name'))
-      app.friends = app.person.getAllRefs(app.FOAF('knows'))
+    /*
+    getUserData(){
+    var app = this;
+    Tripledoc.fetchDocument(app.webId).then(
+    doc => {
+    //    console.log("DOC",doc)
+    //    console.log(doc.getStatements())
+    app.doc = doc;
+    app.person = doc.getSubject(app.webId);
+    console.log("personne",app.person)
+    app.username = app.person.getString(app.FOAF('name'))
+    app.friends = app.person.getAllRefs(app.FOAF('knows'))
 
-      console.log("Friends",app.friends)
-      app.initNotePod()
-      app.agent.send('Profile',{action: "usernameChanged", username: app.username})
-      app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
-      app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
-      const storage = app.person.getRef(app.SPACE('storage'))
-      console.log("storage",storage)
-      app.agent.send('Storage',{action: "storageChanged", storage: storage})
-    },
-    err => {
-    console.log(err)
-  }
+    console.log("Friends",app.friends)
+    app.initNotePod()
+    app.agent.send('Profile',{action: "usernameChanged", username: app.username})
+    app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
+    app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
+    const storage = app.person.getRef(app.SPACE('storage'))
+    console.log("storage",storage)
+    app.agent.send('Storage',{action: "storageChanged", storage: storage})
+  },
+  err => {
+  console.log(err)
+}
 );
 }*/
 
@@ -316,8 +323,12 @@ getNotes(){
           console.log("storage",this.storage)
           this.path = this.storage+"public/Picpost/"
           console.log(this.file)
-          this.filename = this.file.name
-          this.uri = this.path+this.filename
+
+
+          this.filename = this.file.name.substring(0,this.file.name.lastIndexOf("."));
+          this.shadowRoot.getElementById('filename').value = this.filename
+          this.extension = this.file.name.substring(this.file.name.lastIndexOf("."));
+          this.uri = this.path+this.filename+this.extension
 
           var canvas =   this.shadowRoot.getElementById('canvas')
           var ctx = canvas.getContext('2d');
@@ -352,6 +363,8 @@ getNotes(){
 
 
         sendPic(){
+
+          this.uri = this.path+this.filename+this.extension
           this.sfh.updateFile(this.uri, this.file)
           .then(
             success =>{
@@ -360,6 +373,33 @@ getNotes(){
 
             },
             err => {console.log(err)});
+
+          }
+
+
+          filenameChange(){
+            var filename = this.shadowRoot.getElementById("filename").value
+            if (filename.length == 0){
+              alert("Filename must not be blank")
+              this.shadowRoot.getElementById("filename").value = this.filename
+            }else{
+              this.filename = filename
+              this.uri=this.path+this.filename+this.extension
+            }
+          }
+
+          copy(){
+            console.log(this.uri)
+            var dummy = document.createElement("textarea");
+            // to avoid breaking orgain page when copying more words
+            // cant copy when adding below this code
+            // dummy.style.display = 'none'
+            //document.body.appendChild(dummy);
+            //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+            dummy.value = this.uri;
+            dummy.select();
+            document.execCommand("copy");
+            //  document.body.removeChild(dummy);
           }
 
 
@@ -411,28 +451,46 @@ getNotes(){
               <div class="row">
               <form>
               <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
-              <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="imageFile" accept="image/*;capture=camera">
+  <!--            <div class="custom-file">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="imageFile" accept="image/*;capture=camera" lang="${this.lang}">
               <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
               </div>
               <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="videoFile" accept="video/*;capture=camcorder">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="videoFile" accept="video/*;capture=camcorder" lang="${this.lang}">
               <label class="custom-file-label" for="videoFile"><i class="fas fa-video"></i> Video</label>
               </div>
               <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="audio/*;capture=microphone">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="audio/*;capture=microphone" lang="${this.lang}">
               <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
+              </div>
+-->
+              <div class="custom-file">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="image/*;video/*;audio/*" lang="${this.lang}">
+              <label class="custom-file-label" for="audioFile"><i class="fas fa-camera-retro"></i><i class="fas fa-video"></i><i class="fas fa-microphone"></i></label>
               </div>
               </form>
               </div>
 
-              <div class="row">
+
               Folder : <a href="${this.path}" target="_blank">${this.path}</a>
+
+              <div class="col-auto">
+              <label class="sr-only" for="filename">Filename</label>
+              <div class="input-group mb-2">
+              <input id="filename" class="form-control" type="text" value="${this.filename}" @change="${this.filenameChange}" placeholder="Filename">
+              <div class="input-group-append">
+              <div class="input-group-text">${this.extension}</div>
               </div>
-              <div class="row">
-              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature fa-disabled"></i> <i title="copy" class="fas fa-copy fa-disabled"></i>
               </div>
-              <div class="row"><canvas style="max-width: 100%; height: auto;" id="canvas"/></div>
+              </div>
+
+              <!--
+              <input id="filename" class="form-control" type="text" value="${this.filename}" @change="${this.filenameChange}" placeholder="Filename"> ${this.extension}
+              -->
+
+
+
+              <div class="col-auto"><canvas style="max-width: 100%; height: auto;" id="canvas"/></div>
 
 
               <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
@@ -443,12 +501,16 @@ getNotes(){
 
               <bs-form-group>
               <bs-form-label slot="label">Legend</bs-form-label>
-              <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+              <bs-form-textarea id ="notearea" rows="4" slot="control"></bs-form-textarea>
 
 
               </bs-form-group>
               <br>
               <bs-button primary @click=${this.sendPic}>${i18next.t('send_picture')}</bs-button>
+              <a href="${this.path+this.filename}" target="_blank">
+              <i title="download" class="fas fa-file-download"></i>
+              </a>
+              <i title="copy" @click="${this.copy}" class="fas fa-copy"></i>
 
 
 
