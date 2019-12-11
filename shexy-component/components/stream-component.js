@@ -112,13 +112,13 @@ render() {
   <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
   <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
 
-
+<div class="container">
   <video id="video"  autoplay></video>
   <img id="screenshot" src="">
   <canvas style="display:none;"></canvas>
   <button id="capture-button">Capture</capture>
   <button id="screenshot-button">Screenshot</capture>
-
+</div>
   `;
 }
 
