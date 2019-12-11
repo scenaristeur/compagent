@@ -77,6 +77,7 @@ class PicpostComponent extends LitElement {
   personChanged(person){
     this.person=person;
     //  this.initNotePod()
+    this.webId = person.webId
     this.storage = this.person.getRef(space.storage)
     console.log("storage",this.storage)
     this.sfh.readFolder(this.storage+"public/Picpost/").then(
@@ -301,6 +302,11 @@ getNotes(){
           */
         }
         sendPic(e) {
+
+          if (this.webId == null){
+            alert(i18next.t('must_log'))
+          }
+
           console.log(e.target)
           console.log(e.target.getAttribute("capture"))
 
@@ -364,8 +370,8 @@ getNotes(){
             </form>
 
 
-            <input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
-          <!--  <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
+            <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
+            <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
             <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
 Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>

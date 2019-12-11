@@ -65,7 +65,7 @@ class ShexySolid extends LitElement {
 
     processsTtl(){
       console.log("TTL",this.ttl)
-      this.solidCheckSession()
+    //  this.solidCheckSession()
     }
 
 
@@ -420,7 +420,7 @@ shouldUpdate(changedProperties) {
 }
 
 firstUpdated(){
-
+/*
   this.fileClient.checkSession().then(
     session => {
       console.log("Logged in as "+session.webId)
@@ -433,7 +433,7 @@ firstUpdated(){
       return false;
       this.webId = ""
     }
-  );
+  );*/
 
 }
 

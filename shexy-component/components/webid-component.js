@@ -74,6 +74,7 @@ class WebidComponent extends LitElement {
         console.log("Friends",app.friends)
         const storage = app.person.getRef(app.SPACE('storage'))
         console.log("storage",storage)
+        app.person.webId = app.webId
         app.agent.send('Profile',{action: "usernameChanged", username: app.username})
         app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
         app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
