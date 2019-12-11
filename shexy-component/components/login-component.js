@@ -48,7 +48,7 @@ class LoginComponent extends LitElement {
 
 
     solid.auth.trackSession(session => {
-      if (session.webId != app.webId){
+
         if (!session){
           //  this.switchLogButtons(null)
           app.logged = false
@@ -63,7 +63,7 @@ class LoginComponent extends LitElement {
           console.log("user is "+session.webId)
           app.informAllAgents(session)
         }
-      }
+      
     })
 
   }
