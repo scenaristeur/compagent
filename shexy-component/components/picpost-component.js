@@ -356,6 +356,13 @@ getNotes(){
               <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
               <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
+              <style>
+              .fa-disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+              }
+
+              </style>
 
 
 
@@ -387,7 +394,7 @@ getNotes(){
               <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
               Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
-              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature"></i> <i title="copy" class="fas fa-copy"></i></br>
+              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature fa-disabled"></i> <i title="copy" class="fas fa-copy fa-disabled"></i></br>
 
 
               <bs-form-group>

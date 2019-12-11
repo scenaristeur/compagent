@@ -108,6 +108,7 @@ clickHandler(event) {
 
 render() {
   return html`
+
   <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
   <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
   <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
@@ -117,9 +118,9 @@ render() {
   <div class="col">
   <button type="button" class="btn btn-outline-info" id="capture-button">Capture</button>
   <button type="button" class="btn btn-outline-info" id="screenshot-button">Screenshot</button><br>
-  <video id="video" width="320px" height="240px" autoplay></video><br>
+  <video id="video" width="640px" height="480px" autoplay></video><br>
 
-  <img id="screenshot" src="">
+  <img id="screenshot" width="640px" height="480px" src="">
   <canvas style="display:none;"></canvas>
 
   </div>
