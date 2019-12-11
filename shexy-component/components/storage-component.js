@@ -66,6 +66,19 @@ class StorageComponent extends LitElement {
     console.log("SESSION")
     this.sessionStorage = storage
   }
+  copy(e){
+    var dummy = document.createElement("textarea");
+    // to avoid breaking orgain page when copying more words
+    // cant copy when adding below this code
+    // dummy.style.display = 'none'
+    document.body.appendChild(dummy);
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    dummy.value = e.target.getAttribute("uri")
+    console.log(dummy.value)
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
 
   render() {
 
@@ -73,57 +86,52 @@ class StorageComponent extends LitElement {
     const folderList = (folder) => html`
     <h5>folders  (${folder.folders.length})  :</h5>
     <input id="newFolderInput" placeholder="newFolderName" ></input>
-    <bs-button @click=${this.newFolder}>New Folder</bs-button><br>
+    <button type="button" class=" info" @click=${this.newFolder}>New Folder</button><br>
     <bs-list-group>
     <bs-list-group-item active @click=${this.clickFolder} uri=${folder.parent}>.. (${folder.parent})</bs-list-group-item>
-
+    </bs-list-group>
+    <ul class="list-group list-group-flush">
     ${folder.folders.map((f) => html`
-
-      <bs-list-group-item @click=${this.clickFolder} uri=${f.url} >${f.name} <i class="fas fa-copy"></i></bs-list-group-item>
-      <!--<button @click=${this.clickAcl} uri=${f.url} >acl</button> -->
+      <li class="list-group-item">
+      <span @click=${this.clickFolder} uri=${f.url} >${f.name}</span>
+      <div style="width:100%;text-align:right" ><i title="copy" @click="${this.copy}" uri=${f.url} class="fas fa-copy"></i></div>
+      </li>
       `)}
-      </bs-list-group>
+      </ul>
       `;
 
-
       const fileList = (files) => html`
-
-
-
       <h5>files (${files.length}) :</h5>
-
       <input id="newFileInput" placeholder="newfilename.ttl"></input>
       <button @click=${this.newFile} disabled>New File</button>
       <!--  <twit-component name="Twit" uri=${this.uri}></twit-component>
       <note-component name="Note" uri=${this.uri}></note-component>-->
-      <bs-list-group>
 
+    <ul class="list-group list-group-flush">
       ${files.map((f) => html`
         ${this.isFileImage(f) ?
           html`
-          <bs-list-group-item>
+          <li class="list-group-item">
           <img src=${f.url} style='border:5px solid lightgray' width='50' height='50' @click=${this.clickFile} uri=${f.url} type=${f.type}>
- <i class="fas fa-copy"></i>
-          </bs-list-group-item>
-          `
+          <div style="width:100%;text-align:right" ><i title="copy" @click="${this.copy}" uri=${f.url} class="fas fa-copy"></i></div>
+          </li>`
           : html`
-          <bs-list-group-item @click=${this.clickFile} uri=${f.url} type=${f.type}>
-          ${f.name}
-          <bs-link-button primary small href="${f.url}" target="_blank">Open</bs-link-button>
-           <i class="fas fa-copy"></i>
-          </bs-list-group-item>
+            <li class="list-group-item">
+          <span @click=${this.clickFile} uri=${f.url} type=${f.type}>${f.name}</span>
+          <div style="width:100%;text-align:right" ><i title="copy" @click="${this.copy}" uri=${f.url} class="fas fa-copy"></i></div>
+          </li>
           `
         }
         <!--<button @click=${this.clickAcl} uri=${f.url} >acl</button>-->
         `)}
-        </bs-list-group>
+        </ul>
 
         `;
 
 
         return html`
         <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
-          <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
         <style>
         bs-card-img{
           max-width:33%
@@ -131,10 +139,8 @@ class StorageComponent extends LitElement {
         </style>
 
         <bs-card>
-        <bs-card-img position="top" slot="top-image">
-        <!--
-        <img src="https://forum.solidproject.org/uploads/default/original/2X/1/17fa5b5c2a39024abe5a4daba5c4beae7ff9f01d.png" width="180px" height="180px" >
-        -->
+        <!--  <bs-card-img position="top" slot="top-image">
+
         <svg class="bd-placeholder-img"
         width="180" height="180"
         xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +151,7 @@ class StorageComponent extends LitElement {
         </rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
         </svg>
 
-        </bs-card-img>
+        </bs-card-img>-->
         <h1>${this.name}</h1>
         <bs-card-body>
         <bs-card-title slot="card-title">
@@ -158,17 +164,17 @@ class StorageComponent extends LitElement {
 
 
 
-        <bs-row>
-        <bs-col>
+        <div class="row">
+        <div class="col-md">
         ${folderList(this.folder)}
-        </bs-col>
-        <bs-col>
+        </div>
+        <div class="col-md">
         ${fileList(this.folder.files)}
-        </bs-col>
-        <bs-col>
+        </div>
+        <div class="col-lg">
         <visualization-component name="Visualization"></visualization-component>
-        </bs-col>
-        </bs-row>
+        </div>
+        </div>
 
 
 
@@ -178,6 +184,9 @@ class StorageComponent extends LitElement {
         <bs-link-button disabled primary>Explore</bs-link-button>
         </bs-card-body>
         </bs-card>
+
+
+
 
         <!--  <p>${this.message}</p>
         <p>${this.count}</p>

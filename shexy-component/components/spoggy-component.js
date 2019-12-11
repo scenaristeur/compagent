@@ -172,25 +172,29 @@ class SpoggyComponent extends LitElement {
       border-radius: 50%;
     }
     </style>
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
-    <button
+    <button pimary
     id="nouveau_graph"
     @click=${this.nouveau}
 
     >Nouveau</button> /n
     <!--  <button id="importer_btn" onclick="catchCommande({value:'/i'})">Ouvrir</button> /i-->
-    <button id="save_to_pod" disabled onclick="open_ub()">Universal Browser</button> /a
-    <button id="capture_graphe"  disabled @click=${this.attrappeCommande}>Capturer jpg</button> /c
+    <button primary id="save_to_pod" disabled onclick="open_ub()">Universal Browser</button> /a
+    <button primary id="capture_graphe"  disabled @click=${this.attrappeCommande}>Capturer jpg</button> /c
 
-    <div>
-    Data is send to "Editor Module " in :  Json
+    <div class="row">
+    <div class="col">
+    Data is send to "Editor Module " in :<br>  Json
     <label class="switch">
     <input id="formatSwitch" type="checkbox" @click=${this.updateEditorFromNetwork}>
     <span class="slider round"></span>
     </label>
     Ttl
     </div>
-    </fieldset>
+      </div>
+  
     </div>
 
     <div id="nodePopUp">

@@ -66,6 +66,21 @@ class EditorComponent extends LitElement {
 
   render() {
     return html`
+<style>
+textarea
+{
+  border:1px solid #999999;
+  width:100%;
+  margin:5px 0;
+  padding:3px;
+}
+.boxsizingBorder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+</style>
 
     <!--<h1>${this.name}</h1>-->
     <div>
@@ -75,6 +90,7 @@ class EditorComponent extends LitElement {
     </div>
   <div>
   <textarea
+  class="boxsizingBorder"
     rows="20"
     cols="60"
     id="textarea"

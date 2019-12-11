@@ -169,6 +169,8 @@ class AppComponent extends LitElement {
 
 
       </style>
+      <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+      <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
       <webid-component name="Webid"></webid-component>
       <bs-container >
@@ -222,75 +224,10 @@ class AppComponent extends LitElement {
 
 
       <bs-jumbotron >
-      <h1 class="display-4">${i18next.t('hello_world')}</h1>
-
-      <p class="lead">${i18next.t('info_app1')}</p>
-      <hr class="my-4">
-
-
-
-
-
-
-
-
-
-
-      <p>  ${this.webId != null ?
+      <div class="row">
+          <div class="col-md">
+      ${this.webId != null ?
         html `
-
-
-
-        <!--
-        <p>
-        <bs-collapse-toggle target="multiCollapseExample1">
-        <bs-link-button primary>Profile</bs-link-button>
-        </bs-collapse-toggle>
-        <bs-collapse-toggle target="multiCollapseExample2">
-        <bs-button primary>Friends</bs-button>
-        </bs-collapse-toggle>
-        <bs-collapse-toggle target="multiCollapseExample3">
-        <bs-button primary>Storage</bs-button>
-        </bs-collapse-toggle>
-        <bs-collapse-multi-toggle multitarget="multi-collapse">
-        <bs-button primary>Toggle both elements</bs-button>
-        </bs-collapse-multi-toggle>
-        </p>
-
-        <bs-row>
-        <bs-column xs>
-        <bs-collapsable expanded id="multiCollapseExample1" class="multi-collapse">
-        <bs-card>
-        <bs-card-body>
-        <profile-component name="Profile"></profile-component>
-        </bs-card-body>
-        </bs-card>
-        </bs-collapsable>
-        </bs-column>
-        <bs-column xs>
-        <bs-collapsable expanded id="multiCollapseExample2" class="multi-collapse">
-        <bs-card>
-        <bs-card-body>
-        <friends-component name="Friends"></friends-component>
-        </bs-card-body>
-        </bs-card>
-        </bs-collapsable>
-        </bs-column>
-        <bs-column xs>
-        <bs-collapsable expanded id="multiCollapseExample3" class="multi-collapse">
-        <bs-card>
-        <bs-card-body>
-        <storage-component name="Storage"></storage-component>
-        </bs-card-body>
-        </bs-card>
-        </bs-collapsable>
-        </bs-column>
-        </bs-row>
-        -->
-
-
-
-
         <bs-accordion>
         <bs-card>
         <bs-card-header slot="card-header">
@@ -335,26 +272,26 @@ class AppComponent extends LitElement {
         </bs-collapsable>
         </bs-card>
         </bs-accordion>
-
-
-        <!--
-        <bs-link-button disabled primary>Hide Profile Friends & Storage</bs-link-button>-->
-        <!--
-        <br>
-        <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
-        `
+`
         :html `
+        <h2 class="display-4">${i18next.t('hello_world')}</h2>
+
+        <p class="lead">${i18next.t('info_app1')}</p>
         ${i18next.t('info_app2')}
         ${i18next.t('info_app3')}
         <a href="./assets/images/auth.png" target="_blank">
         ${i18next.t('screenshot')}
-        </a>.
+        </a>. <br>
+        <login-component name="Login2"></login-component>
         `
 
-      }</p>
+      }
+      </div>
+      </div>
+
       <!--  <bs-link-button primary>Learn more</bs-link-button>-->
 
-      <login-component name="Login2"></login-component>
+
       </bs-jumbotron>
 
       <bs-row>
