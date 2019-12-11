@@ -14,6 +14,7 @@ import './agora-notes-component.js'
 import './annonce-component.js'
 import './agora-annonce-component.js'
 import './picpost-component.js'
+import './stream-component.js'
 //import './agora-picpost-component.js'
 
 import './shexy-component.js'
@@ -202,7 +203,7 @@ class AppComponent extends LitElement {
 
       </bs-navbar-nav>
 
-    <!--  <bs-form inline class="my-2 my-lg-0">
+      <!--  <bs-form inline class="my-2 my-lg-0">
       <bs-form-input class="mr-sm-2" type="search" placeholder="Search"></bs-form-input>
       <bs-button class="my-2 my-sm-0" outline-success action="submit">Search</bs-button>
       </bs-form>-->
@@ -369,7 +370,10 @@ class AppComponent extends LitElement {
 
 
       <bs-row>
-    <!--  <bs-column sm demo>
+      <bs-column sm demo>
+      <stream-component id="stream" name="Stream"></stream-component>
+      </bs-column>
+      <!--  <bs-column sm demo>
       <agora-picpost-component id="agorapicpost" name="AgoraPicpost"></agora-picpost-component>
       </bs-column>-->
       <bs-column sm demo>
@@ -393,9 +397,9 @@ class AppComponent extends LitElement {
       </bs-row>
       </bs-container>
       <bs-container>
-            <bs-row>
-            <shexy-component name="Shexy"></shexy-component>
-            </bs-row>
+      <bs-row>
+      <shexy-component name="Shexy"></shexy-component>
+      </bs-row>
       </bs-container>
 
       <bs-container mt-4 class="footer">

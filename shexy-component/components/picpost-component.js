@@ -379,12 +379,13 @@ getNotes(){
             </form>
 
 
+
             <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
             <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
             <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
 Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
-File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i class="fas fa-copy"></i></br>
+File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature"></i> <i title="copy" class="fas fa-copy"></i></br>
 
 
             <bs-form-group>
