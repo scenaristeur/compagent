@@ -363,9 +363,18 @@ getNotes(){
 
 
             <form>
+            <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
               <div class="custom-file">
-                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="customFile" accept="image/*">
-                <label class="custom-file-label" for="customFile">Choose file <i class="fas fa-camera-retro"></i></label>
+                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="imageFile" accept="image/*;capture=camera">
+                <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="videoFile" accept="video/*;capture=camcorder">
+                <label class="custom-file-label" for="videoFile"><i class="fas fa-video"></i> Video</label>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="audioFile" accept="audio/*;capture=microphone">
+                <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
               </div>
             </form>
 

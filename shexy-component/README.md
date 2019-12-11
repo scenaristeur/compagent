@@ -40,6 +40,8 @@ https://codesandbox.io/s/hardcore-elion-11ko6
 # Restore PublicTypeIndex
 https://github.com/solid/node-solid-server/blob/master/default-templates/new-account/settings/publicTypeIndex.ttl
 
+# getusermedia
+https://www.html5rocks.com/en/tutorials/getusermedia/intro/
 
 
 import { LitElement, html, property, customElement }  from 'https://unpkg.com/lit-element?module';
