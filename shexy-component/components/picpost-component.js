@@ -8,6 +8,8 @@ import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 import './i18n-component.js'
 
+import './stream-component.js'
+
 import { space} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 
 // Extend the LitElement base class
@@ -85,7 +87,7 @@ class PicpostComponent extends LitElement {
 
         console.log(success)
         if (typeof success == "String" && success.startsWith("404")){
-        //  console.log("404 ERREUR §§§§§§§§§§§§§")
+          //  console.log("404 ERREUR §§§§§§§§§§§§§")
           this.sfh.createFolder(this.storage+"public/Picpost/").then(
             success => {console.log(success)},
             err => {console.log(err)})
@@ -324,34 +326,34 @@ getNotes(){
             },
             err => {console.log(err)});
 
-        }
+          }
 
 
-        render() {
-          const noteList = (notes) => html`
-          <h3>My Picpost List (${notes.length})</h3>
+          render() {
+            const noteList = (notes) => html`
+            <h3>My Picpost List (${notes.length})</h3>
 
 
-          <bs-list-group-action>
-          ${notes.map((n) => html`
-            <bs-list-group-item-action-link class="flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-            <!--  <h5 class="mb-1">${n.title}</h5> -->
-            </div>
-            <p class="mb-1">
-            <div style="white-space: pre-wrap">${n.text}</div>
-            </p>
-            <!--<small>Donec id elit non mi porta.</small>-->
-            <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-            <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
-            </bs-list-group-item-action-link>
-            `)}
-            </bs-list-group-action>
+            <bs-list-group-action>
+            ${notes.map((n) => html`
+              <bs-list-group-item-action-link class="flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+              <!--  <h5 class="mb-1">${n.title}</h5> -->
+              </div>
+              <p class="mb-1">
+              <div style="white-space: pre-wrap">${n.text}</div>
+              </p>
+              <!--<small>Donec id elit non mi porta.</small>-->
+              <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
+              <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
+              </bs-list-group-item-action-link>
+              `)}
+              </bs-list-group-action>
 
-            `;
+              `;
 
-            return html`
-            <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+              return html`
+              <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
               <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
 
@@ -359,58 +361,61 @@ getNotes(){
 
 
 
-            <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
+              <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
 
 
-            <form>
-            <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
+              <form>
+              <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
               <div class="custom-file">
-                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="imageFile" accept="image/*;capture=camera">
-                <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
+              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="imageFile" accept="image/*;capture=camera">
+              <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
               </div>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="videoFile" accept="video/*;capture=camcorder">
-                <label class="custom-file-label" for="videoFile"><i class="fas fa-video"></i> Video</label>
+              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="videoFile" accept="video/*;capture=camcorder">
+              <label class="custom-file-label" for="videoFile"><i class="fas fa-video"></i> Video</label>
               </div>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" @change="${this.sendPic}" id="audioFile" accept="audio/*;capture=microphone">
-                <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
+              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="audioFile" accept="audio/*;capture=microphone">
+              <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
               </div>
-            </form>
+              </form>
 
 
 
-            <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
-            <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
-            <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
+              <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
+              <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
+              <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
-Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
-File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature"></i> <i title="copy" class="fas fa-copy"></i></br>
-
-
-            <bs-form-group>
-            <bs-form-label slot="label">Legend</bs-form-label>
-          <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+              Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
+              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature"></i> <i title="copy" class="fas fa-copy"></i></br>
 
 
-            </bs-form-group>
-            <br>
-            <bs-button primary @click=${this.addNote}>${i18next.t('add_legend')}</bs-button>
+              <bs-form-group>
+              <bs-form-label slot="label">Legend</bs-form-label>
+              <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+
+
+              </bs-form-group>
+              <br>
+              <bs-button primary @click=${this.addNote}>${i18next.t('add_legend')}</bs-button>
 
 
 
 
-            <bs-form-check-group>
-            <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
-            <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
-            </bs-form-check-group>
-            <br>
-            <p>
-            ${noteList(this.notes)}
-            </p>
-            `;
+              <bs-form-check-group>
+              <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
+              <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
+              </bs-form-check-group>
+              <br>
+
+              <stream-component id="stream" name="Stream"></stream-component>
+
+              <p>
+              ${noteList(this.notes)}
+              </p>
+              `;
+            }
           }
-        }
 
-        // Register the new element with the browser.
-        customElements.define('picpost-component', PicpostComponent);
+          // Register the new element with the browser.
+          customElements.define('picpost-component', PicpostComponent);

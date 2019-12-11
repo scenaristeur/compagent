@@ -14,7 +14,7 @@ import './agora-notes-component.js'
 import './annonce-component.js'
 import './agora-annonce-component.js'
 import './picpost-component.js'
-import './stream-component.js'
+
 //import './agora-picpost-component.js'
 
 import './shexy-component.js'
@@ -370,9 +370,7 @@ class AppComponent extends LitElement {
 
 
       <bs-row>
-      <bs-column sm demo>
-      <stream-component id="stream" name="Stream"></stream-component>
-      </bs-column>
+
       <!--  <bs-column sm demo>
       <agora-picpost-component id="agorapicpost" name="AgoraPicpost"></agora-picpost-component>
       </bs-column>-->
