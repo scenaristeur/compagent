@@ -14,8 +14,8 @@ class AgoraPicpostComponent extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      agoraNotesListUrl: {type: String},
-      notes: {type: Array},
+      agoraPicsListUrl: {type: String},
+      pics: {type: Array},
       lang: {type: String}
     };
   }
@@ -23,9 +23,9 @@ class AgoraPicpostComponent extends LitElement {
   constructor() {
     super();
     this.name = "unknown"
-    this.notes = []
+    this.pics = []
     this.lang=navigator.language
-    this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
+    this.agoraPicsListUrl = "https://agora.solid.community/public/Picpost/pics.ttl"
     /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
@@ -56,18 +56,18 @@ class AgoraPicpostComponent extends LitElement {
 
   render() {
 
-    const noteList = (notes) => html`
-    <h3>    Notes on Agora (${notes.length})</h3>
+    const picList = (pics) => html`
+    <h3>    pics on Agora (${pics.length})</h3>
 
 
     <bs-link-button primary small
-    href="${this.agoraNotesListUrl}"
+    href="${this.agoraPicsListUrl}"
     target="_blank">
-    ${this.agoraNotesListUrl}
+    ${this.agoraPicsListUrl}
     </bs-link-button>
 
     <bs-list-group-action>
-    ${notes.map((n) => html`
+    ${pics.map((n) => html`
       <bs-list-group-item-action-link class="flex-column align-items-start">
       <div class="d-flex w-100 justify-content-between">
       <!--              <h5 class="mb-1">${n.title}</h5>-->
@@ -101,26 +101,26 @@ class AgoraPicpostComponent extends LitElement {
       return html`
 
 
-      ${noteList(this.notes)}
+      ${picList(this.pics)}
       `;
     }
 
 
     getAgoraData(){
       var app = this
-      Tripledoc.fetchDocument(app.agoraNotesListUrl).then(
-        notesList => {
-          app.notesList = notesList;
+      Tripledoc.fetchDocument(app.agoraPicsListUrl).then(
+        picsList => {
+          app.picsList = picsList;
 
-          console.log("app.notesList",app.notesList)
-
-
+          console.log("app.picsList",app.picsList)
 
 
-          app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
-          //  console.log("notesUri",app.notesUri)
-          app.notes = []
-          app.notesUri.forEach(function (nuri){
+
+
+          app.picsUri = picsList.findSubjects(rdf.type, schema.MediaObject)
+          //  console.log("picsUri",app.picsUri)
+          app.pics = []
+          app.picsUri.forEach(function (nuri){
             //var subj = nuri.getLocalSubject()
             //  console.log("nuri",nuri)
             //  console.log("doc",nuri.getDocument())
@@ -129,17 +129,17 @@ class AgoraPicpostComponent extends LitElement {
             var creator = nuri.getRef(schema.creator)
             var also = nuri.getRef(rdfs.seeAlso)
             //  console.log(text, date)
-            var note = {}
-            note.text = text;
-            note.date = date;
-            note.creator = creator;
-            note.also = also;
+            var pic = {}
+            pic.text = text;
+            pic.date = date;
+            pic.creator = creator;
+            pic.also = also;
             //text = nuri.getAllStrings()*/
-            app.notes = [... app.notes, note]
+            app.pics = [... app.pics, pic]
           })
 
-          app.notes.reverse()
-          console.log(app.notes)
+          app.pics.reverse()
+          console.log(app.pics)
 
 
           if (app.socket == undefined){
@@ -154,15 +154,15 @@ class AgoraPicpostComponent extends LitElement {
       subscribe(){
         var app = this
         //https://github.com/scenaristeur/spoggy-chat-solid/blob/master/index.html
-        var websocket = this.notesList.getWebSocketRef();
+        var websocket = this.picsList.getWebSocketRef();
         console.log("WEBSOCK",websocket)
         app.socket = new WebSocket(websocket);
         console.log ("socket",app.socket)
         app.socket.onopen = function() {
           const d = new Date();
           var now = d.toLocaleTimeString(app.lang) + `.${d.getMilliseconds()}`
-          this.send('sub '+app.agoraNotesListUrl);
-          app.agent.send('Messages', now+"[souscription] "+app.agoraNotesListUrl)
+          this.send('sub '+app.agoraPicsListUrl);
+          app.agent.send('Messages', now+"[souscription] "+app.agoraPicsListUrl)
           //  this.send('sub https://spoggy.solid.community/public/test/fichier2.ttl');
           /*  this.send('sub https://spoggy.solid.community/public/test');
           this.send('sub https://spoggy.solid.community/public/test/index.ttl');*/

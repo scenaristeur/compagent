@@ -15,7 +15,7 @@ import './annonce-component.js'
 import './agora-annonce-component.js'
 import './picpost-component.js'
 
-//import './agora-picpost-component.js'
+import './agora-picpost-component.js'
 
 import './shexy-component.js'
 
@@ -357,25 +357,14 @@ class AppComponent extends LitElement {
       <login-component name="Login2"></login-component>
       </bs-jumbotron>
 
-
-      </bs-container>
-
-
-
-
-
-      <bs-container >
-
-
-
-
       <bs-row>
 
-      <!--  <bs-column sm demo>
-      <agora-picpost-component id="agorapicpost" name="AgoraPicpost"></agora-picpost-component>
-      </bs-column>-->
+
       <bs-column sm demo>
       <picpost-component id="picpost" name="Picpost"></picpost-component>
+      </bs-column>
+      <bs-column sm demo>
+      <agora-picpost-component id="agorapicpost" name="AgoraPicpost"></agora-picpost-component>
       </bs-column>
       <bs-column sm demo>
       <agora-notes-component id="agoranotes" name="AgoraNotes"></agora-notes-component>
