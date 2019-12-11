@@ -202,10 +202,10 @@ class AppComponent extends LitElement {
 
       </bs-navbar-nav>
 
-      <bs-form inline class="my-2 my-lg-0">
+    <!--  <bs-form inline class="my-2 my-lg-0">
       <bs-form-input class="mr-sm-2" type="search" placeholder="Search"></bs-form-input>
       <bs-button class="my-2 my-sm-0" outline-success action="submit">Search</bs-button>
-      </bs-form>
+      </bs-form>-->
       <bs-nav-item>
       <login-component name="Login"></login-component>
       </bs-nav-item>
