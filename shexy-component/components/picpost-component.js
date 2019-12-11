@@ -303,29 +303,63 @@ getNotes(){
           return notesList;
           */
         }
-        sendPic(e) {
+        createTemp(e) {
 
           if (this.webId == null){
             alert(i18next.t('must_log'))
           }
 
           console.log(e.target)
-          console.log(e.target.getAttribute("capture"))
+          //  console.log(e.target.getAttribute("capture"))
 
-          var file = e.target.files[0];
+          this.file = e.target.files[0];
           console.log("storage",this.storage)
           this.path = this.storage+"public/Picpost/"
-          console.log(file)
-          this.filename = file.name
-          var uri = this.path+this.filename
-          this.sfh.updateFile(uri, file)
+          console.log(this.file)
+          this.filename = this.file.name
+          this.uri = this.path+this.filename
+
+          var canvas =   this.shadowRoot.getElementById('canvas')
+          var ctx = canvas.getContext('2d');
+          var cw = canvas.width;
+          var ch = canvas.height;
+          var maxW=cw;
+          var maxH=ch;
+
+          var image = new Image;
+          image.onload = function() {
+            var iw=image.width;
+            var ih=image.height;
+            var scale=Math.min((maxW/iw),(maxH/ih));
+            var iwScaled=iw*scale;
+            var ihScaled=ih*scale;
+            canvas.width=iwScaled;
+            canvas.height=ihScaled;
+            ctx.drawImage(image,0,0,iwScaled,ihScaled);
+            //  ctx.drawImage(image, 0,0);
+            //  alert('the image is drawn');
+          }
+          image.src = URL.createObjectURL(this.file);
+
+          /*
+          canvas.width = this.file.width;
+          canvas.height = this.file.height;
+          canvas.getContext('2d').drawImage(image, 0, 0);
+          // Other browsers will fall back to image/png
+          img.src = canvas.toDataURL('image/webp');*/
+
+        }
+
+
+        sendPic(){
+          this.sfh.updateFile(this.uri, this.file)
           .then(
             success =>{
               console.log(success)
+              //this.addNote()
 
             },
             err => {console.log(err)});
-
           }
 
 
@@ -362,6 +396,9 @@ getNotes(){
                 cursor: not-allowed;
               }
 
+              i {
+                padding: 10px
+              }
               </style>
 
 
@@ -371,30 +408,37 @@ getNotes(){
               <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
 
 
+              <div class="row">
               <form>
               <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
               <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="imageFile" accept="image/*;capture=camera">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="imageFile" accept="image/*;capture=camera">
               <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
               </div>
               <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="videoFile" accept="video/*;capture=camcorder">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="videoFile" accept="video/*;capture=camcorder">
               <label class="custom-file-label" for="videoFile"><i class="fas fa-video"></i> Video</label>
               </div>
               <div class="custom-file">
-              <input type="file" class="custom-file-input" @change="${this.sendPic}" id="audioFile" accept="audio/*;capture=microphone">
+              <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="audio/*;capture=microphone">
               <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
               </div>
               </form>
+              </div>
 
+              <div class="row">
+              Folder : <a href="${this.path}" target="_blank">${this.path}</a>
+              </div>
+              <div class="row">
+              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature fa-disabled"></i> <i title="copy" class="fas fa-copy fa-disabled"></i>
+              </div>
+              <div class="row"><canvas style="max-width: 100%; height: auto;" id="canvas"/></div>
 
 
               <!--<input type="file" class="form-control-file" @change="${this.sendPic}"  id="camera" accept="image/*" capture="camera"></input>
               <input type="file" @change="${this.sendPic}"  id="camcorder" accept="image/*" capture="camcorder">
               <input type="file" @change="${this.sendPic}" id="audio" accept="image/*" capture="audio">-->
 
-              Folder : <a href="${this.path}" target="_blank">${this.path}</a> <br>
-              File <a href="${this.path+this.filename}" target="_blank">${this.filename}</a> <i title="rename" class="fas fa-file-signature fa-disabled"></i> <i title="copy" class="fas fa-copy fa-disabled"></i></br>
 
 
               <bs-form-group>
@@ -404,7 +448,7 @@ getNotes(){
 
               </bs-form-group>
               <br>
-              <bs-button primary @click=${this.addNote}>${i18next.t('add_legend')}</bs-button>
+              <bs-button primary @click=${this.sendPic}>${i18next.t('send_picture')}</bs-button>
 
 
 
