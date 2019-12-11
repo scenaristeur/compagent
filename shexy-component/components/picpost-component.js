@@ -10,7 +10,7 @@ import './i18n-component.js'
 
 import './stream-component.js'
 
-import { space} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
+import { space, schema, solid, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 
 // Extend the LitElement base class
 class PicpostComponent extends LitElement {
@@ -20,9 +20,9 @@ class PicpostComponent extends LitElement {
       message: { type: String },
       name: {type: String},
       source: {type: String},
-      notes: {type: Array},
+      pics: {type: Array},
       lang: {type: String},
-      agoraNotesListUrl: {type: String},
+      agoraPicsListUrl: {type: String},
       person: {type: Object},
       path: {type: String},
       filename: {type: String}
@@ -35,8 +35,8 @@ class PicpostComponent extends LitElement {
     this.name = "unknown"
     this.person = {}
     this.source = "unknown"
-    this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
-    this.notes = []
+    this.agoraPicsListUrl = "https://agora.solid.community/public/Picpost/pics.ttl"
+    this.pics = []
     this.lang=navigator.language
     this.sfh = new SolidFileHelper()
     this.path = ""
@@ -85,7 +85,7 @@ class PicpostComponent extends LitElement {
 
 personChanged(person){
   this.person=person;
-  //  this.initNotePod()
+  this.initPicPod()
   this.webId = person.webId
   this.storage = this.person.getRef(space.storage)
   console.log("storage",this.storage)
@@ -113,7 +113,7 @@ personChanged(person){
         //this.getUserData()
         //
       }else{
-        this.notes = []
+        this.pics = []
       }
     }
 
@@ -131,7 +131,7 @@ personChanged(person){
     app.friends = app.person.getAllRefs(app.FOAF('knows'))
 
     console.log("Friends",app.friends)
-    app.initNotePod()
+    app.initpicPod()
     app.agent.send('Profile',{action: "usernameChanged", username: app.username})
     app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
     app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
@@ -145,93 +145,94 @@ personChanged(person){
 );
 }*/
 
-initNotePod(){
+initPicPod(){
   var app = this;
   app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
-  //console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
+  console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
   Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
     publicTypeIndex => {
       app.publicTypeIndex = publicTypeIndex;
-      app.notesListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
-      //  console.log("app.notesListEntry",app.notesListEntry)
-      if (app.notesListEntry === null){
-        app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
+      app.picsListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.MediaObject);
+      console.log("app.picsListEntry",app.picsListEntry)
+      if (app.picsListEntry === null){
+        app.picsListUrl = app.initialisePicsList(app.person, app.publicTypeIndex)
       }else{
-        app.notesListUrl = app.notesListEntry.getRef(solid.instance)
-        //  console.log("notesListUrl",app.notesListUrl)
+        app.picsListUrl = app.picsListEntry.getRef(solid.instance)
+          console.log("picsListUrl",app.picsListUrl)
 
       }
-      app.getNotes()
+      app.getPics()
     },
     err => {console.log(err)}
   );
 }
 
 
-getNotes(){
+getPics(){
   var app = this;
-  //  console.log("getNotes at ",app.notesListUrl)
-  Tripledoc.fetchDocument(app.notesListUrl).then(
-    notesList => {
-      app.notesList = notesList;
+  //  console.log("getpics at ",app.picsListUrl)
+  Tripledoc.fetchDocument(app.picsListUrl).then(
+    picsList => {
+      app.picsList = picsList;
 
-      //    console.log("app.notesList",app.notesList)
-      app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
-      //  console.log("notesUri",app.notesUri)
-      app.notes = []
-      app.notesUri.forEach(function (nuri){
+      //    console.log("app.picsList",app.picsList)
+      app.picsUri = picsList.findSubjects(rdf.type, schema.MediaObject)
+      //  console.log("picsUri",app.picsUri)
+      app.pics = []
+      app.picsUri.forEach(function (nuri){
         var subject = nuri.asNodeRef()
         //  console.log("subject",subject)
         //  console.log("doc",nuri.getDocument())
         var text = nuri.getString(schema.text)
         var date = nuri.getDateTime(schema.dateCreated)
         //  console.log(text, date)
-        var note = {}
-        note.text = text;
-        note.date = date;
-        note.subject = subject;
+        var pic = {}
+        pic.text = text;
+        pic.date = date;
+        pic.subject = subject;
         //text = nuri.getAllStrings()*/
-        app.notes = [... app.notes, note]
+        app.pics = [... app.pics, pic]
       })
 
-      app.notes.reverse()
+      app.pics.reverse()
     })
   }
 
 
 
-  addNote(){
+  addPic(){
     var app = this
 
-    //  console.log(app.notesList)
-    if (app.notesList == undefined){
+    console.log(app.picsList)
+    if (app.picsList == undefined){
       alert(i18next.t('must_log'))
     }else{
-      var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
-      var note = textarea.value.trim()
+      var textarea = this.shadowRoot.getElementById('picarea').shadowRoot.querySelector(".form-control")
+      var pic = textarea.value.trim()
       textarea.value = ""
-      //  console.log(note)
-      const newNote = app.notesList.addSubject();
+      //  console.log(pic)
+      const newPic = app.picsList.addSubject();
       var date = new Date(Date.now())
-      // Indicate that the Subject is a schema:TextDigitalDocument:
-      newNote.addRef(rdf.type, schema.TextDigitalDocument);
-      // Set the Subject's `schema:text` to the actual note contents:
-      newNote.addLiteral(schema.text, note);
-      // Store the date the note was created (i.e. now):
-      newNote.addLiteral(schema.dateCreated, date)
+      // Indicate that the Subject is a schema:MediaObject:
+      newPic.addRef(rdf.type, schema.MediaObject);
+      // Set the Subject's `schema:text` to the actual pic contents:
+      newPic.addLiteral(schema.text, pic);
+      // Store the date the pic was created (i.e. now):
+      newPic.addLiteral(schema.dateCreated, date)
+      newPic.addRef(schema.about, app.uri);
 
-      console.log(newNote.asNodeRef())
+      console.log(newPic.asNodeRef())
 
 
 
-      app.notesList.save([newNote]).then(
+      app.picsList.save([newPic]).then(
         success=>{
           var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
           if(checkAgora == true){
-            app.updateAgora(note, date, newNote.asNodeRef())
+            app.updateAgora(pic, date, newPic.asNodeRef())
           }
-          app.initNotePod()
+          app.initPicPod()
         },
         err=>{
           console.log(err)
@@ -241,28 +242,29 @@ getNotes(){
 
     }
 
-    updateAgora(note,date, subject){
+    updateAgora(pic,date, subject){
       var app = this;
-      //  console.log("app.agoraNotesListUrl",app.agoraNotesListUrl)
-      Tripledoc.fetchDocument(app.agoraNotesListUrl).then(
-        agoraNotesList => {
-          app.agoraNotesList = agoraNotesList;
-          //  console.log("app.agoraNotesList",app.agoraNotesList)
-          const newNote = app.agoraNotesList.addSubject();
-          // Indicate that the Subject is a schema:TextDigitalDocument:
-          newNote.addRef(rdf.type, schema.TextDigitalDocument);
-          // Set the Subject's `schema:text` to the actual note contents:
-          newNote.addLiteral(schema.text, note);
-          // Store the date the note was created (i.e. now):
-          newNote.addLiteral(schema.dateCreated, date)
-          // add ref to user note
-          newNote.addRef(rdfs.seeAlso, subject);
-          newNote.addRef(schema.creator, app.webId);
+      console.log("app.agoraPicsListUrl",app.agoraPicsListUrl)
+      Tripledoc.fetchDocument(app.agoraPicsListUrl).then(
+        agoraPicsList => {
+          app.agoraPicsList = agoraPicsList;
+          console.log("app.agoraPicsList",app.agoraPicsList)
+          const newPic = app.agoraPicsList.addSubject();
+          // Indicate that the Subject is a schema:MediaObject:
+          newPic.addRef(rdf.type, schema.MediaObject);
+          // Set the Subject's `schema:text` to the actual pic contents:
+          newPic.addLiteral(schema.text, pic);
+          // Store the date the pic was created (i.e. now):
+          newPic.addLiteral(schema.dateCreated, date)
+          // add ref to user pic
+          newPic.addRef(rdfs.seeAlso, subject);
+          newPic.addRef(schema.creator, app.webId);
+          console.log(newPic.asNodeRef())
 
-          app.agoraNotesList.save([newNote]).then(
+          app.agoraPicsList.save([newPic]).then(
             success=>{
               console.log("success agora", success)
-              //  app.initNotePod()
+              //  app.initpicPod()
             },
             err=>{
               console.log(err)
@@ -270,48 +272,48 @@ getNotes(){
           });
         }
 
-        initialiseNotesList(profile,typeIndex){
+        initialisePicsList(profile,typeIndex){
           var app = this;
           console.log("creation a revoir")
           const storage = profile.getRef(space.storage)
           //    console.log("storage",storage)
           app.agent.send('Storage',{action: "storageChanged", storage: storage})
 
-          const notesListUrl = storage + 'public/notes.ttl';
+          const picsListUrl = storage + 'public/Picpost/pics.ttl';
 
-          const notesList = Tripledoc.createDocument(notesListUrl);
-          notesList.save();
+          const picsList = Tripledoc.createDocument(picsListUrl);
+          picsList.save();
 
-          // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
+          // Store a reference to that Document in the public Type Index for `schema:MediaObject`:
           const typeRegistration = typeIndex.addSubject();
           typeRegistration.addRef(rdf.type, solid.TypeRegistration)
-          typeRegistration.addRef(solid.instance, notesList.asRef())
-          typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
+          typeRegistration.addRef(solid.instance, picsList.asRef())
+          typeRegistration.addRef(solid.forClass, schema.MediaObject)
           typeIndex.save([ typeRegistration ]);
 
-          return notesListUrl
+          return picsListUrl
           /*// Get the root URL of the user's Pod:
           const storage = profile.getRef(space.storage);
 
           // Determine at what URL the new Document should be stored:
-          const notesListUrl = storage + 'public/notes.ttl';
+          const picsListUrl = storage + 'public/pics.ttl';
           // Create the new Document:
-          const notesList = createDocument(notesListUrl);
-          await notesList.save();
+          const picsList = createDocument(picsListUrl);
+          await picsList.save();
 
-          // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
+          // Store a reference to that Document in the public Type Index for `schema:MediaObject`:
           const typeRegistration = typeIndex.addSubject();
           typeRegistration.addRef(rdf.type, solid.TypeRegistration)
           typeRegistration.addRef(solid.instance, document.asRef())
-          typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
+          typeRegistration.addRef(solid.forClass, schema.MediaObject)
           await typeIndex.save([ typeRegistration ]);
 
           // Then finally return the new Document:
-          return notesList;
+          return picsList;
           */
         }
         createTemp(e) {
-
+          console.log(e)
           if (this.webId == null){
             alert(i18next.t('must_log'))
           }
@@ -369,7 +371,7 @@ getNotes(){
           .then(
             success =>{
               console.log(success)
-              //this.addNote()
+              this.addPic()
 
             },
             err => {console.log(err)});
@@ -404,12 +406,12 @@ getNotes(){
 
 
           render() {
-            const noteList = (notes) => html`
-            <h3>My Picpost List (${notes.length})</h3>
+            const picList = (pics) => html`
+            <h3>My Picpost List (${pics.length})</h3>
 
 
             <bs-list-group-action>
-            ${notes.map((n) => html`
+            ${pics.map((n) => html`
               <bs-list-group-item-action-link class="flex-column align-items-start">
               <div class="d-flex w-100 justify-content-between">
               <!--  <h5 class="mb-1">${n.title}</h5> -->
@@ -451,7 +453,7 @@ getNotes(){
               <div class="row">
               <form>
               <!--https://www.html5rocks.com/en/tutorials/getusermedia/intro/-->
-  <!--            <div class="custom-file">
+              <!--            <div class="custom-file">
               <input type="file" class="custom-file-input" @change="${this.createTemp}" id="imageFile" accept="image/*;capture=camera" lang="${this.lang}">
               <label class="custom-file-label" for="imageFile"><i class="fas fa-camera-retro"></i> Image</label>
               </div>
@@ -463,7 +465,7 @@ getNotes(){
               <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="audio/*;capture=microphone" lang="${this.lang}">
               <label class="custom-file-label" for="audioFile"><i class="fas fa-microphone"></i> Audio</label>
               </div>
--->
+              -->
               <div class="custom-file">
               <input type="file" class="custom-file-input" @change="${this.createTemp}" id="audioFile" accept="image/*;video/*;audio/*" lang="${this.lang}">
               <label class="custom-file-label" for="audioFile"><i class="fas fa-camera-retro"></i><i class="fas fa-video"></i><i class="fas fa-microphone"></i></label>
@@ -501,7 +503,7 @@ getNotes(){
 
               <bs-form-group>
               <bs-form-label slot="label">Legend</bs-form-label>
-              <bs-form-textarea id ="notearea" rows="4" slot="control"></bs-form-textarea>
+              <bs-form-textarea id ="picarea" rows="4" slot="control"></bs-form-textarea>
 
 
               </bs-form-group>
@@ -524,7 +526,7 @@ getNotes(){
               <stream-component id="stream" name="Stream"></stream-component>
 
               <p>
-              ${noteList(this.notes)}
+              ${picList(this.pics)}
               </p>
               `;
             }
