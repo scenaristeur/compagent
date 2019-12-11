@@ -112,15 +112,15 @@ render() {
   <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
   <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
   <h3 class="m-0 font-weight-bold text-primary">${this.name} </h3>
-
+<hr>1
   <div class="container">
   <div class="row">
   <div class="col">
   <button type="button" class="btn btn-outline-info" id="capture-button">Capture</button>
   <button type="button" class="btn btn-outline-info" id="screenshot-button">Screenshot</button><br>
-  <video id="video" width="640px" height="480px" autoplay></video><br>
+  <video id="video" style="max-width: 100%; height: auto;" autoplay></video><br>
 
-  <img id="screenshot" width="640px" height="480px" src="">
+  <img id="screenshot" style="max-width: 100%; height: auto;" src="">
   <canvas style="display:none;"></canvas>
 
   </div>
