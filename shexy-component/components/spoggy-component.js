@@ -194,7 +194,7 @@ class SpoggyComponent extends LitElement {
     Ttl
     </div>
       </div>
-  
+
     </div>
 
     <div id="nodePopUp">
@@ -223,7 +223,6 @@ class SpoggyComponent extends LitElement {
 
     <div class="network" id="mynetwork" bgcolor="#E6E6FA">  </div>
 
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
 

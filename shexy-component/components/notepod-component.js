@@ -116,18 +116,18 @@ console.log(err)
 initNotePod(){
   var app = this;
   app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
-  //console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
+  console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
   Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
     publicTypeIndex => {
       app.publicTypeIndex = publicTypeIndex;
       app.notesListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
-      //  console.log("app.notesListEntry",app.notesListEntry)
+        console.log("app.notesListEntry",app.notesListEntry)
       if (app.notesListEntry === null){
         app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
       }else{
         app.notesListUrl = app.notesListEntry.getRef(solid.instance)
-        //  console.log("notesListUrl",app.notesListUrl)
+          console.log("notesListUrl",app.notesListUrl)
 
       }
       app.getNotes()
@@ -139,14 +139,14 @@ initNotePod(){
 
 getNotes(){
   var app = this;
-  //  console.log("getNotes at ",app.notesListUrl)
+    console.log("getNotes at ",app.notesListUrl)
   Tripledoc.fetchDocument(app.notesListUrl).then(
     notesList => {
       app.notesList = notesList;
 
-      //    console.log("app.notesList",app.notesList)
+          console.log("app.notesList",app.notesList)
       app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
-      //  console.log("notesUri",app.notesUri)
+        console.log("notesUri",app.notesUri)
       app.notes = []
       app.notesUri.forEach(function (nuri){
         var subject = nuri.asNodeRef()
@@ -172,10 +172,10 @@ getNotes(){
   addNote(){
     var app = this
 
-    //  console.log(app.notesList)
-    if (app.notesList == undefined){
+      console.log("app.notesList",app.notesList)
+  /*  if (app.notesList == undefined){
       alert(i18next.t('must_log'))
-    }else{
+    }else{*/
       var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
       var note = textarea.value.trim()
       textarea.value = ""
@@ -189,7 +189,7 @@ getNotes(){
       // Store the date the note was created (i.e. now):
       newNote.addLiteral(schema.dateCreated, date)
 
-console.log(newNote.asNodeRef())
+      console.log(newNote.asNodeRef())
 
 
 
@@ -205,7 +205,7 @@ console.log(newNote.asNodeRef())
           console.log(err)
           alert(err)
         });
-      }
+    //  }
 
     }
 
@@ -281,46 +281,93 @@ console.log(newNote.asNodeRef())
 
         render() {
           const noteList = (notes) => html`
-        <h3>My  Note List (${notes.length})</h3>
+          <h3>My  Note List (${notes.length})</h3>
 
 
-          <bs-list-group-action>
+          <ul class="list-group list-group-flush">
           ${notes.map((n) => html`
-            <bs-list-group-item-action-link class="flex-column align-items-start">
+            <li class="list-group-item">
+
+            <div class="row">
+
+            <div class="col">
             <div class="d-flex w-100 justify-content-between">
-            <!--  <h5 class="mb-1">${n.title}</h5> -->
+            <!--<h5 class="mb-1">Titre</h5>-->
             </div>
             <p class="mb-1">
-              <div style="white-space: pre-wrap">${n.text}</div>
-              </p>
+            <div style="white-space: pre-wrap">${n.text}</div>
+            </p>
             <!--<small>Donec id elit non mi porta.</small>-->
             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-            <bs-link-button primary small href="${n.subject}" target="_blank">Open</bs-link-button>
-            </bs-list-group-item-action-link>
+
+            </div>
+
+            <div class="col-sm-2">
+            <i title="copy" primary @click="${this.copy}" uri=${n.subject} class="fas fa-copy"></i>
+            <a href="${n.subject}" target="_blank">  <i title="open" primary small  class="fas fa-eye"></i></a>
+
+            </div>
+
+
+            </div>
+            <!--
+            <div style="width:100%;text-align:right" >
+
+            </div>-->
+
+            </li>
             `)}
-            </bs-list-group-action>
+            </ul>
 
-              `;
 
-              return html`
-              <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-              <bs-form-group>
-              <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
-              <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
-              </bs-form-group>
-              <br>
-              <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
-              <bs-form-check-group>
-              <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
-              <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
-              </bs-form-check-group>
-              <br>
-              <p>
-              ${noteList(this.notes)}
-              </p>
-              `;
+
+
+            `;
+
+            return html`
+
+            <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+            <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+            i {
+              padding: 10px
             }
+            </style>
+
+            <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
+            <bs-form-group>
+            <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
+            <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
+            </bs-form-group>
+            <br>
+            <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
+            <bs-form-check-group>
+            <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
+            <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
+            </bs-form-check-group>
+            <br>
+            <p>
+            ${noteList(this.notes)}
+            </p>
+            `;
           }
 
-          // Register the new element with the browser.
-          customElements.define('notepod-component', NotepodComponent);
+          copy(e){
+
+            var dummy = document.createElement("textarea");
+            // to avoid breaking orgain page when copying more words
+            // cant copy when adding below this code
+            // dummy.style.display = 'none'
+            //document.body.appendChild(dummy);
+            //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+            dummy.value = e.target.getAttribute(uri);
+            dummy.select();
+            document.execCommand("copy");
+            //  document.body.removeChild(dummy);
+          }
+
+
+        }
+
+        // Register the new element with the browser.
+        customElements.define('notepod-component', NotepodComponent);

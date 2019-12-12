@@ -15,8 +15,6 @@ import './annonce-component.js'
 import './agora-annonce-component.js'
 import './picpost-component.js'
 
-import './visualization-component.js'
-
 import './agora-picpost-component.js'
 
 import './shexy-component.js'
@@ -230,63 +228,50 @@ class AppComponent extends LitElement {
           <div class="col-md">
       ${this.webId != null ?
         html `
-
-
-<div class="row">
-<div class="col">
-<bs-accordion>
-<bs-card>
-<bs-card-header slot="card-header">
-<bs-collapse-toggle target="collapseOne">
-<h5 class="mb-0">
-<bs-button link>Profile</bs-button>
-</h5>
-</bs-collapse-toggle>
-</bs-card-header>
-<bs-collapsable collapsed id="collapseOne">
-<bs-card-body>
-<profile-component name="Profile"></profile-component>
-</bs-card-body>
-</bs-collapsable>
-</bs-card>
-<bs-card>
-<bs-card-header slot="card-header">
-<bs-collapse-toggle target="collapseTwo">
-<h5 class="mb-0">
-<bs-button link>Friends</bs-button>
-</h5>
-</bs-collapse-toggle>
-</bs-card-header>
-<bs-collapsable collapsed id="collapseTwo">
-<bs-card-body>
-<friends-component name="Friends"></friends-component>
-</bs-card-body>
-</bs-collapsable>
-</bs-card>
-<bs-card>
-<bs-card-header slot="card-header">
-<bs-collapse-toggle target="collapseThree">
-<h5 class="mb-0">
-<bs-button link>Storage</bs-button>
-</h5>
-</bs-collapse-toggle>
-</bs-card-header>
-<bs-collapsable collapsed id="collapseThree">
-<bs-card-body>
-<storage-component name="Storage"></storage-component>
-</bs-card-body>
-</bs-collapsable>
-</bs-card>
-</bs-accordion>
-</div>
-<div class="col">
-    <visualization-component name="Visualization"></visualization-component>
-</div>
-
-</div>
-
-
-
+        <bs-accordion>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseOne">
+        <h5 class="mb-0">
+        <bs-button link>Profile</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseOne">
+        <bs-card-body>
+        <profile-component name="Profile"></profile-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseTwo">
+        <h5 class="mb-0">
+        <bs-button link>Friends</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseTwo">
+        <bs-card-body>
+        <friends-component name="Friends"></friends-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        <bs-card>
+        <bs-card-header slot="card-header">
+        <bs-collapse-toggle target="collapseThree">
+        <h5 class="mb-0">
+        <bs-button link>Storage</bs-button>
+        </h5>
+        </bs-collapse-toggle>
+        </bs-card-header>
+        <bs-collapsable collapsed id="collapseThree">
+        <bs-card-body>
+        <storage-component name="Storage"></storage-component>
+        </bs-card-body>
+        </bs-collapsable>
+        </bs-card>
+        </bs-accordion>
 `
         :html `
         <h2 class="display-4">${i18next.t('hello_world')}</h2>

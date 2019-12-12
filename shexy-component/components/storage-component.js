@@ -7,7 +7,7 @@ import  '../vendor/@lit-element-bootstrap/bs-form.bundle.js';
 import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 import { SolidFileHelper } from '../helpers/solid-file-helper.js';
 
-import './visualization-component.js'
+
 
 // Extend the LitElement base class
 class StorageComponent extends LitElement {
@@ -107,7 +107,7 @@ class StorageComponent extends LitElement {
       <!--  <twit-component name="Twit" uri=${this.uri}></twit-component>
       <note-component name="Note" uri=${this.uri}></note-component>-->
 
-    <ul class="list-group list-group-flush">
+      <ul class="list-group list-group-flush">
       ${files.map((f) => html`
         ${this.isFileImage(f) ?
           html`
@@ -116,7 +116,7 @@ class StorageComponent extends LitElement {
           <div style="width:100%;text-align:right" ><i title="copy" @click="${this.copy}" uri=${f.url} class="fas fa-copy"></i></div>
           </li>`
           : html`
-            <li class="list-group-item">
+          <li class="list-group-item">
           <span @click=${this.clickFile} uri=${f.url} type=${f.type}>${f.name}</span>
           <div style="width:100%;text-align:right" ><i title="copy" @click="${this.copy}" uri=${f.url} class="fas fa-copy"></i></div>
           </li>
@@ -170,9 +170,6 @@ class StorageComponent extends LitElement {
         </div>
         <div class="col-md">
         ${fileList(this.folder.files)}
-        </div>
-        <div class="col-lg">
-        <visualization-component name="Visualization"></visualization-component>
         </div>
         </div>
 
