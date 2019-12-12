@@ -173,8 +173,42 @@ class SpoggyComponent extends LitElement {
     .slider.round:before {
       border-radius: 50%;
     }
-    </style>
 
+
+    /*custum menu */
+    .custom-menu {
+      display: none;
+      z-index: 1000;
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid #CCC;
+      white-space: nowrap;
+      font-family: sans-serif;
+      background: #FFF;
+      color: #333;
+      border-radius: 5px;
+      padding: 0;
+    }
+
+    /* Each of the items in the list */
+    .custom-menu li {
+      padding: 8px 12px;
+      cursor: pointer;
+      list-style-type: none;
+      transition: all .3s ease;
+      user-select: none;
+    }
+
+    .custom-menu li:hover {
+      background-color: #DEF;
+    }
+
+    </style>
+    <ul id="custom-menu" class='custom-menu'>
+    <li data-action="edit" @click=${this.menuClick}>Edit</li>
+    <li data-action="expand" @click=${this.menuClick}>Expand</li>
+    <!--<li data-action="focus" @click=${this.menuClick}>Focus</li>-->
+    </ul>
 
     <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
     <button pimary
@@ -228,7 +262,30 @@ class SpoggyComponent extends LitElement {
     `;
   }
 
+  menuClick(e){
+    this.shadowRoot.getElementById("custom-menu").style.display = "none"
+    var action = e.target.getAttribute("data-action")
+    console.log(action, this.currentNode)
+    switch(action) {
+      case "edit":
+      var params = {}
+      params.data = this.currentNode
+      //params.callback = this.spoggy.network.editNode()
+      this.editNode(params)
+      // code block
+      break;
+      case "expand":
+      // code block
+      break;
+      case "focus":
+      // code block
+      break;
+      default:
+      // code block
+      console.log("action inconnue",action)
 
+    }
+  }
 
   nouveau(){
     this.spoggy.network.body.data.edges.clear();
@@ -462,6 +519,7 @@ attrappeCommande(){
 }
 
 init(){
+  var app =this;
   // create a network
   var container = this.shadowRoot.getElementById('mynetwork');
   //  this.spoggy.agent(this.agent)
@@ -471,6 +529,69 @@ init(){
   //  this.spoggy.agent(this.agent)
   //  this.browser.network(browsercontainer)
   console.log("SPOGGY PEUPLE", this.spoggy)
+  // JAVASCRIPT (jQuery)
+
+  // Trigger action when the contexmenu is about to be shown
+  //https://stackoverflow.com/questions/4495626/making-custom-right-click-context-menus-for-my-web-app/20471268#20471268
+  this.spoggy.network.on("oncontext", function (params) {
+    console.log(params)
+    var event = params.event
+    console.log("context",event)
+    // Avoid the real one
+    event.preventDefault();
+    console.log($(".custom-menu"))
+
+    var n = app.spoggy.network.getNodeAt(params.pointer.DOM);
+    console.log(n)
+    if (n != undefined){
+      app.currentNode = app.spoggy.network.body.data.nodes.get(n);
+      console.log(app.currentNode);
+      var m = app.shadowRoot.getElementById('custom-menu')
+      m.style.display = "block";
+      m.style.top = params.pointer.DOM.y;
+      m.style.left =  params.pointer.DOM.x;
+    }
+    // Show contextmenu
+    /*      $(".custom-menu").finish().toggle(100).
+
+    // In the right position (the mouse)
+    css({
+    top: event.pageY + "px",
+    left: event.pageX + "px"
+  });*/
+});
+
+
+// If the document is clicked somewhere
+/*
+$(document).bind("mousedown", function (e) {
+
+// If the clicked element is not the menu
+if (!$(e.target).parents(".custom-menu").length > 0) {
+
+// Hide it
+$(".custom-menu").hide(100);
+}
+});
+
+
+// If the menu element is clicked
+$(".custom-menu li").click(function(){
+
+// This is the triggered action name
+switch($(this).attr("data-action")) {
+
+// A case for each action. Your actions here
+case "first": alert("first"); break;
+case "second": alert("second"); break;
+case "third": alert("third"); break;
+}
+
+// Hide it AFTER the action was triggered
+$(".custom-menu").hide(100);
+});
+*/
+
 }
 
 
@@ -628,7 +749,7 @@ editNode(params){
   //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
   this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
   this.shadowRoot.getElementById('node-cancelButton').onclick = this.clearNodePopUp.bind(this, callback);
-   //this.cancelAction.bind(this, callback);
+  //this.cancelAction.bind(this, callback);
   this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
   this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
 }
@@ -649,7 +770,7 @@ edgeNameChanged(event,data, callback) {
   }
 }
 saveNodeData(data, callback) {
-  console.log(data, callback)
+  console.log(data, callback.name)
   data.label = this.shadowRoot.getElementById('node-label').value;
   /*  console.log(this.shadowRoot.getElementById('node-shape'))
   data.shape = this.shadowRoot.getElementById('node-shape').value;
@@ -667,7 +788,10 @@ saveNodeData(data, callback) {
 console.log(data)
 //  this.fitAndFocus(data.id)
 this.clearNodePopUp();
-callback(data);
+if (callback != undefined){
+  callback(data);
+}
+
 }
 
 
