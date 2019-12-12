@@ -69,14 +69,15 @@ class SpoggyComponent extends LitElement {
 
   render() {
     return html`
-    <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
+
     <link href="./vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
+    
     <style type="text/css">
     /* network */
     .network {
-    /*  width: 100%;*/
+      /*  width: 100%;*/
       height: 400px;
       /*  width: 100%;
       height: 800px;*/
@@ -87,10 +88,11 @@ class SpoggyComponent extends LitElement {
     }
     #nodePopUp {
       display:none;
+      position: absolute;
 
       z-index:299;
-      width:250px;
-      height:120px;
+      width:300px;
+      height:200px;
       background-color: #f9f9f9;
       border-style:solid;
       border-width:3px;
@@ -100,10 +102,10 @@ class SpoggyComponent extends LitElement {
     }
     #edge-popUp {
       display:none;
-
+      position: absolute;
       z-index:299;
-      width:250px;
-      height:90px;
+      width:300px;
+      height:120px;
       background-color: #f9f9f9;
       border-style:solid;
       border-width:3px;
@@ -172,9 +174,9 @@ class SpoggyComponent extends LitElement {
       border-radius: 50%;
     }
     </style>
-    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
-    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
+
+    <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
     <button pimary
     id="nouveau_graph"
     @click=${this.nouveau}
@@ -193,7 +195,7 @@ class SpoggyComponent extends LitElement {
     </label>
     Ttl
     </div>
-      </div>
+    </div>
 
     </div>
 
@@ -623,7 +625,7 @@ editNode(params){
   this.shadowRoot.getElementById('node-label').value = data.label;
   //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
   this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-  //  this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
+  this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
   this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
   this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
 }

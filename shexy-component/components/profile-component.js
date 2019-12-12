@@ -52,18 +52,16 @@ class ProfileComponent extends LitElement {
 
   render() {
     return html`
-    <style>
-    bs-card-img{
-      max-width:33%
-    }
-    </style>
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
+
 
     <bs-card>
   <!--  <bs-card-img position="top" slot="top-image">
     <svg class="bd-placeholder-img" width="180" height="180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
 
     </bs-card-img>-->
-    <h1>${this.username}</h1>
+    <h3 class="m-0 font-weight-bold text-primary">${this.username}</h1>
     <bs-card-body>
     <bs-card-title slot="card-title">
     <h5>webId :</h5>

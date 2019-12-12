@@ -46,11 +46,8 @@ class FriendsComponent extends LitElement {
 
   render() {
     return html`
-    <style>
-    bs-card-img{
-      max-width:33%
-    }
-    </style>
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
 
     <bs-card>
   <!--  <bs-card-img position="top" slot="top-image">
@@ -64,7 +61,7 @@ class FriendsComponent extends LitElement {
     </rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
     </svg>
     </bs-card-img>-->
-    <h1>${this.name}</h1>
+    <h3 class="m-0 font-weight-bold text-primary">${this.name}</h1>
     <bs-card-body>
     <bs-card-title slot="card-title">
     <h5>online:</h5>

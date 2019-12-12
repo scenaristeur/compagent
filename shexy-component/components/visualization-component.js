@@ -44,10 +44,12 @@ class VisualizationComponent extends LitElement {
 
   render() {
     return html`
+    <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
+    <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
     <!--  <h1>${this.name}</h1>
     <p> ${this.file.uri} de type  ${this.file.type} , fileType: (${this.fileType})</p>
     -->
-    <h5>Visualization</h5>
+    <h3 class="m-0 font-weight-bold text-primary">Visualization</h3>
 
     <image-component name="Image" ?hidden=${this.fileType != 'image'}></image-component>
     <editor-component name="Editor" type="simple" ?hidden=${this.fileType != 'text'}></editor-component>

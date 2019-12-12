@@ -9,7 +9,7 @@ import './i18n-component.js'
 
 import {vcard, foaf, solid, schema, space, rdf, rdfs} from '../vendor/rdf-namespaces/rdf-namespaces.min.js';
 
-// Extend the LitElement base class
+
 class NotepodComponent extends LitElement {
 
   static get properties() {
@@ -33,14 +33,6 @@ class NotepodComponent extends LitElement {
     this.agoraNotesListUrl = "https://agora.solid.community/public/notes.ttl"
     this.notes = []
     this.lang=navigator.language
-    /*    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
-    this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
-    this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
-    this.SCHEMA = new $rdf.Namespace('http://schema.org/');
-    this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
-    this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-    this.RDFS = new $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#')*/
-
   }
 
 
@@ -76,136 +68,100 @@ class NotepodComponent extends LitElement {
 
   sessionChanged(webId){
     this.webId = webId
-
-    if (this.webId != null){
-      //this.getUserData()
-      //
-    }else{
+    if (this.webId == null){
       this.notes = []
     }
   }
 
-  /*
-  getUserData(){
-  var app = this;
-  Tripledoc.fetchDocument(app.webId).then(
-  doc => {
-  //    console.log("DOC",doc)
-  //    console.log(doc.getStatements())
-  app.doc = doc;
-  app.person = doc.getSubject(app.webId);
-  console.log("personne",app.person)
-  app.username = app.person.getString(app.FOAF('name'))
-  app.friends = app.person.getAllRefs(app.FOAF('knows'))
 
-  console.log("Friends",app.friends)
-  app.initNotePod()
-  app.agent.send('Profile',{action: "usernameChanged", username: app.username})
-  app.agent.send('Profile',{action: "sessionChanged", webId: app.webId})
-  app.agent.send('Friends',{action: "friendsChanged", friends: app.friends})
-  const storage = app.person.getRef(app.SPACE('storage'))
-  console.log("storage",storage)
-  app.agent.send('Storage',{action: "storageChanged", storage: storage})
-},
-err => {
-console.log(err)
-}
-);
-}*/
+  initNotePod(){
+    var app = this;
+    app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
+    console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
-initNotePod(){
-  var app = this;
-  app.publicTypeIndexUrl = app.person.getRef(solid.publicTypeIndex)
-  console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
-
-  Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
-    publicTypeIndex => {
-      app.publicTypeIndex = publicTypeIndex;
-      app.notesListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
+    Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
+      publicTypeIndex => {
+        app.publicTypeIndex = publicTypeIndex;
+        app.notesListEntry = app.publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
         console.log("app.notesListEntry",app.notesListEntry)
-      if (app.notesListEntry === null){
-        app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
-      }else{
-        app.notesListUrl = app.notesListEntry.getRef(solid.instance)
+        if (app.notesListEntry === null){
+          app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
+        }else{
+          app.notesListUrl = app.notesListEntry.getRef(solid.instance)
           console.log("notesListUrl",app.notesListUrl)
-
-      }
-      app.getNotes()
-    },
-    err => {console.log(err)}
-  );
-}
-
-
-getNotes(){
-  var app = this;
-    console.log("getNotes at ",app.notesListUrl)
-  Tripledoc.fetchDocument(app.notesListUrl).then(
-    notesList => {
-      app.notesList = notesList;
-
-          console.log("app.notesList",app.notesList)
-      app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
-        console.log("notesUri",app.notesUri)
-      app.notes = []
-      app.notesUri.forEach(function (nuri){
-        var subject = nuri.asNodeRef()
-        //  console.log("subject",subject)
-        //  console.log("doc",nuri.getDocument())
-        var text = nuri.getString(schema.text)
-        var date = nuri.getDateTime(schema.dateCreated)
-        //  console.log(text, date)
-        var note = {}
-        note.text = text;
-        note.date = date;
-        note.subject = subject;
-        //text = nuri.getAllStrings()*/
-        app.notes = [... app.notes, note]
-      })
-
-      app.notes.reverse()
-    })
+        }
+        app.getNotes()
+      },
+      err => {console.log(err)}
+    );
   }
 
 
+  getNotes(){
+    var app = this;
+    console.log("getNotes at ",app.notesListUrl)
+    Tripledoc.fetchDocument(app.notesListUrl).then(
+      notesList => {
+        app.notesList = notesList;
+        console.log("app.notesList",app.notesList)
+        app.notesUri = notesList.findSubjects(rdf.type, schema.TextDigitalDocument)
+        console.log("notesUri",app.notesUri)
+        app.notes = []
+        app.notesUri.forEach(function (nuri){
+          var subject = nuri.asNodeRef()
+          //  console.log("subject",subject)
+          //  console.log("doc",nuri.getDocument())
+          var text = nuri.getString(schema.text)
+          var date = nuri.getDateTime(schema.dateCreated)
+          //  console.log(text, date)
+          var note = {}
+          note.text = text;
+          note.date = date;
+          note.subject = subject;
+          //text = nuri.getAllStrings()*/
+          app.notes = [... app.notes, note]
+        })
+        app.notes.reverse()
+      })
+    }
 
-  addNote(){
-    var app = this
 
+
+    addNote(){
+      var app = this
       console.log("app.notesList",app.notesList)
-  /*  if (app.notesList == undefined){
-      alert(i18next.t('must_log'))
-    }else{*/
-      var textarea = this.shadowRoot.getElementById('notearea').shadowRoot.querySelector(".form-control")
-      var note = textarea.value.trim()
-      textarea.value = ""
-      //  console.log(note)
-      const newNote = app.notesList.addSubject();
-      var date = new Date(Date.now())
-      // Indicate that the Subject is a schema:TextDigitalDocument:
-      newNote.addRef(rdf.type, schema.TextDigitalDocument);
-      // Set the Subject's `schema:text` to the actual note contents:
-      newNote.addLiteral(schema.text, note);
-      // Store the date the note was created (i.e. now):
-      newNote.addLiteral(schema.dateCreated, date)
+        if (app.notesList == undefined){
+      alert("app.notesList is undefined", i18next.t('must_log'))
+    }else{
+    var textarea = this.shadowRoot.getElementById('notearea')/*.shadowRoot.querySelector(".form-control")*/
+    var note = textarea.value.trim()
+    textarea.value = ""
+    //  console.log(note)
+    const newNote = app.notesList.addSubject();
+    var date = new Date(Date.now())
+    // Indicate that the Subject is a schema:TextDigitalDocument:
+    newNote.addRef(rdf.type, schema.TextDigitalDocument);
+    // Set the Subject's `schema:text` to the actual note contents:
+    newNote.addLiteral(schema.text, note);
+    // Store the date the note was created (i.e. now):
+    newNote.addLiteral(schema.dateCreated, date)
 
-      console.log(newNote.asNodeRef())
+    //console.log(newNote.asNodeRef())
 
+    app.notesList.save([newNote]).then(
+      success=>{
+        var checkAgora = this.shadowRoot.getElementById('agora_pub').checked //this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
 
-
-      app.notesList.save([newNote]).then(
-        success=>{
-          var checkAgora = this.shadowRoot.getElementById('agora_pub').shadowRoot.firstElementChild.checked
-          if(checkAgora == true){
-            app.updateAgora(note, date, newNote.asNodeRef())
-          }
-          app.initNotePod()
-        },
-        err=>{
-          console.log(err)
-          alert(err)
-        });
-    //  }
+        if(checkAgora == true){
+          app.updateAgora(note, date, newNote.asNodeRef())
+        }
+        app.initNotePod()
+      },
+      err=>{
+        console.log(err)
+        alert(err)
+      });
+     }
 
     }
 
@@ -258,36 +214,15 @@ getNotes(){
           typeIndex.save([ typeRegistration ]);
 
           return notesListUrl
-          /*// Get the root URL of the user's Pod:
-          const storage = profile.getRef(space.storage);
-
-          // Determine at what URL the new Document should be stored:
-          const notesListUrl = storage + 'public/notes.ttl';
-          // Create the new Document:
-          const notesList = createDocument(notesListUrl);
-          await notesList.save();
-
-          // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
-          const typeRegistration = typeIndex.addSubject();
-          typeRegistration.addRef(rdf.type, solid.TypeRegistration)
-          typeRegistration.addRef(solid.instance, document.asRef())
-          typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
-          await typeIndex.save([ typeRegistration ]);
-
-          // Then finally return the new Document:
-          return notesList;
-          */
         }
 
         render() {
           const noteList = (notes) => html`
-          <h3>My  Note List (${notes.length})</h3>
-
+          <h3 class="m-0 font-weight-bold text-primary">My  Note List (${notes.length})</h3>
 
           <ul class="list-group list-group-flush">
           ${notes.map((n) => html`
             <li class="list-group-item">
-
             <div class="row">
 
             <div class="col">
@@ -299,28 +234,16 @@ getNotes(){
             </p>
             <!--<small>Donec id elit non mi porta.</small>-->
             <small>${n.date.toLocaleString(this.lang, { timeZone: 'UTC' })}</small>
-
             </div>
 
-            <div class="col-sm-2">
+            <div class="col-sm-1">
             <i title="copy" primary @click="${this.copy}" uri=${n.subject} class="fas fa-copy"></i>
             <a href="${n.subject}" target="_blank">  <i title="open" primary small  class="fas fa-eye"></i></a>
-
             </div>
-
-
             </div>
-            <!--
-            <div style="width:100%;text-align:right" >
-
-            </div>-->
-
             </li>
             `)}
             </ul>
-
-
-
 
             `;
 
@@ -330,43 +253,49 @@ getNotes(){
             <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
             <style>
             i {
-              padding: 10px
+              padding-top: 10px;
+              padding-bottom: 10px
             }
             </style>
 
+            <div class="col">
             <h3 class="m-0 font-weight-bold text-primary">${this.name}</h3>
-            <bs-form-group>
-            <!--<bs-form-label slot="label">Example textarea</bs-form-label>-->
-            <bs-form-textarea id ="notearea" rows="8" slot="control"></bs-form-textarea>
-            </bs-form-group>
-            <br>
-            <bs-button primary @click=${this.addNote}>${i18next.t('add_note')}</bs-button>
-            <bs-form-check-group>
-            <bs-form-checkbox-input id="agora_pub" name="agora_pub" slot="check" checked></bs-form-checkbox-input>
-            <bs-form-check-label slot="label">${i18next.t('agora_publish')}</bs-form-check-label>
-            </bs-form-check-group>
-            <br>
-            <p>
+            <div class="row">
+            <div class="form-group">
+            <label for="notearea">Write a note on your Pod & share it on Agora</label>
+            <textarea class="form-control" id="notearea" rows="3"></textarea>
+            </div>
+            </div>
+
+            <div class="row">
+            <div class="col">
+            <button type="button" class="btn btn-primary" primary @click=${this.addNote}>${i18next.t('add_note')}</button>
+            </div>
+            <div class="col">
+            <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="agora_pub" name="agora_pub" checked>
+            <label class="form-check-label" for="agora_pub">
+            ${i18next.t('agora_publish')}
+            </label>
+            </div>
+            </div>
+            </div>
+            </div>
+
+            <div class="col">
             ${noteList(this.notes)}
-            </p>
+            </div>
             `;
           }
 
           copy(e){
-
             var dummy = document.createElement("textarea");
-            // to avoid breaking orgain page when copying more words
-            // cant copy when adding below this code
-            // dummy.style.display = 'none'
             document.body.appendChild(dummy);
-            //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
             dummy.value = e.target.getAttribute("uri");
-          //  console.log(dummy.value)
             dummy.select();
             document.execCommand("copy");
-              document.body.removeChild(dummy);
+            document.body.removeChild(dummy);
           }
-
 
         }
 

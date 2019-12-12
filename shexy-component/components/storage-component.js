@@ -152,7 +152,7 @@ class StorageComponent extends LitElement {
         </svg>
 
         </bs-card-img>-->
-        <h1>${this.name}</h1>
+        <h3 class="m-0 font-weight-bold text-primary">${this.name}</h1>
         <bs-card-body>
         <bs-card-title slot="card-title">
         <button @click=${this.clickFolder} uri=${this.sessionStorage} >${this.sessionStorage}</button>

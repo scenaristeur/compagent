@@ -11,8 +11,8 @@ import './friends-component.js'
 import './storage-component.js'
 import './notepod-component.js'
 import './agora-notes-component.js'
-import './annonce-component.js'
-import './agora-annonce-component.js'
+//import './annonce-component.js'
+//import './agora-annonce-component.js'
 import './picpost-component.js'
 
 import './visualization-component.js'
@@ -116,11 +116,6 @@ class AppComponent extends LitElement {
       <!--<bs-link-button primary small href="${n.url}" target="_blank">${n.name}</bs-link-button>-->
       </bs-nav-item>
       `)}
-
-
-
-
-
 
       `;
 
@@ -282,10 +277,7 @@ class AppComponent extends LitElement {
 <div class="col">
     <visualization-component name="Visualization"></visualization-component>
 </div>
-
 </div>
-
-
 
 `
         :html `
@@ -325,15 +317,15 @@ class AppComponent extends LitElement {
       <notepod-component id="notepod" name="Notepod"></notepod-component>
       </bs-column>
       </bs-row>
-      <bs-row>
+    <!--  <bs-row>
       <bs-column sm demo>
       <annonce-component name="Annonce"></annonce-component>
       </bs-column>
       <bs-column sm demo>
       <agora-annonce-component name="AgoraAnnonce"></agora-annonce-component>
       </bs-column>
-      <!--  <bs-column sm demo>sm</bs-column>-->
-      </bs-row>
+
+      </bs-row>-->
       </bs-container>
       <bs-container>
       <bs-row>
