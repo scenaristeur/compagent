@@ -73,7 +73,7 @@ class SpoggyComponent extends LitElement {
     <link href="./vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <link href="./vendor/fontawesome/css/all.css" rel="stylesheet">
     <link href="./vendor/bootstrap-4/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <style type="text/css">
     /* network */
     .network {
@@ -254,6 +254,8 @@ class SpoggyComponent extends LitElement {
       //  this.agent.send('Editor', {action: "setValue", data:data});
       var formatTtl = this.shadowRoot.getElementById("formatSwitch")
       console.log(formatTtl.checked)
+      var fakefile = {type: "text", uri:""}
+      this.agent.send('Visualization', {action: "fileChanged", file:fakefile});
       if(formatTtl.checked == true){
 
         var text = this.jsonToTtl(data)
@@ -625,7 +627,8 @@ editNode(params){
   this.shadowRoot.getElementById('node-label').value = data.label;
   //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
   this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-  this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
+  this.shadowRoot.getElementById('node-cancelButton').onclick = this.clearNodePopUp.bind(this, callback);
+   //this.cancelAction.bind(this, callback);
   this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
   this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
 }
@@ -646,6 +649,7 @@ edgeNameChanged(event,data, callback) {
   }
 }
 saveNodeData(data, callback) {
+  console.log(data, callback)
   data.label = this.shadowRoot.getElementById('node-label').value;
   /*  console.log(this.shadowRoot.getElementById('node-shape'))
   data.shape = this.shadowRoot.getElementById('node-shape').value;
