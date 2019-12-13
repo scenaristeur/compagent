@@ -353,7 +353,7 @@ ${this.shapes.map(shape => html`
 
 
   <shexy-formatter
-  name="${this.currentShape}"
+  name="ShexyFormatter"
   .shape="${this.currentShape}"
   .data="${this.data}"
   ></shexy-formatter>
