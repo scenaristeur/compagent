@@ -37,7 +37,7 @@ class SpoggyComponent extends LitElement {
       switch(message.action) {
         case "editNode":
         // code block
-        app.editNode(message.params)
+        app.editNode(message.params.data,message.params.cancelAction,message.params.callback)
         break;
         case "editEdgeWithoutDrag":
         // code block
@@ -268,10 +268,10 @@ class SpoggyComponent extends LitElement {
     console.log(action, this.currentNode)
     switch(action) {
       case "edit":
-      var params = {}
-      params.data = this.currentNode
+    //  var params = {}
+    //  params.data = this.currentNode
       //params.callback = this.spoggy.network.editNode()
-      this.editNode(params)
+      this.editNode(this.currentNode)
       // code block
       break;
       case "expand":
@@ -523,7 +523,7 @@ init(){
   // create a network
   var container = this.shadowRoot.getElementById('mynetwork');
   //  this.spoggy.agent(this.agent)
-  this.spoggy.network(container)
+  this.spoggy.networkFactory(container)
 
   //  var browsercontainer = this.shadowRoot.getElementById('browsernetwork');
   //  this.spoggy.agent(this.agent)
@@ -533,7 +533,7 @@ init(){
 
   // Trigger action when the contexmenu is about to be shown
   //https://stackoverflow.com/questions/4495626/making-custom-right-click-context-menus-for-my-web-app/20471268#20471268
-  this.spoggy.network.on("oncontext", function (params) {
+  this.spoggy.network.on("oncontextAVOIR", function (params) {
     console.log(params)
     var event = params.event
     console.log("context",event)
@@ -560,6 +560,78 @@ init(){
     left: event.pageX + "px"
   });*/
 });
+
+var network = app.spoggy.network
+network.on("selectNodeERRORCALLBACK", function (params) {
+  console.log('selectNode Event:', params);
+  //var n = network.getNodeAt(params.pointer.DOM);
+  //console.log(n)
+  if (params.nodes.length == 1) {
+    /*if (network.isCluster(params.nodes[0]) == true) {
+    network.openCluster(params.nodes[0]);
+  }else{*/
+  let id = params.nodes[0];
+  var node = network.body.data.nodes.get(id);
+  console.log(node);
+  app.currentNode = node;
+
+  //  node.label.indexOf(' ') >= 0 ? document.getElementById("input").value = '"'+node.label+'" ' : document.getElementById("input").value = node.label+' ';
+  //}
+}
+
+console.log(app.shadowRoot.getElementById("mynetwork"))
+event.preventDefault();
+var ord = event.pageY-app.shadowRoot.getElementById("mynetwork").offsetTop
+var abs = event.pageX-app.shadowRoot.getElementById("mynetwork").offsetWidth-app.shadowRoot.getElementById("mynetwork").offsetLeft
+//console.log("ORD",ord)
+// Show contextmenu
+
+var m = app.shadowRoot.getElementById('custom-menu')
+m.style.display = "block";
+m.style.top = ord + "px"
+m.style.left =  abs + "px"
+
+
+});
+
+network.on("doubleClickATESTER", async function (params) {
+  console.log('doubleClick ', params);
+  var id = params.nodes[0];
+  var existNode;
+  try{
+    existNode = network.body.data.nodes.get({
+      filter: function(node){
+        return (node.id == id );
+      }
+    });
+    console.log(existNode);
+    if (existNode.length != 0){
+      console.log("existe", existNode[0])
+      var params = existNode[0];
+      params.source = existNode[0].id;
+      importer(params,updateGraph)
+      fitAndFocus(existNode[0].id)
+      if(params.source.endsWith("#me")){
+        updateCurrentWebId(params.source)
+      }
+      //app.nodeChanged(existNode[0]);
+      //  app.agentVis.send('agentFileeditor', {type: "nodeChanged", node: existNode[0]});
+      //  app.agentVis.send('agentFoldermenu', {type: "nodeChanged", node: existNode[0]});
+      //  network.body.data.nodes.add(data);
+      //  var thing = this.thing;
+    }else{
+      console.log("n'existe pas")
+      //  delete data.x;
+      //  delete data.y
+      //  network.body.data.nodes.update(data);
+    }
+  }
+  catch (err){
+    console.log(err);
+  }
+});
+
+
 
 
 // If the document is clicked somewhere
@@ -739,11 +811,11 @@ getTypeIndex(){
 }
 
 
-editNode(params){
-  console.log("open",params)
-  var data = params.data;
+editNode(data,cancelAction, callback){
+  console.log("open",data, cancelAction, callback)
+/*  var data = params.data;
   var cancelAction = params.cancelAction ;
-  var callback = params.callback ;
+  var callback = params.callback ;*/
   this.shadowRoot.getElementById('node-id').value = data.id || "";
   this.shadowRoot.getElementById('node-label').value = data.label;
   //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
@@ -770,7 +842,7 @@ edgeNameChanged(event,data, callback) {
   }
 }
 saveNodeData(data, callback) {
-  console.log(data, callback.name)
+
   data.label = this.shadowRoot.getElementById('node-label').value;
   /*  console.log(this.shadowRoot.getElementById('node-shape'))
   data.shape = this.shadowRoot.getElementById('node-shape').value;

@@ -46,7 +46,7 @@ export class Spoggy {
     console.log(`${this.name} aboie.`);
     this.agent.send('Messages', 'Parle depuis module!');
   }
-  network(container){
+  networkFactory(container){
     var module = this;
     // randomly create some nodes and edges
     var nodes = new vis.DataSet([
